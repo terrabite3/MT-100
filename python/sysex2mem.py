@@ -158,7 +158,7 @@ class SyxParser:
                     found_data = True
                     row += '%0.2x' % self.memory[row_offset + addr]
                 else:
-                    row += '  '
+                    row += '..'
 
             if found_data:
                 result += row + '\n'
