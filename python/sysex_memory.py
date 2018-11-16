@@ -25,10 +25,10 @@ class SysExMemory:
     def next_address(self, address):
         address += 1
         if address & 0x80:
-            address = (address & 0xFFFF00) + 0x100
-        if address & 0x8000:
-            address = (address & 0xFF00FF) + 0x10000
-        if address & 0xFF808080:
+            address = (address & 0xFF_FF_00) + 0x1_00
+        if address & 0x80_00:
+            address = (address & 0xFF_00_FF) + 0x1_00_00
+        if address & 0xFF_80_80_80:
             eprint('Bad address: ' + hex(address))
         return address
 
@@ -155,11 +155,11 @@ class SysExMemory:
         pending_write = None
 
         # Avoid looping over empty regions
-        for window in sorted(set(x & 0xff0000 for x in self.memory)):
-            for address in range(window, window + 0x10001):
+        for window in sorted(set(x & 0xff_00_00 for x in self.memory)):
+            for address in range(window, window + 0x1_00_01):
 
                 # Skip invalid 7-bit addresses
-                if address & 0x808080:
+                if address & 0x80_80_80:
                     continue
 
                 # If an address is skipped, that's the end of the write
@@ -193,11 +193,11 @@ class SysExMemory:
             result.append(self.CMD_DATA_SET)
 
             # Address
-            result.append((address & 0x7f0000) >> 16)
-            result.append((address & 0x7f00) >> 8)
+            result.append((address & 0x7f_00_00) >> 16)
+            result.append((address & 0x7f_00) >> 8)
             result.append(address & 0x7f)
-            sum = (address & 0x7f0000) >> 16
-            sum += (address & 0x7f00) >> 8
+            sum = (address & 0x7f_00_00) >> 16
+            sum += (address & 0x7f_00) >> 8
             sum += address & 0x7f
 
             # Data
@@ -236,7 +236,7 @@ class SysExMemory:
 
             address = int(tokens[0], 16)
 
-            if address & 0xFF808080:
+            if address & 0xFF_80_80_80:
                 eprint('Bad address: ' + hex(address))
                 continue
 
@@ -270,9 +270,9 @@ class SysExMemory:
 
         prev_row_found = False
 
-        for row_offset in sorted(set(x & 0xFFFFF0 for x in self.memory)):
+        for row_offset in sorted(set(x & 0xFF_FF_F0 for x in self.memory)):
             # Skip invalid addresses (7-bit hex)
-            if row_offset & 0x808080:
+            if row_offset & 0x80_80_80:
                 continue
 
             found_data = False
