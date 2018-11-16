@@ -4,6 +4,12 @@
 
 import sys
 
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+
 START_SYSEX = 0xf0
 END_SYSEX = 0xf7
 ROLAND_ID = 0x41
@@ -25,20 +31,20 @@ class MemParser:
         
         tokens = line.split(':')
         if len(tokens) != 2:
-            print('Invalid line: ' + line)
+            eprint('Invalid line: ' + line)
             return
 
         address = int(tokens[0], 16)
 
         if address & 0xFF808080:
-            print('Bad address: ' + hex(address))
+            eprint('Bad address: ' + hex(address))
             return
 
         byte_pairs = tokens[1].split()
 
         for pair in byte_pairs:
             if len(pair) != 4:
-                print('Invalid bytes: ' + pair)
+                eprint('Invalid bytes: ' + pair)
                 return
 
             byte0 = pair[0:2]
@@ -46,13 +52,13 @@ class MemParser:
 
             if byte0 != '..':
                 if address in self.memory:
-                    print('Warning: overwriting ' + hex(self.memory[address]) + ' with ' + byte0 + ' at address ' + hex(address))
+                    eprint('Warning: overwriting ' + hex(self.memory[address]) + ' with ' + byte0 + ' at address ' + hex(address))
                 self.memory[address] = int(byte0, 16)
             address += 1
 
             if byte1 != '..':
                 if address in self.memory:
-                    print('Warning: overwriting ' + hex(self.memory[address]) + ' with ' + byte1 + ' at address ' + hex(address))
+                    eprint('Warning: overwriting ' + hex(self.memory[address]) + ' with ' + byte1 + ' at address ' + hex(address))
                 self.memory[address] = int(byte1, 16)
             address += 1
 
@@ -98,7 +104,7 @@ class MemParser:
         if address & 0x8000:
             address = (address & 0xFF00FF) + 0x10000
         if address & 0xFF808080:
-            print('Bad address: ' + hex(address))
+            eprint('Bad address: ' + hex(address))
         return address
 
 
@@ -173,7 +179,7 @@ class MemParser:
 
 
 if len(sys.argv) < 3:
-    print("The first argument must be a memory file. The second argument must be the output file.")
+    eprint("The first argument must be a memory file. The second argument must be the output file.")
     exit(1)
 
 parser = MemParser()
@@ -188,8 +194,8 @@ with open(sys.argv[1], "r") as f:
             counter += 1
             line = f.readline()
     except RuntimeError as error:
-        print(error)
-        print('At line ' + hex(counter))
+        eprint(error)
+        eprint('At line ' + hex(counter))
 
 with open(sys.argv[2], 'wb') as f:
     parser.dump_commands(f)

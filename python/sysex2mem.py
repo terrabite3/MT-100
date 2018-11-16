@@ -5,6 +5,9 @@
 import sys
 from enum import Enum
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 class State(Enum):
     INIT = 0
     MFG_ID = 1
@@ -63,7 +66,7 @@ class SyxParser:
                 self.state = State.ADDR_MSB
                 return
             else:
-                print('Unknown command: ' + hex(b))
+                eprint('Unknown command: ' + hex(b))
                 self.state = UNRECOGNIZED
                 return
         
@@ -93,7 +96,7 @@ class SyxParser:
                 self.pending_write = None
 
                 if self.sum & 0x7f:
-                    print('Warning: checksum error')
+                    eprint('Warning: checksum error')
 
 
                 return
@@ -103,7 +106,7 @@ class SyxParser:
                     self.pending_write = None
 
                 if self.address in self.memory:
-                    print('Warning: overwriting ' + hex(self.memory[self.address]) + ' with ' + hex(b) + ' at address ' + hex(self.address))
+                    eprint('Warning: overwriting ' + hex(self.memory[self.address]) + ' with ' + hex(b) + ' at address ' + hex(self.address))
                 # self.memory[self.address] = b
 
                 self.pending_write = (self.address, b)
@@ -134,7 +137,7 @@ class SyxParser:
         if address & 0x8000:
             address = (address & 0xFF00FF) + 0x10000
         if address & 0xFF808080:
-            print('Bad address: ' + hex(address))
+            eprint('Bad address: ' + hex(address))
         return address
 
     def dump_memory(self):
@@ -181,7 +184,7 @@ class SyxParser:
 
 
 if len(sys.argv) < 2:
-    print("The first argument must be a .syx file.")
+    eprint("The first argument must be a .syx file.")
     exit(1)
 
 parser = SyxParser()
@@ -197,7 +200,7 @@ with open(sys.argv[1], "rb") as f:
             counter += 1
             byte = f.read(1)
     except RuntimeError as error:
-        print(error)
-        print('At byte ' + hex(counter))
+        eprint(error)
+        eprint('At byte ' + hex(counter))
 
 print(parser.dump_memory())
