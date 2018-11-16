@@ -3,7 +3,7 @@
 # This tool will read in a .syx file and output a memory file with the corresponding writes.
 
 import sys
-from sysex_memory import SysExMemory
+from sysex_memory import *
 
 
 if len(sys.argv) < 2:

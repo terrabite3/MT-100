@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+import sys
 from enum import Enum
 
 def eprint(*args, **kwargs):
@@ -142,7 +143,121 @@ class SysExMemory:
 
         # Store the completed memory in the object
         self.memory = memory
+
+
+    def write_syx(self, out_file):
+        result = bytearray()
+
+
+        # Each write is a 2-tuple (address, [data0, data1, ... dataN])
+        writes = []
+
+        pending_write = None
+
+        for address in range(0, 0x800000):
+
+            # Skip invalid 7-bit addresses
+            if address & 0x808080:
+                continue
+
+            # If an address is skipped, that's the end of the write
+            if address not in self.memory:
+                if pending_write:
+                    writes.append(pending_write)
+                    pending_write = None
+                continue
+
+            if not pending_write:
+                pending_write = (address, [])
+
+            pending_write[1].append(self.memory[address])
+
+            if len(pending_write[1]) == 256:
+                writes.append(pending_write)
+                pending_write = None
+
         
+
+        for write in writes:
+
+            address = write[0]
+            data = write[1]
+
+            # Start with the header
+            result.append(self.START_SYSEX)
+            result.append(self.ROLAND_ID)
+            result.append(self.DEV_ID)
+            result.append(self.MODEL_ID)
+            result.append(self.CMD_DATA_SET)
+
+            # Address
+            result.append((address & 0x7f0000) >> 16)
+            result.append((address & 0x7f00) >> 8)
+            result.append(address & 0x7f)
+            sum = (address & 0x7f0000) >> 16
+            sum += (address & 0x7f00) >> 8
+            sum += address & 0x7f
+
+            # Data
+            for byte in data:
+                result.append(byte)
+                sum += byte
+
+            # Checksum
+            result.append(0x80 - (sum & 0x7f))
+
+            # End SYSEX
+            result.append(self.END_SYSEX)
+
+
+        open(out_file, 'wb').write(result)
+
+
+
+
+    def read_memory(self, filename):
+        memory = {}
+
+        for line in open(filename, 'r').readlines():
+            # Ignore empty lines
+            if len(line.strip()) == 0:
+                continue
+            
+            tokens = line.split(':')
+            if len(tokens) != 2:
+                eprint('Invalid line: ' + line)
+                continue
+
+            address = int(tokens[0], 16)
+
+            if address & 0xFF808080:
+                eprint('Bad address: ' + hex(address))
+                continue
+
+            byte_pairs = tokens[1].split()
+
+            for pair in byte_pairs:
+                if len(pair) != 4:
+                    eprint('Invalid bytes: ' + pair)
+                    continue
+
+                byte0 = pair[0:2]
+                byte1 = pair[2:4]
+
+                if byte0 != '..':
+                    if address in memory:
+                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte0 + ' at address ' + hex(address))
+                    memory[address] = int(byte0, 16)
+                address += 1
+
+                if byte1 != '..':
+                    if address in memory:
+                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte1 + ' at address ' + hex(address))
+                    memory[address] = int(byte1, 16)
+                address += 1
+
+        self.memory = memory
+
 
     def write_memory(self, filename=None):
         result = ''
