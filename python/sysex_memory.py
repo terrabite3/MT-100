@@ -6,6 +6,40 @@ from enum import Enum
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+def seven(address):
+    if address >= native(0x40_00_00):
+        raise RuntimeError('Native address too large: ' + hex(address))
+
+    result = address & 0x7f
+    result += (address << 1) & 0x7f_00
+    result += (address << 2) & 0x7f_00_00
+    return result
+
+def native(address):
+    if type(address) is str:
+        # Remove any leading or trailing whitespace
+        address = address.strip()
+        # Remove a leading '0x'
+        if address[0:2].lower() == '0x':
+            address = address[2:]
+        # Remove any separating underscores
+        address.replace('_', '')
+        return native(int(address, 16))
+
+    elif type(address) is bytearray:
+        if len(address) == 3:
+            result = address[0] << 14
+            result += address[1] << 7
+            result += address[2]
+            return result
+
+    elif type(address) is int:
+        result = address & 0x7f
+        result += (address & 0x7f_00) >> 1
+        result += (address & 0x7f_00_00) >> 2 
+        return result
+
+
 class SysExMemory:
 
     
@@ -33,17 +67,6 @@ class SysExMemory:
     def __init__(self):
         self.memory = {}
 
-    
-    # Increment the address, keeping in mind 7-bit hex format
-    def next_address(self, address):
-        address += 1
-        if address & 0x80:
-            address = (address & 0xFF_FF_00) + 0x1_00
-        if address & 0x80_00:
-            address = (address & 0xFF_00_FF) + 0x1_00_00
-        if address & 0xFF_80_80_80:
-            eprint('Bad address: ' + hex(address))
-        return address
 
 
     def read_syx(self, filename):
@@ -103,13 +126,13 @@ class SysExMemory:
 
             elif state == State.ADDR_MSB:
                 state = State.ADDR_MB
-                address = b * 256 * 256
+                address = b * 128 * 128
                 sum = b
                 continue
 
             elif state == State.ADDR_MB:
                 state = State.ADDR_LSB
-                address += b * 256
+                address += b * 128
                 sum += b
                 continue
 
@@ -136,11 +159,11 @@ class SysExMemory:
                         pending_write = None
 
                     if address in memory:
-                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + hex(b) + ' at address ' + hex(address))
+                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + hex(b) + ' at address ' + hex(seven(address)))
 
                     pending_write = (address, b)
 
-                    address = self.next_address(address)
+                    address += 1
                     sum += b
                     continue
 
@@ -167,29 +190,22 @@ class SysExMemory:
 
         pending_write = None
 
-        # Avoid looping over empty regions
-        for window in sorted(set(x & 0xff_00_00 for x in self.memory)):
-            for address in range(window, window + 0x1_00_01):
-
-                # Skip invalid 7-bit addresses
-                if address & 0x80_80_80:
-                    continue
-
-                # If an address is skipped, that's the end of the write
-                if address not in self.memory:
-                    if pending_write:
-                        writes.append(pending_write)
-                        pending_write = None
-                    continue
-
-                if not pending_write:
-                    pending_write = (address, [])
-
-                pending_write[1].append(self.memory[address])
-
-                if len(pending_write[1]) == 256:
+        for address in range(native(0x20_01_00)):
+            # If an address is skipped, that's the end of the write
+            if address not in self.memory:
+                if pending_write:
                     writes.append(pending_write)
                     pending_write = None
+                continue
+
+            if not pending_write:
+                pending_write = (seven(address), [])
+
+            pending_write[1].append(self.memory[address])
+
+            if len(pending_write[1]) == 256:
+                writes.append(pending_write)
+                pending_write = None
 
 
         
@@ -247,11 +263,7 @@ class SysExMemory:
                 eprint('Invalid line: ' + line)
                 continue
 
-            address = int(tokens[0], 16)
-
-            if address & 0xFF_80_80_80:
-                eprint('Bad address: ' + hex(address))
-                continue
+            address = native(int(tokens[0], 16))
 
             byte_pairs = tokens[1].split()
 
@@ -265,13 +277,13 @@ class SysExMemory:
 
                 if byte0 != '..':
                     if address in memory:
-                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte0 + ' at address ' + hex(address))
+                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte0 + ' at address ' + hex(seven(address)))
                     memory[address] = int(byte0, 16)
                 address += 1
 
                 if byte1 != '..':
                     if address in memory:
-                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte1 + ' at address ' + hex(address))
+                        eprint('Warning: overwriting ' + hex(memory[address]) + ' with ' + byte1 + ' at address ' + hex(seven(address)))
                     memory[address] = int(byte1, 16)
                 address += 1
 
@@ -281,17 +293,13 @@ class SysExMemory:
     def write_memory(self, filename=None):
         result = ''
 
-        for row_offset in sorted(set(x & 0xFF_FF_F0 for x in self.memory)):
+        for row_offset in sorted(set(x & native(0xFF_FF_F0) for x in self.memory)):
             row = ''
 
-            # Skip invalid addresses (7-bit hex)
-            if row_offset & 0x80_80_80:
-                continue
+            if seven(row_offset) in self.address_names:
+                row = self.address_names[seven(row_offset)] + '\n'
 
-            if row_offset in self.address_names:
-                row = self.address_names[row_offset] + '\n'
-
-            row += '%0.6x:' % row_offset
+            row += '%0.6x:' % seven(row_offset)
 
             for addr in range(0x10):
                 if not addr & 1:
