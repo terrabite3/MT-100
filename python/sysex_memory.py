@@ -17,6 +17,19 @@ class SysExMemory:
 
     CMD_DATA_SET = 0x12
 
+
+    address_names = {
+        0x02_00_00: '# Timbre Temp',
+        0x03_00_00: '# Patch Temp',
+        0x03_01_10: '# Rhythm Setup Temp',
+        0x04_00_00: '# Timbre Temp',
+        0x05_00_00: '# Patch Memory',
+        0x08_00_00: '# Timbre Memory',
+        0x10_00_00: '# System Area',
+        0x20_00_00: '# Display',
+    }
+
+
     def __init__(self):
         self.memory = {}
 
@@ -228,7 +241,7 @@ class SysExMemory:
             # Ignore empty lines
             if len(line.strip()) == 0:
                 continue
-            
+
             tokens = line.split(':')
             if len(tokens) != 2:
                 eprint('Invalid line: ' + line)
@@ -268,33 +281,28 @@ class SysExMemory:
     def write_memory(self, filename=None):
         result = ''
 
-        prev_row_found = False
-
         for row_offset in sorted(set(x & 0xFF_FF_F0 for x in self.memory)):
+            row = ''
+
             # Skip invalid addresses (7-bit hex)
             if row_offset & 0x80_80_80:
                 continue
 
-            found_data = False
-            row = '%0.6x:' % row_offset
+            if row_offset in self.address_names:
+                row = self.address_names[row_offset] + '\n'
+
+            row += '%0.6x:' % row_offset
 
             for addr in range(0x10):
                 if not addr & 1:
                     row += ' '
 
                 if row_offset + addr in self.memory:
-                    found_data = True
                     row += '%0.2x' % self.memory[row_offset + addr]
                 else:
                     row += '..'
 
-            if found_data:
-                result += row + '\n'
-            elif prev_row_found:
-                # Insert a single blank line when there is a gap
-                result += '\n'
-
-            prev_row_found = found_data
+            result += row + '\n'
 
         if filename:
             open(filename, 'w').write(result)
