@@ -154,30 +154,32 @@ class SysExMemory:
 
         pending_write = None
 
-        for address in range(0, 0x800000):
+        # Avoid looping over empty regions
+        for window in sorted(set(x & 0xff0000 for x in self.memory)):
+            for address in range(window, window + 0x10001):
 
-            # Skip invalid 7-bit addresses
-            if address & 0x808080:
-                continue
+                # Skip invalid 7-bit addresses
+                if address & 0x808080:
+                    continue
 
-            # If an address is skipped, that's the end of the write
-            if address not in self.memory:
-                if pending_write:
+                # If an address is skipped, that's the end of the write
+                if address not in self.memory:
+                    if pending_write:
+                        writes.append(pending_write)
+                        pending_write = None
+                    continue
+
+                if not pending_write:
+                    pending_write = (address, [])
+
+                pending_write[1].append(self.memory[address])
+
+                if len(pending_write[1]) == 256:
                     writes.append(pending_write)
                     pending_write = None
-                continue
 
-            if not pending_write:
-                pending_write = (address, [])
-
-            pending_write[1].append(self.memory[address])
-
-            if len(pending_write[1]) == 256:
-                writes.append(pending_write)
-                pending_write = None
 
         
-
         for write in writes:
 
             address = write[0]
@@ -264,7 +266,7 @@ class SysExMemory:
 
         prev_row_found = False
 
-        for row_offset in range(0, 0x800000, 0x10):
+        for row_offset in sorted(set(x & 0xFFFFF0 for x in self.memory)):
             # Skip invalid addresses (7-bit hex)
             if row_offset & 0x808080:
                 continue
