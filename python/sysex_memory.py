@@ -221,6 +221,10 @@ class SysExMemory:
         memory = {}
 
         for line in open(filename, 'r').readlines():
+            # Treat anything after a # as a comment
+            if '#' in line:
+                line = line[:line.find('#')]
+
             # Ignore empty lines
             if len(line.strip()) == 0:
                 continue
