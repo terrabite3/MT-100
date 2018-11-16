@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 # This tool will read in a memory file and output a .syx file with the corresponding writes.
 
