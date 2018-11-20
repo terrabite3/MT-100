@@ -18,10 +18,11 @@ try:
     params.load_from_memory(parser.memory)
 
     j = json.dumps(params, cls=MtJsonEncoder)
-
+    print(j)
 
     d = json.loads(j)
     d['display'] = 'Hello'
+    d['system']['master_tune'] = 450
 
     params2 = MtParameters()
     params2.load_json(d)
