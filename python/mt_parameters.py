@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sysex_memory import *
+from json import JSONEncoder
 
 
 class MtParameters:
@@ -43,3 +44,26 @@ class MtParameters:
                 memory[self.DISPLAY + x] = ord(self.display[x])
             else:
                 memory[self.DISPLAY + x] = 0
+
+
+    def __json__(self):
+        result = {}
+        
+        if self.display:
+            result['display'] = self.display
+
+        return result
+
+    def load_json(self, json):
+
+        if 'display' in json:
+            self.display = json['display']
+
+
+
+class MtJsonEncoder(JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, '__json__'):
+            return obj.__json__()
+        return json.JSONEncoder.default(self, obj)
+
