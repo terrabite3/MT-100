@@ -105,11 +105,16 @@ class GroupProperty(Property):
             prop.write_to_memory(memory)
 
     def write_dict(self, parent):
-        if self.name not in parent:
-            parent[self.name] = {}
+        if self.name in parent:
+            my_dict = parent[self.name]
+        else:
+            my_dict = {}
 
         for prop in self.properties():
-            prop.write_dict(parent[self.name])
+            prop.write_dict(my_dict)
+
+        if my_dict:
+            parent[self.name] = my_dict
 
     def load_dict(self, json):
         if self.name in json:
