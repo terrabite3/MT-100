@@ -63,7 +63,29 @@ class StringProperty(Property):
                 else:
                     memory[self.address + x] = 0
 
+class FloatProperty(Property):
+    def __init__(self, name, address, raw_min, raw_max, float_min, float_max):
+        Property.__init__(self, name, address)
+        self.raw_min = raw_min
+        self.raw_max = raw_max
+        self.float_min = float_min
+        self.float_max = float_max
 
+    def load_from_memory(self, memory):
+        if self.address in memory:
+            raw_value = memory[self.address]
+            if raw_value < self.raw_min or raw_value > self.raw_max:
+                raise RuntimeError('Invalid raw value {} while loading {} from memory.'.format(raw_value, self.name))
+            self.value = self.float_min + (self.float_max - self.float_min) * ((raw_value - self.raw_min) / (self.raw_max - self.raw_min))
+            
+    def write_to_memory(self, memory):
+        if self.value != None:
+            raw_value = (self.value - self.float_min) / (self.float_max - self.float_min) * (self.raw_max - self.raw_min) + self.raw_min
+            raw_value = round(raw_value)
+            raw_value = min(raw_value, self.raw_max)
+            raw_value = max(raw_value, self.raw_min)
+            memory[self.address] = raw_value
+        
 
 class MtParameters:
     CHANNEL_TIMBRE_TEMP =   native(0x02_00_00)
@@ -106,7 +128,6 @@ class MtParameters:
         self.system.write_dict(parent['system'])
 
     def load_dict(self, json):
-
         self.display.load_dict(json)
 
         if 'system' in json:
@@ -115,52 +136,26 @@ class MtParameters:
 
 class System:
 
-    MASTER_TUNE = 0x00
-    MASTER_TUNE_MIN = 432.1
-    MASTER_TUNE_MAX = 457.6
-    
-
     def __init__(self, offset):
         self.offset = offset
 
-        self.master_tune = None
-        
-        self.reverb_mode = ChoiceProperty('reverb_mode', 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
-        self.reverb_mode.address += offset
+        self.master_tune = FloatProperty('master_tune', offset + 0x00, 0, 127, 432.1, 457.6)
+        self.reverb_mode = ChoiceProperty('reverb_mode', offset + 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
 
     def load_from_memory(self, memory):
-        if self.offset + self.MASTER_TUNE in memory:
-            raw_value = memory[self.offset + self.MASTER_TUNE]
-            f_min = self.MASTER_TUNE_MIN
-            f_max = self.MASTER_TUNE_MAX
-            self.master_tune = f_min + (f_max - f_min) * (raw_value / 127)
-
+        self.master_tune.load_from_memory(memory)
         self.reverb_mode.load_from_memory(memory)
 
     def write_to_memory(self, memory):
-        if self.master_tune:
-            f_min = self.MASTER_TUNE_MIN
-            f_max = self.MASTER_TUNE_MAX
-            raw_value = round((self.master_tune - f_min) / (f_max - f_min) * 127)
-            # Clamp
-            raw_value = min(raw_value, 127)
-            raw_value = max(raw_value, 0)
-            memory[self.offset + self.MASTER_TUNE] = raw_value
-
+        self.master_tune.write_to_memory(memory)
         self.reverb_mode.write_to_memory(memory)
 
-
     def write_dict(self, parent):
-        
-        if self.master_tune:
-            parent['master_tune'] = self.master_tune
-
+        self.master_tune.write_dict(parent)
         self.reverb_mode.write_dict(parent)
 
     def load_dict(self, json):
-        if 'master_tune' in json:
-            self.master_tune = json['master_tune']
-
+        self.master_tune.load_dict(json)
         self.reverb_mode.load_dict(json)
 
 
