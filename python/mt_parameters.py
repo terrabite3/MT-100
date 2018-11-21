@@ -150,7 +150,19 @@ class GroupProperty(Property):
                 prop.load_dict(json[self.name])
 
 
+class ListProperty(GroupProperty):
+    def __init__(self, name, address, count, stride, child_type):
+        GroupProperty.__init__(self, name, address)
 
+        self.children = {}
+        for index in range(count):
+            name = str(index + 1)
+            addr = self.address + index * stride
+            self.children[name] = child_type(name, addr)
+
+    def properties(self):
+        for key, child in self.children.items():
+            yield child
 
 class MtParameters(GroupProperty):
     CHANNEL_TIMBRE_TEMP =   native(0x02_00_00)
@@ -164,7 +176,7 @@ class MtParameters(GroupProperty):
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
-        self.patch_memory = PatchMemory(self.PATCH_MEMORY)
+        self.patch_memory = ListProperty('patch_memory', self.PATCH_MEMORY, 128, 0x08, Patch)
         self.system = System(self.SYSTEM_AREA)
         self.display = StringProperty('display', self.DISPLAY, 20)
 
@@ -205,16 +217,3 @@ class Patch(GroupProperty):
         self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
         self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
 
-class PatchMemory(GroupProperty):
-    def __init__(self, address):
-        Property.__init__(self, 'patch_memory', address)
-        self.children = {}
-        for index in range(128):
-            name = str(index + 1)
-            addr = self.address + index * 0x08
-            self.children[name] = Patch(name, addr)
-
-    def properties(self):
-        for key, child in self.children.items():
-            yield child
-    
