@@ -2,7 +2,7 @@
 
 from sysex_memory import *
 from json import JSONEncoder
-
+from math import ceil, log10
 
 class Property:
     def __init__(self, name, address):
@@ -77,6 +77,12 @@ class FloatProperty(Property):
             if raw_value < self.raw_min or raw_value > self.raw_max:
                 raise RuntimeError('Invalid raw value {} while loading {} from memory.'.format(raw_value, self.name))
             self.value = self.float_min + (self.float_max - self.float_min) * ((raw_value - self.raw_min) / (self.raw_max - self.raw_min))
+            
+            # Determine the number of digits needed to unambiguously define values
+            delta_v = (self.float_max - self.float_min) / (self.raw_max - self.raw_min + 1)
+            ndigits = ceil(-log10(delta_v))
+
+            self.value = round(self.value, ndigits)
             
     def write_to_memory(self, memory):
         if self.value != None:
