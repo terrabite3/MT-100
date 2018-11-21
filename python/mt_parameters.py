@@ -177,6 +177,7 @@ class MtParameters(GroupProperty):
 
     def __init__(self):
         self.patch_memory = ListProperty('patch_memory', self.PATCH_MEMORY, 128, 0x08, Patch)
+        self.timbre_memory = ListProperty('timbre_memory', self.TIMBRE_MEMORY, 64, native(0x2_00), Timbre)
         self.system = System(self.SYSTEM_AREA)
         self.display = StringProperty('display', self.DISPLAY, 20)
 
@@ -217,3 +218,29 @@ class Patch(GroupProperty):
         self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
         self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
 
+
+class Timbre(GroupProperty):
+    def __init__(self, name, address):
+        GroupProperty.__init__(self, name, address)
+
+        self.common_param = TimbreCommonParam(address + 0x00)
+        # self.partial_param_1 = PartialParameter('partial_parameter_1', address + 0x0E)
+        # self.partial_param_2 = PartialParameter('partial_parameter_2', address + 0x48)
+        # self.partial_param_3 = PartialParameter('partial_parameter_3', address + native(0x1_02))
+        # self.partial_param_4 = PartialParameter('partial_parameter_4', address + native(0x1_3C))
+
+
+class TimbreCommonParam(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'common_parameter', address)
+
+        self.name_param = StringProperty('name', address + 0x00, 10)
+        self.structure_1_2 = IntProperty('structure_partial_1_2', address + 0xA, 12, 1)
+        self.structure_3_4 = IntProperty('structure_partial_3_4', address + 0xB, 12, 1)
+        # TODO: Create bitfield property class
+        self.partial_mute = IntProperty('partial_mute', address + 0xC, 15)
+        self.envelope_mode = ChoiceProperty('envelope_mode', address + 0xD, ['Normal', 'No sustain'])
+
+# class TimbrePartialParam(GroupProperty):
+#     def __init__(self, name, address):
+#         GroupProperty.__init__(self, name, address)

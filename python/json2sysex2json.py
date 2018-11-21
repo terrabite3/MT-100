@@ -43,8 +43,8 @@ with open(sys.argv[1], 'r') as json_file:
 
 
     # Compare the two dictionaries as JSON strings
-    original_json_string = json.dumps(forward_dictionary, sort_keys=True)
-    final_json_string = json.dumps(reverse_dictionary, sort_keys=True)
+    original_json_string = json.dumps(forward_dictionary, sort_keys=True, indent=2)
+    final_json_string = json.dumps(reverse_dictionary, sort_keys=True, indent=2)
 
     if original_json_string == final_json_string:
         print('Success')

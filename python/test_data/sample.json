@@ -11,6 +11,13 @@
             "reverb_switch": "ON"
         }
     },
+    "timbre_memory": {
+        "1": {
+            "common_parameter": {
+                "name": "foobar"
+            }
+        }
+    },
     "system": {
         "master_tune": 440.1,
         "reverb_mode": "Room",

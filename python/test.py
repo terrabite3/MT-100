@@ -19,20 +19,20 @@ try:
 
     json_dict = {}
     params.write_dict(json_dict)
-    j = json.dumps(json_dict)
+    j = json.dumps(json_dict, indent=2)
     print(j)
 
-    d = json.loads(j)
-    d['display'] = 'Hello'
-    d['system']['master_tune'] = 450
+    # d = json.loads(j)
+    # d['display'] = 'Hello'
+    # d['system']['master_tune'] = 450
 
-    params2 = MtParameters()
-    params2.load_dict(d)
+    # params2 = MtParameters()
+    # params2.load_dict(d)
 
-    parser2 = SysExMemory()
-    params2.write_to_memory(parser2.memory)
+    # parser2 = SysExMemory()
+    # params2.write_to_memory(parser2.memory)
 
-    print(parser2.write_memory())
+    # print(parser2.write_memory())
 
 
 except RuntimeError as error:
