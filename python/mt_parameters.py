@@ -87,7 +87,36 @@ class FloatProperty(Property):
             memory[self.address] = raw_value
         
 
-class MtParameters:
+class GroupProperty(Property):
+    def __init__(self, name, address):
+        Property.__init__(self, name, address)
+
+    def properties(self):
+        for key, value in self.__dict__.items():
+            if isinstance(value, Property):
+                yield value
+
+    def load_from_memory(self, memory):
+        for prop in self.properties():
+            prop.load_from_memory(memory)
+
+    def write_to_memory(self, memory):
+        for prop in self.properties():
+            prop.write_to_memory(memory)
+
+    def write_dict(self, parent):
+        if self.name not in parent:
+            parent[self.name] = {}
+
+        for prop in self.properties():
+            prop.write_dict(parent[self.name])
+
+    def load_dict(self, json):
+        if self.name in json:
+            for prop in self.properties():
+                prop.load_dict(json[self.name])
+
+class MtParameters(GroupProperty):
     CHANNEL_TIMBRE_TEMP =   native(0x02_00_00)
     PATCH_TEMP =            native(0x03_00_00)
     RHYTHM_SETUP =          native(0x03_01_10)
@@ -99,63 +128,25 @@ class MtParameters:
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
-        self.patch_temp = {}
-        self.rhythm_setup_temp = {}
-        self.timbre_temp = {}
-        self.patch_memory = []
-        self.timbre_memory = []
         self.system = System(self.SYSTEM_AREA)
         self.display = StringProperty('display', self.DISPLAY, 20)
 
-
-    def load_from_memory(self, memory):
-        self.display.load_from_memory(memory)
-
-        if self.SYSTEM_AREA in memory:
-            self.system.load_from_memory(memory)
-
-
-    def write_to_memory(self, memory):
-        self.display.write_to_memory(memory)
-
-        self.system.write_to_memory(memory)
-
-
     def write_dict(self, parent):
-        self.display.write_dict(parent)
-
-        parent['system'] = {}
-        self.system.write_dict(parent['system'])
+        for prop in self.properties():
+            prop.write_dict(parent)
 
     def load_dict(self, json):
-        self.display.load_dict(json)
-
-        if 'system' in json:
-            self.system.load_dict(json['system'])
+        for prop in self.properties():
+            prop.load_dict(json)
 
 
-class System:
+class System(GroupProperty):
 
-    def __init__(self, offset):
-        self.offset = offset
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'system', address)
 
-        self.master_tune = FloatProperty('master_tune', offset + 0x00, 0, 127, 432.1, 457.6)
-        self.reverb_mode = ChoiceProperty('reverb_mode', offset + 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
+        self.master_tune = FloatProperty('master_tune', address + 0x00, 0, 127, 432.1, 457.6)
+        self.reverb_mode = ChoiceProperty('reverb_mode', address + 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
 
-    def load_from_memory(self, memory):
-        self.master_tune.load_from_memory(memory)
-        self.reverb_mode.load_from_memory(memory)
-
-    def write_to_memory(self, memory):
-        self.master_tune.write_to_memory(memory)
-        self.reverb_mode.write_to_memory(memory)
-
-    def write_dict(self, parent):
-        self.master_tune.write_dict(parent)
-        self.reverb_mode.write_dict(parent)
-
-    def load_dict(self, json):
-        self.master_tune.load_dict(json)
-        self.reverb_mode.load_dict(json)
 
 
