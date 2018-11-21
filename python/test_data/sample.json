@@ -2,6 +2,9 @@
     "display": "Hello, world!",
     "system": {
         "master_tune": 440.1,
-        "reverb_mode": "Room"
+        "reverb_mode": "Room",
+        "reverb_time": 3,
+        "reverb_level": 7,
+        "master_volume": 100
     }
 }

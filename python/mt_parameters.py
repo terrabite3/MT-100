@@ -11,7 +11,7 @@ class Property:
         self.value = None
 
     def write_dict(self, parent):
-        if self.value:
+        if self.value != None:
             parent[self.name] = self.value
 
     def load_dict(self, json):
@@ -62,6 +62,28 @@ class StringProperty(Property):
                     memory[self.address + x] = ord(self.value[x])
                 else:
                     memory[self.address + x] = 0
+
+class IntProperty(Property):
+    # max is in terms of raw value, not offset value
+    # If the property is from 1 to 8 corresponding to raw values 0 to 7, then max=7 and offset=1
+    def __init__(self, name, address, max=127, offset=0):
+        Property.__init__(self, name, address)
+        self.max = max
+        self.offset = offset
+
+    def load_from_memory(self, memory):
+        if self.address in memory:
+            raw_value = memory[self.address]
+            if raw_value > self.max:
+                raise RuntimeError('Value too large {} while loading {} from memory.'.format(raw_value, self.name))
+            self.value = raw_value + self.offset
+
+    def write_to_memory(self, memory):
+        if self.value != None:
+            raw_value = self.value - self.offset
+            if raw_value > self.max:
+                raise RuntimeError('Value too large {} while writing {} to memory.'.format(raw_value, self.name))
+            memory[self.address] = raw_value
 
 class FloatProperty(Property):
     def __init__(self, name, address, raw_min, raw_max, float_min, float_max):
@@ -158,6 +180,13 @@ class System(GroupProperty):
 
         self.master_tune = FloatProperty('master_tune', address + 0x00, 0, 127, 432.1, 457.6)
         self.reverb_mode = ChoiceProperty('reverb_mode', address + 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
+        self.reverb_time = IntProperty('reverb_time', address + 0x02, 7, 1)
+        self.reverb_level = IntProperty('reverb_level', address + 0x03, 7)
+
+        # TODO: Add partial reserves
+        # TODO: Add MIDI channels
+
+        self.master_volume = IntProperty('master_volume', address + 0x16, 100)
 
 
 
