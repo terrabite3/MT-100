@@ -149,18 +149,22 @@ class GroupProperty(Property):
             for prop in self.properties():
                 prop.load_dict(json[self.name])
 
+
+
+
 class MtParameters(GroupProperty):
     CHANNEL_TIMBRE_TEMP =   native(0x02_00_00)
     PATCH_TEMP =            native(0x03_00_00)
     RHYTHM_SETUP =          native(0x03_01_10)
-    TIMBRE_TEMP =           native(0x40_00_00)
-    PATCH_MEMORY =          native(0x50_00_00)
-    TIMBRE_MEMORY =         native(0x80_00_00)
+    TIMBRE_TEMP =           native(0x04_00_00)
+    PATCH_MEMORY =          native(0x05_00_00)
+    TIMBRE_MEMORY =         native(0x08_00_00)
     SYSTEM_AREA =           native(0x10_00_00)
     DISPLAY =               native(0x20_00_00)
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
+        self.patch_memory = PatchMemory(self.PATCH_MEMORY)
         self.system = System(self.SYSTEM_AREA)
         self.display = StringProperty('display', self.DISPLAY, 20)
 
@@ -189,4 +193,22 @@ class System(GroupProperty):
         self.master_volume = IntProperty('master_volume', address + 0x16, 100)
 
 
+class Patch(GroupProperty):
+    def __init__(self, name, address):
+        GroupProperty.__init__(self, name, address)
 
+        self.timbre_group = ChoiceProperty('timbre_group', address + 0x00, ['a', 'b', 'i', 'r'])
+
+class PatchMemory(GroupProperty):
+    def __init__(self, address):
+        Property.__init__(self, 'patch_memory', address)
+        self.children = {}
+        for index in range(128):
+            name = str(index + 1)
+            addr = self.address + index * 0x08
+            self.children[name] = Patch(name, addr)
+
+    def properties(self):
+        for key, child in self.children.items():
+            yield child
+    

@@ -1,5 +1,10 @@
 {
     "display": "Hello, world!",
+    "patch_memory": {
+        "1": {
+            "timbre_group": "a"
+        }
+    },
     "system": {
         "master_tune": 440.1,
         "reverb_mode": "Room",
