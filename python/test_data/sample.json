@@ -2,7 +2,13 @@
     "display": "Hello, world!",
     "patch_memory": {
         "1": {
-            "timbre_group": "a"
+            "timbre_group": "a",
+            "timbre_number": 3,
+            "key_shift": 0,
+            "fine_tune": 0,
+            "bender_range": 2,
+            "assign_mode": "POLY 2",
+            "reverb_switch": "ON"
         }
     },
     "system": {

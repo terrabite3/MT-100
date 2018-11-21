@@ -198,6 +198,12 @@ class Patch(GroupProperty):
         GroupProperty.__init__(self, name, address)
 
         self.timbre_group = ChoiceProperty('timbre_group', address + 0x00, ['a', 'b', 'i', 'r'])
+        self.timbre_number = IntProperty('timbre_number', address + 0x01, 63)
+        self.key_shift = IntProperty('key_shift', address + 0x02, 48, -24)
+        self.fine_tune = IntProperty('fine_tune', address + 0x03, 100, -50)
+        self.bender_range = IntProperty('bender_range', address + 0x04, 24)
+        self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
+        self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
 
 class PatchMemory(GroupProperty):
     def __init__(self, address):
