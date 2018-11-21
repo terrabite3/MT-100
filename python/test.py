@@ -17,7 +17,9 @@ try:
     params = MtParameters()
     params.load_from_memory(parser.memory)
 
-    j = json.dumps(params, cls=MtJsonEncoder)
+    json_dict = {}
+    params.write_dict(json_dict)
+    j = json.dumps(json_dict)
     print(j)
 
     d = json.loads(j)
@@ -25,7 +27,7 @@ try:
     d['system']['master_tune'] = 450
 
     params2 = MtParameters()
-    params2.load_json(d)
+    params2.load_dict(d)
 
     parser2 = SysExMemory()
     params2.write_to_memory(parser2.memory)

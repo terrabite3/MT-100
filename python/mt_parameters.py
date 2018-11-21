@@ -10,11 +10,11 @@ class Property:
         self.address = address
         self.value = None
 
-    def __json__(self, parent):
+    def write_dict(self, parent):
         if self.value:
             parent[self.name] = self.value
 
-    def load_json(self, json):
+    def load_dict(self, json):
         if self.name in json:
             self.value = json[self.name]
 
@@ -22,10 +22,8 @@ class ChoiceProperty(Property):
     def __init__(self, name, address, choices):
         Property.__init__(self, name, address)
         self.choices = choices
-        print(hex(seven(self.address)))
 
     def load_from_memory(self, memory):
-        print(hex(seven(self.address)))
         if self.address in memory:
             raw_value = memory[self.address]
             if raw_value >= len(self.choices) or raw_value < 0:
@@ -36,11 +34,34 @@ class ChoiceProperty(Property):
         if self.value:
             try:
                 index = self.choices.index(self.value)
-                print(hex(seven(self.address)))
-                print(index)
                 memory[self.address] = index
             except ValueError as e:
                 raise RuntimeError('Invalid choice {} while writing {} to memory.'.format(self.value, self.name))
+
+class StringProperty(Property):
+    def __init__(self, name, address, length):
+        Property.__init__(self, name, address)
+        self.length = length
+
+    def load_from_memory(self, memory):
+        if self.address in memory:
+            value = ''
+            for x in range(self.address, self.address + self.length):
+                if x in memory:
+                    if memory[x] == 0:
+                        break
+                    value += chr(memory[x])
+                else:
+                    break
+            self.value = value
+
+    def write_to_memory(self, memory):
+        if self.value != None:
+            for x in range(self.length):
+                if len(self.value) > x:
+                    memory[self.address + x] = ord(self.value[x])
+                else:
+                    memory[self.address + x] = 0
 
 
 
@@ -62,52 +83,34 @@ class MtParameters:
         self.patch_memory = []
         self.timbre_memory = []
         self.system = System(self.SYSTEM_AREA)
-        self.display = None
+        self.display = StringProperty('display', self.DISPLAY, 20)
 
 
     def load_from_memory(self, memory):
-        if self.DISPLAY in memory:
-            name = ''
-            for x in range(self.DISPLAY, self.DISPLAY + 20):
-                if x in memory:
-                    if memory[x] == 0:
-                        break
-                    name += chr(memory[x])
-                else:
-                    break
-            self.display = name
+        self.display.load_from_memory(memory)
 
         if self.SYSTEM_AREA in memory:
             self.system.load_from_memory(memory)
 
 
     def write_to_memory(self, memory):
-        for x in range(20):
-            if len(self.display) > x:
-                memory[self.DISPLAY + x] = ord(self.display[x])
-            else:
-                memory[self.DISPLAY + x] = 0
+        self.display.write_to_memory(memory)
 
         self.system.write_to_memory(memory)
 
 
-    def __json__(self):
-        result = {}
-        
-        if self.display:
-            result['display'] = self.display
+    def write_dict(self, parent):
+        self.display.write_dict(parent)
 
-        result['system'] = self.system.__json__()
+        parent['system'] = {}
+        self.system.write_dict(parent['system'])
 
-        return result
+    def load_dict(self, json):
 
-    def load_json(self, json):
-
-        if 'display' in json:
-            self.display = json['display']
+        self.display.load_dict(json)
 
         if 'system' in json:
-            self.system.load_json(json['system'])
+            self.system.load_dict(json['system'])
 
 
 class System:
@@ -147,27 +150,17 @@ class System:
         self.reverb_mode.write_to_memory(memory)
 
 
-    def __json__(self):
-        result = {}
+    def write_dict(self, parent):
         
         if self.master_tune:
-            result['master_tune'] = self.master_tune
+            parent['master_tune'] = self.master_tune
 
-        self.reverb_mode.__json__(result)
+        self.reverb_mode.write_dict(parent)
 
-        return result
-
-    def load_json(self, json):
+    def load_dict(self, json):
         if 'master_tune' in json:
             self.master_tune = json['master_tune']
 
-        self.reverb_mode.load_json(json)
+        self.reverb_mode.load_dict(json)
 
-
-
-class MtJsonEncoder(JSONEncoder):
-    def default(self, obj):
-        if hasattr(obj, '__json__'):
-            return obj.__json__()
-        return json.JSONEncoder.default(self, obj)
 
