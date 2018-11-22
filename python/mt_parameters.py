@@ -123,6 +123,26 @@ class FloatProperty(Property):
         return raw_value
 
         
+
+class BitfieldProperty(Property):
+    def __init__(self, name, address, bits):
+        Property.__init__(self, name, address)
+        self.bits = bits
+
+    def load_raw_value(self, raw_value):
+        if raw_value >= 1 << self.bits:
+            raise RuntimeError('Invalid valid {} while reading {}.'.format(self.value, self.name))
+        self.value = ('{0:0' + str(self.bits) + 'b}').format(raw_value)
+
+    def get_raw_value(self):
+        if self.value == None:
+            return None
+        if len(self.value) != self.bits:
+            raise RuntimeError('Invalid value {} while writing {}'.format(self.value, self.name))
+
+        return int(self.value, base=2)
+
+
 class GroupProperty(Property):
     def __init__(self, name, address):
         Property.__init__(self, name, address)
@@ -245,8 +265,7 @@ class TimbreCommonParam(GroupProperty):
         self.name_param = StringProperty('name', address + 0x00, 10)
         self.structure_1_2 = IntProperty('structure_partial_1_2', address + 0xA, 12, 1)
         self.structure_3_4 = IntProperty('structure_partial_3_4', address + 0xB, 12, 1)
-        # TODO: Create bitfield property class
-        self.partial_mute = IntProperty('partial_mute', address + 0xC, 15)
+        self.partial_mute = BitfieldProperty('partial_mute', address + 0xC, 4)
         self.envelope_mode = ChoiceProperty('envelope_mode', address + 0xD, ['Normal', 'No sustain'])
 
 # class TimbrePartialParam(GroupProperty):

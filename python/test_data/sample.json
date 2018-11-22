@@ -14,7 +14,8 @@
     "timbre_memory": {
         "1": {
             "common_parameter": {
-                "name": "foobar"
+                "name": "foobar",
+                "partial_mute": "0011"
             }
         }
     },
