@@ -18,25 +18,34 @@ class Property:
         if self.name in json:
             self.value = json[self.name]
 
+    def load_from_memory(self, memory):
+        if self.address in memory:
+            raw_value = memory[self.address]
+            self.load_raw_value(raw_value)
+
+    def write_to_memory(self, memory):
+        raw_value = self.get_raw_value()
+        if raw_value != None:
+            memory[self.address] = raw_value
+
 class ChoiceProperty(Property):
     def __init__(self, name, address, choices):
         Property.__init__(self, name, address)
         self.choices = choices
 
-    def load_from_memory(self, memory):
-        if self.address in memory:
-            raw_value = memory[self.address]
-            if raw_value >= len(self.choices) or raw_value < 0:
-                raise RuntimeError('Invalid index {} while loading {} from memory.'.format(raw_value, self.name))
-            self.value = self.choices[raw_value]
+    def load_raw_value(self, raw_value):
+        if raw_value >= len(self.choices) or raw_value < 0:
+            raise RuntimeError('Invalid index {} while loading {} from memory.'.format(raw_value, self.name))
+        self.value = self.choices[raw_value]
+        
+    def get_raw_value(self):
+        if self.value == None:
+            return None
+        try:
+            return self.choices.index(self.value)
+        except ValueError as e:
+            raise RuntimeError('Invalid choice {} while writing {} to memory.'.format(self.value, self.name))
 
-    def write_to_memory(self, memory):
-        if self.value:
-            try:
-                index = self.choices.index(self.value)
-                memory[self.address] = index
-            except ValueError as e:
-                raise RuntimeError('Invalid choice {} while writing {} to memory.'.format(self.value, self.name))
 
 class StringProperty(Property):
     def __init__(self, name, address, length):
@@ -71,19 +80,19 @@ class IntProperty(Property):
         self.max = max
         self.offset = offset
 
-    def load_from_memory(self, memory):
-        if self.address in memory:
-            raw_value = memory[self.address]
-            if raw_value > self.max:
-                raise RuntimeError('Value too large {} while loading {} from memory.'.format(raw_value, self.name))
-            self.value = raw_value + self.offset
+    def load_raw_value(self, raw_value):
+        if raw_value > self.max:
+            raise RuntimeError('Value too large {} while loading {} from memory.'.format(raw_value, self.name))
+        self.value = raw_value + self.offset
 
-    def write_to_memory(self, memory):
-        if self.value != None:
-            raw_value = self.value - self.offset
-            if raw_value > self.max:
-                raise RuntimeError('Value too large {} while writing {} to memory.'.format(raw_value, self.name))
-            memory[self.address] = raw_value
+    def get_raw_value(self):
+        if self.value == None:
+            return None
+        raw_value = self.value - self.offset
+        if raw_value > self.max:
+            raise RuntimeError('Value too large {} while writing {} to memory.'.format(raw_value, self.name))
+        return raw_value
+
 
 class FloatProperty(Property):
     def __init__(self, name, address, raw_min, raw_max, float_min, float_max):
@@ -93,28 +102,27 @@ class FloatProperty(Property):
         self.float_min = float_min
         self.float_max = float_max
 
-    def load_from_memory(self, memory):
-        if self.address in memory:
-            raw_value = memory[self.address]
-            if raw_value < self.raw_min or raw_value > self.raw_max:
-                raise RuntimeError('Invalid raw value {} while loading {} from memory.'.format(raw_value, self.name))
-            self.value = self.float_min + (self.float_max - self.float_min) * ((raw_value - self.raw_min) / (self.raw_max - self.raw_min))
-            
-            # Determine the number of digits needed to unambiguously define values
-            delta_v = (self.float_max - self.float_min) / (self.raw_max - self.raw_min + 1)
-            ndigits = ceil(-log10(delta_v))
-
-            self.value = round(self.value, ndigits)
-            
-    def write_to_memory(self, memory):
-        if self.value != None:
-            raw_value = (self.value - self.float_min) / (self.float_max - self.float_min) * (self.raw_max - self.raw_min) + self.raw_min
-            raw_value = round(raw_value)
-            raw_value = min(raw_value, self.raw_max)
-            raw_value = max(raw_value, self.raw_min)
-            memory[self.address] = raw_value
+    def load_raw_value(self, raw_value):
+        if raw_value < self.raw_min or raw_value > self.raw_max:
+            raise RuntimeError('Invalid raw value {} while loading {} from memory.'.format(raw_value, self.name))
+        self.value = self.float_min + (self.float_max - self.float_min) * ((raw_value - self.raw_min) / (self.raw_max - self.raw_min))
         
+        # Determine the number of digits needed to unambiguously define values
+        delta_v = (self.float_max - self.float_min) / (self.raw_max - self.raw_min + 1)
+        ndigits = ceil(-log10(delta_v))
 
+        self.value = round(self.value, ndigits)
+
+    def get_raw_value(self):
+        if self.value == None:
+            return None
+        raw_value = (self.value - self.float_min) / (self.float_max - self.float_min) * (self.raw_max - self.raw_min) + self.raw_min
+        raw_value = round(raw_value)
+        raw_value = min(raw_value, self.raw_max)
+        raw_value = max(raw_value, self.raw_min)
+        return raw_value
+
+        
 class GroupProperty(Property):
     def __init__(self, name, address):
         Property.__init__(self, name, address)
