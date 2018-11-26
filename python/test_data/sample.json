@@ -14,8 +14,15 @@
     "timbre_memory": {
         "1": {
             "common_parameter": {
-                "name": "foobar",
-                "partial_mute": "0011"
+                "name": "ABCDEFGHIJ",
+                "structure_1_2": 1,
+                "structure_3_4": 4,
+                "partial_mute": "0011",
+                "envelope_mode": "Normal"
+            },
+            "partial_parameter_1": {
+                "pitch_coarse": "C5",
+                "pitch_fine": 0
             }
         }
     },

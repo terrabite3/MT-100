@@ -122,7 +122,6 @@ class FloatProperty(Property):
         raw_value = max(raw_value, self.raw_min)
         return raw_value
 
-        
 
 class BitfieldProperty(Property):
     def __init__(self, name, address, bits):
@@ -141,6 +140,20 @@ class BitfieldProperty(Property):
             raise RuntimeError('Invalid value {} while writing {}'.format(self.value, self.name))
 
         return int(self.value, base=2)
+
+
+class NoteProperty(ChoiceProperty):
+    def __init__(self, name, address):
+        notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+
+        pitches = []
+        for octave in range(1, 9):
+            for note in notes:
+                pitches.append(note + str(octave))
+        pitches.append('C9')
+
+        ChoiceProperty.__init__(self, name, address, pitches)
+
 
 
 class GroupProperty(Property):
@@ -252,10 +265,10 @@ class Timbre(GroupProperty):
         GroupProperty.__init__(self, name, address)
 
         self.common_param = TimbreCommonParam(address + 0x00)
-        # self.partial_param_1 = PartialParameter('partial_parameter_1', address + 0x0E)
-        # self.partial_param_2 = PartialParameter('partial_parameter_2', address + 0x48)
-        # self.partial_param_3 = PartialParameter('partial_parameter_3', address + native(0x1_02))
-        # self.partial_param_4 = PartialParameter('partial_parameter_4', address + native(0x1_3C))
+        self.partial_param_1 = PartialParam('partial_parameter_1', address + 0x0E)
+        self.partial_param_2 = PartialParam('partial_parameter_2', address + 0x48)
+        self.partial_param_3 = PartialParam('partial_parameter_3', address + native(0x1_02))
+        self.partial_param_4 = PartialParam('partial_parameter_4', address + native(0x1_3C))
 
 
 class TimbreCommonParam(GroupProperty):
@@ -263,11 +276,56 @@ class TimbreCommonParam(GroupProperty):
         GroupProperty.__init__(self, 'common_parameter', address)
 
         self.name_param = StringProperty('name', address + 0x00, 10)
-        self.structure_1_2 = IntProperty('structure_partial_1_2', address + 0xA, 12, 1)
-        self.structure_3_4 = IntProperty('structure_partial_3_4', address + 0xB, 12, 1)
+        self.structure_1_2 = IntProperty('structure_1_2', address + 0xA, 12, 1)
+        self.structure_3_4 = IntProperty('structure_3_4', address + 0xB, 12, 1)
         self.partial_mute = BitfieldProperty('partial_mute', address + 0xC, 4)
         self.envelope_mode = ChoiceProperty('envelope_mode', address + 0xD, ['Normal', 'No sustain'])
 
-# class TimbrePartialParam(GroupProperty):
-#     def __init__(self, name, address):
-#         GroupProperty.__init__(self, name, address)
+class PartialParam(GroupProperty):
+    def __init__(self, name, address):
+        GroupProperty.__init__(self, name, address)
+
+        self.wave_generator = WaveGenerator(address + 0x00)
+        self.pitch = PartialPitch(address + 0x08)
+        self.tvf = TVF(address + 0x17)
+        self.tva = TVA(address + 0x29)
+
+
+class WaveGenerator(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'wave_generator', address)
+
+        self.pitch_coarse = NoteProperty('pitch_coarse', address + 0x00)
+
+
+class PartialPitch(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'pitch', address)
+
+class PitchEnvelope(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'envenlope', address)
+
+        
+class PitchLFO(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'lfo', address)
+
+
+class TVF(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'time_variant_filter', address)
+
+        
+class TVFEnvelope(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'envelope', address)
+
+        
+class TVA(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'time_variant_amplifier', address)
+        
+class TVAEnvelope(GroupProperty):
+    def __init__(self, address):
+        GroupProperty.__init__(self, 'envenlope', address)
