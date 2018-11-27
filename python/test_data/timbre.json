@@ -1,0 +1,130 @@
+{
+    "timbre_memory": {
+        "1": {
+            "common_parameter": {
+                "name": "ABCDEFGHIJ",
+                "structure_1_2": 1,
+                "structure_3_4": 4,
+                "partial_mute": "0011",
+                "envelope_mode": "Normal"
+            },
+            "partial_parameter_1": {
+                "wave_generator": {
+                    "pitch_coarse": "C5",
+                    "pitch_fine": 0,
+                    "pitch_keyfollow": "1",
+                    "pitch_bender_sw": "ON",
+                    "waveform": "SQU",
+                    "pcm_wave_number": 1,
+                    "pulse_width": 0,
+                    "pulse_width_velo_sens": 0
+                },
+                "pitch": {
+                    "envelope": {
+                        "depth": 0,
+                        "velo_sens": 0,
+                        "time_keyfollow": 0,
+                        "time_1": 20,
+                        "time_2": 20,
+                        "time_3": 20,
+                        "time_4": 20,
+                        "level_0": 25,
+                        "level_1": 0,
+                        "level_2": -25,
+                        "level_sustain": 0,
+                        "level_end": 0
+                    },
+                    "lfo": {
+                        "rate": 10,
+                        "depth": 20,
+                        "mod_sens": 100
+                    }
+                }
+            }
+        },
+        "2": {
+            "common_parameter": {
+                "name": "minimums",
+                "structure_1_2": 1,
+                "structure_3_4": 1,
+                "partial_mute": "0000",
+                "envelope_mode": "Normal"
+            },
+            "partial_parameter_1": {
+                "wave_generator": {
+                    "pitch_coarse": "C1",
+                    "pitch_fine": -50,
+                    "pitch_keyfollow": "-1",
+                    "pitch_bender_sw": "OFF",
+                    "waveform": "SQU",
+                    "pcm_wave_number": 1,
+                    "pulse_width": 0,
+                    "pulse_width_velo_sens": -7
+                },
+                "pitch": {
+                    "envelope": {
+                        "depth": 0,
+                        "velo_sens": 0,
+                        "time_keyfollow": 0,
+                        "time_1": 0,
+                        "time_2": 0,
+                        "time_3": 0,
+                        "time_4": 0,
+                        "level_0": -50,
+                        "level_1": -50,
+                        "level_2": -50,
+                        "level_sustain": -50,
+                        "level_end": -50
+                    },
+                    "lfo": {
+                        "rate": 0,
+                        "depth": 0,
+                        "mod_sens": 0
+                    }
+                }
+            }
+        },
+        "3": {
+            "common_parameter": {
+                "name": "maximums",
+                "structure_1_2": 13,
+                "structure_3_4": 13,
+                "partial_mute": "1111",
+                "envelope_mode": "No sustain"
+            },
+            "partial_parameter_1": {
+                "wave_generator": {
+                    "pitch_coarse": "C9",
+                    "pitch_fine": 50,
+                    "pitch_keyfollow": "s2",
+                    "pitch_bender_sw": "ON",
+                    "waveform": "SAW",
+                    "pcm_wave_number": 127,
+                    "pulse_width": 100,
+                    "pulse_width_velo_sens": 7
+                },
+                "pitch": {
+                    "envelope": {
+                        "depth": 10,
+                        "velo_sens": 100,
+                        "time_keyfollow": 4,
+                        "time_1": 100,
+                        "time_2": 100,
+                        "time_3": 100,
+                        "time_4": 100,
+                        "level_0": 50,
+                        "level_1": 50,
+                        "level_2": 50,
+                        "level_sustain": 50,
+                        "level_end": 50
+                    },
+                    "lfo": {
+                        "rate": 100,
+                        "depth": 100,
+                        "mod_sens": 100
+                    }
+                }
+            }
+        }
+    }
+}
