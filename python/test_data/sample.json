@@ -21,8 +21,9 @@
                 "envelope_mode": "Normal"
             },
             "partial_parameter_1": {
-                "pitch_coarse": "C5",
-                "pitch_fine": 0
+                "wave_generator": {
+                    "pitch_coarse": "C5"
+                }
             }
         }
     },
