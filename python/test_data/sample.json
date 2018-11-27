@@ -22,7 +22,14 @@
             },
             "partial_parameter_1": {
                 "wave_generator": {
-                    "pitch_coarse": "C5"
+                    "pitch_coarse": "C5",
+                    "pitch_fine": 0,
+                    "pitch_keyfollow": "1",
+                    "pitch_bender_sw": "ON",
+                    "waveform": "SQU",
+                    "pcm_wave_number": 1,
+                    "pulse_width": 0,
+                    "pulse_width_velo_sens": 0
                 }
             }
         }

@@ -296,6 +296,13 @@ class WaveGenerator(GroupProperty):
         GroupProperty.__init__(self, 'wave_generator', address)
 
         self.pitch_coarse = NoteProperty('pitch_coarse', address + 0x00)
+        self.pitch_fine = IntProperty('pitch_fine', address + 0x01, 100, -50)
+        self.pitch_keyfollow = ChoiceProperty('pitch_keyfollow', address + 0x02, ['-1', '-1/2', '-1/4', '0', '1/8', '1/4', '3/8', '1/2', '5/8', '3/4', '7/8', '1', '5/4', '3/2', '2', 's1', 's2'])
+        self.pitch_bender_sw = ChoiceProperty('pitch_bender_sw', address + 0x03, ['OFF', 'ON'])
+        self.waveform = ChoiceProperty('waveform', address + 0x04, ['SQU', 'SAW'])
+        self.pcm_wave_number = IntProperty('pcm_wave_number', address + 0x05, 127, 1)
+        self.pulse_width = IntProperty('pulse_width', address + 0x06, 100)
+        self.pulse_width_velo_sens = IntProperty('pulse_width_velo_sens', address + 0x07, 14, -7)
 
 
 class PartialPitch(GroupProperty):
@@ -304,7 +311,7 @@ class PartialPitch(GroupProperty):
 
 class PitchEnvelope(GroupProperty):
     def __init__(self, address):
-        GroupProperty.__init__(self, 'envenlope', address)
+        GroupProperty.__init__(self, 'envelope', address)
 
         
 class PitchLFO(GroupProperty):
