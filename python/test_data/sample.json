@@ -30,6 +30,27 @@
                     "pcm_wave_number": 1,
                     "pulse_width": 0,
                     "pulse_width_velo_sens": 0
+                },
+                "pitch": {
+                    "envelope": {
+                        "depth": 0,
+                        "velo_sens": 0,
+                        "time_keyfollow": 0,
+                        "time_1": 20,
+                        "time_2": 20,
+                        "time_3": 20,
+                        "time_4": 20,
+                        "level_0": 25,
+                        "level_1": 0,
+                        "level_2": -25,
+                        "level_sustain": 0,
+                        "level_end": 0
+                    },
+                    "lfo": {
+                        "rate": 10,
+                        "depth": 20,
+                        "mod_sens": 100
+                    }
                 }
             }
         }

@@ -309,14 +309,33 @@ class PartialPitch(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'pitch', address)
 
+        self.envelope = PitchEnvelope(self.address + 0x0)
+        self.lfo = PitchLFO(self.address + 0xC)
+
 class PitchEnvelope(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'envelope', address)
 
+        self.depth = IntProperty('depth', address + 0x0, 10)
+        self.velo_sens = IntProperty('velo_sens', address + 0x1, 100)
+        self.time_keyfollow = IntProperty('time_keyfollow', address + 0x2, 4)
+        self.time_1 = IntProperty('time_1', address + 0x3, 100)
+        self.time_2 = IntProperty('time_2', address + 0x4, 100)
+        self.time_3 = IntProperty('time_3', address + 0x5, 100)
+        self.time_4 = IntProperty('time_4', address + 0x6, 100)
+        self.level_0 = IntProperty('level_0', address + 0x7, 100, -50)
+        self.level_1 = IntProperty('level_1', address + 0x8, 100, -50)
+        self.level_2 = IntProperty('level_2', address + 0x9, 100, -50)
+        self.level_sustain = IntProperty('level_sustain', address + 0xA, 100, -50)
+        self.level_end = IntProperty('level_end', address + 0xB, 100, -50)
         
 class PitchLFO(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'lfo', address)
+
+        self.rate = IntProperty('rate', address + 0x0, 100)
+        self.depth = IntProperty('depth', address + 0x1, 100)
+        self.mod_sens = IntProperty('mod_sens', address + 0x2, 100)
 
 
 class TVF(GroupProperty):
