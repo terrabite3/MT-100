@@ -242,6 +242,7 @@ class MtParameters(GroupProperty):
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
+        self.timbre_temp = ListProperty('timbre_temp', self.TIMBRE_TEMP, 8, native(0x2_00), Timbre)
         self.patch_memory = ListProperty('patch_memory', self.PATCH_MEMORY, 128, 0x08, Patch)
         self.timbre_memory = ListProperty('timbre_memory', self.TIMBRE_MEMORY, 64, native(0x2_00), Timbre)
         self.system = System(self.SYSTEM_AREA)

@@ -1,5 +1,92 @@
 {
     "display": "Hello, world!",
+    "timbre_temp": {
+        "1": {
+            "common_parameter": {
+                "name": "ABCDEFGHIJ",
+                "structure_1_2": 1,
+                "structure_3_4": 4,
+                "partial_mute": "0011",
+                "envelope_mode": "Normal"
+            },
+            "partial_parameter_1": {
+                "wave_generator": {
+                    "pitch_coarse": "C5",
+                    "pitch_fine": 0,
+                    "pitch_keyfollow": "1",
+                    "pitch_bender_sw": "ON",
+                    "waveform": "SQU",
+                    "pcm_wave_number": 1,
+                    "pulse_width": 0,
+                    "pulse_width_velo_sens": 0
+                },
+                "pitch": {
+                    "envelope": {
+                        "depth": 0,
+                        "velo_sens": 0,
+                        "time_keyfollow": 0,
+                        "time_1": 20,
+                        "time_2": 20,
+                        "time_3": 20,
+                        "time_4": 20,
+                        "level_0": 25,
+                        "level_1": 0,
+                        "level_2": -25,
+                        "level_sustain": 0,
+                        "level_end": 0
+                    },
+                    "lfo": {
+                        "rate": 10,
+                        "depth": 20,
+                        "mod_sens": 100
+                    }
+                },
+                "time_variant_filter": {
+                    "cutoff_freq": 0,
+                    "resonance": 0,
+                    "keyfollow": "1",
+                    "bias_point_dir": "<C5",
+                    "bias_level": 0,
+                    "envelope": {
+                        "depth": 50,
+                        "velo_sens": 50,
+                        "depth_keyfollow": 0,
+                        "time_keyfollow": 0,
+                        "time_1": 0,
+                        "time_2": 0,
+                        "time_3": 0,
+                        "time_4": 0,
+                        "time_5": 0,
+                        "level_1": 0,
+                        "level_2": 0,
+                        "level_3": 0,
+                        "level_sustain": 0
+                    }
+                },
+                "time_variant_amplifier": {
+                    "level": 0,
+                    "velo_sens": 0,
+                    "bias_point_1": "<C4",
+                    "bias_level_1": -12,
+                    "bias_point_2": ">C4",
+                    "bias_level_2": -12,
+                    "envelope": {
+                        "time_keyfollow": 0,
+                        "time_v_follow": 0,
+                        "time_1": 0,
+                        "time_2": 0,
+                        "time_3": 0,
+                        "time_4": 0,
+                        "time_5": 0,
+                        "level_1": 0,
+                        "level_2": 0,
+                        "level_3": 0,
+                        "level_sustain": 0
+                    }
+                }
+            }
+        }
+    },
     "patch_memory": {
         "1": {
             "timbre_group": "a",
