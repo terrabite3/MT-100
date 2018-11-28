@@ -396,7 +396,27 @@ class TVFEnvelope(GroupProperty):
 class TVA(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'time_variant_amplifier', address)
+
+        self.level = IntProperty('level', address + 0x0, 100)
+        self.velo_sens = IntProperty('velo_sens', address + 0x1, 100, -50)
+        self.bias_point_1 = BiasPointDirProperty('bias_point_1', address + 0x2)
+        self.bias_level_1 = IntProperty('bias_level_1', address + 0x3, 12, -12)
+        self.bias_point_2 = BiasPointDirProperty('bias_point_2', address + 0x4)
+        self.bias_level_2 = IntProperty('bias_level_2', address + 0x5, 12, -12)
+        self.envelope = TVAEnvelope(address + 0x6)
         
 class TVAEnvelope(GroupProperty):
     def __init__(self, address):
-        GroupProperty.__init__(self, 'envenlope', address)
+        GroupProperty.__init__(self, 'envelope', address)
+
+        self.time_keyfollow = IntProperty('time_keyfollow', address + 0x0, 4)
+        self.time_v_follow = IntProperty('time_v_follow', address + 0x1, 4)
+        self.time_1 = IntProperty('time_1', address + 0x2, 100)
+        self.time_2 = IntProperty('time_2', address + 0x3, 100)
+        self.time_3 = IntProperty('time_3', address + 0x4, 100)
+        self.time_4 = IntProperty('time_4', address + 0x5, 100)
+        self.time_5 = IntProperty('time_5', address + 0x6, 100)
+        self.level_1 = IntProperty('level_1', address + 0x7, 100)
+        self.level_2 = IntProperty('level_2', address + 0x8, 100)
+        self.level_3 = IntProperty('level_3', address + 0x9, 100)
+        self.level_sustain = IntProperty('level_sustain', address + 0xA, 100)

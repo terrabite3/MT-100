@@ -73,6 +73,27 @@
                         "level_3": 0,
                         "level_sustain": 0
                     }
+                },
+                "time_variant_amplifier": {
+                    "level": 0,
+                    "velo_sens": 0,
+                    "bias_point_1": "<C4",
+                    "bias_level_1": -12,
+                    "bias_point_2": ">C4",
+                    "bias_level_2": -12,
+                    "envelope": {
+                        "time_keyfollow": 0,
+                        "time_v_follow": 0,
+                        "time_1": 0,
+                        "time_2": 0,
+                        "time_3": 0,
+                        "time_4": 0,
+                        "time_5": 0,
+                        "level_1": 0,
+                        "level_2": 0,
+                        "level_3": 0,
+                        "level_sustain": 0
+                    }
                 }
             }
         }
