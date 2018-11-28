@@ -155,6 +155,31 @@ class NoteProperty(ChoiceProperty):
         ChoiceProperty.__init__(self, name, address, pitches)
 
 
+class BiasPointDirProperty(ChoiceProperty):
+    def __init__(self, name, address):
+        notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+
+        pitches = []
+        pitches.append('A1')
+        pitches.append('A#1')
+        pitches.append('B1')
+        for octave in range(2, 7):
+            for note in notes:
+                pitches.append(note + str(octave))
+        pitches.append('C7')
+
+        biases = []
+        for pitch in pitches:
+            biases.append('<' + pitch)
+        for pitch in pitches:
+            biases.append('>' + pitch)
+
+        if len(biases) != 128:
+            raise RuntimeError('Bug in bias code: ' + str(biases))
+
+        ChoiceProperty.__init__(self, name, address, biases)
+
+
 
 class GroupProperty(Property):
     def __init__(self, name, address):
@@ -342,6 +367,11 @@ class TVF(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'time_variant_filter', address)
 
+        self.cutoff_freq = IntProperty('cutoff_freq', address + 0x0, 100)
+        self.resonance = IntProperty('resonance', address + 0x1, 30)
+        self.keyfollow = ChoiceProperty('keyfollow', address + 0x2, ['-1', '-1/2', '-1/4', '0', '1/8', '1/4', '3/8', '1/2', '5/8', '3/4', '7/8', '1', '5/4', '3/2', '2'])
+        self.bias_point_dir = BiasPointDirProperty('bias_point_dir', address + 0x3)
+        self.bias_level = IntProperty('bias_level', address + 0x4, 14, -7)
         
 class TVFEnvelope(GroupProperty):
     def __init__(self, address):
