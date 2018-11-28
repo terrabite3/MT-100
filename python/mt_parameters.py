@@ -372,10 +372,25 @@ class TVF(GroupProperty):
         self.keyfollow = ChoiceProperty('keyfollow', address + 0x2, ['-1', '-1/2', '-1/4', '0', '1/8', '1/4', '3/8', '1/2', '5/8', '3/4', '7/8', '1', '5/4', '3/2', '2'])
         self.bias_point_dir = BiasPointDirProperty('bias_point_dir', address + 0x3)
         self.bias_level = IntProperty('bias_level', address + 0x4, 14, -7)
+        self.envelope = TVFEnvelope(address + 0x5)
         
 class TVFEnvelope(GroupProperty):
     def __init__(self, address):
         GroupProperty.__init__(self, 'envelope', address)
+
+        self.depth = IntProperty('depth', address + 0x0, 100)
+        self.velo_sens = IntProperty('velo_sens', address + 0x1, 100)
+        self.depth_keyfollow = IntProperty('depth_keyfollow', address + 0x2, 4)
+        self.time_keyfollow = IntProperty('time_keyfollow', address + 0x3, 4)
+        self.time_1 = IntProperty('time_1', address + 0x4, 100)
+        self.time_2 = IntProperty('time_2', address + 0x5, 100)
+        self.time_3 = IntProperty('time_3', address + 0x6, 100)
+        self.time_4 = IntProperty('time_4', address + 0x7, 100)
+        self.time_5 = IntProperty('time_5', address + 0x8, 100)
+        self.level_1 = IntProperty('level_1', address + 0x9, 100)
+        self.level_2 = IntProperty('level_2', address + 0xA, 100)
+        self.level_3 = IntProperty('level_3', address + 0xB, 100)
+        self.level_sustain = IntProperty('level_sustain', address + 0xC, 100)
 
         
 class TVA(GroupProperty):
