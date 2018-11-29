@@ -217,12 +217,12 @@ class GroupProperty(Property):
 
 
 class ListProperty(GroupProperty):
-    def __init__(self, name, address, count, stride, child_type):
+    def __init__(self, name, address, count, stride, child_type, start=1):
         GroupProperty.__init__(self, name, address)
 
         self.children = {}
         for index in range(count):
-            name = str(index + 1)
+            name = str(index + start)
             addr = self.address + index * stride
             self.children[name] = child_type(name, addr)
 
@@ -242,6 +242,7 @@ class MtParameters(GroupProperty):
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
+        self.rhythm_setup = ListProperty('rhythm_setup', self.RHYTHM_SETUP, 64, 0x04, Rhythm, 24)
         self.timbre_temp = ListProperty('timbre_temp', self.TIMBRE_TEMP, 8, native(0x2_00), Timbre)
         self.patch_memory = ListProperty('patch_memory', self.PATCH_MEMORY, 128, 0x08, Patch)
         self.timbre_memory = ListProperty('timbre_memory', self.TIMBRE_MEMORY, 64, native(0x2_00), Timbre)
@@ -421,3 +422,43 @@ class TVAEnvelope(GroupProperty):
         self.level_2 = IntProperty('level_2', address + 0x8, 100)
         self.level_3 = IntProperty('level_3', address + 0x9, 100)
         self.level_sustain = IntProperty('level_sustain', address + 0xA, 100)
+
+
+class Rhythm(GroupProperty):
+    def __init__(self, name, address):
+        GroupProperty.__init__(self, name, address)
+
+        self.timbre = TimbreReference(address + 0x0)
+        self.output_level = IntProperty('output_level', address + 0x1, 100)
+        self.panpot = IntProperty('panpot', address + 0x2, 14)
+        self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x3, ['OFF', 'ON'])
+
+
+class TimbreReference(Property):
+    def __init__(self, address):
+        Property.__init__(self, 'timbre', address)
+
+    def load_raw_value(self, raw_value):
+        if raw_value < 64:
+            self.value = 'i' + str(raw_value + 1)
+            pass
+        elif raw_value < 128:
+            self.value = 'r' + str(raw_value - 63)
+            pass
+        else:
+            raise RuntimeError('Value too large {} while loading {} from memory.'.format(raw_value, self.name))
+
+    def get_raw_value(self):
+        if self.value == None:
+            return None
+
+        if self.value.startswith('i'):
+            raw_value = int(self.value[1:]) - 1
+        elif self.value.startswith('r'):
+            raw_value = int(self.value[1:]) + 63
+        else:
+            raise RuntimeError('Invalid value {} while writing {} to memory.'.format(raw_value, self.name))
+
+        if raw_value < 0 or raw_value >= 128:
+            raise RuntimeError('Invalid value {} while writing {} to memory.'.format(raw_value, self.name))
+        return raw_value

@@ -1,5 +1,13 @@
 {
     "display": "Hello, world!",
+    "rhythm_setup": {
+        "24": {
+            "timbre": "i1",
+            "output_level": 100,
+            "panpot": 0,
+            "reverb_switch": "ON"
+        }
+    },
     "timbre_temp": {
         "1": {
             "common_parameter": {
