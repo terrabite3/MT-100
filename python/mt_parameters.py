@@ -267,14 +267,14 @@ class GroupProperty(Property):
 
 
 class ListProperty(GroupProperty):
-    def __init__(self, name, address, count, stride, child_type, start=1):
+    def __init__(self, name, address, count, stride, child_type, start=1, child_args={}):
         GroupProperty.__init__(self, name, address)
 
         self.children = {}
         for index in range(count):
             name = str(index + start)
             addr = self.address + index * stride
-            self.children[name] = child_type(name, addr)
+            self.children[name] = child_type(name, addr, **child_args)
 
     def properties(self):
         for key, child in self.children.items():
@@ -318,10 +318,8 @@ class System(GroupProperty):
         self.reverb_mode = ChoiceProperty('reverb_mode', address + 0x01, ['Room', 'Hall', 'Plate', 'Tap delay'])
         self.reverb_time = IntProperty('reverb_time', address + 0x02, 7, 1)
         self.reverb_level = IntProperty('reverb_level', address + 0x03, 7)
-
-        # TODO: Add partial reserves
-        # TODO: Add MIDI channels
-
+        self.partial_reserve = ListProperty('partial_reserve', address + 0x04, 9, 1, IntProperty, child_args={'max': 32})
+        self.midi_channel = ListProperty('midi_channel', address + 0xD, 9, 1, ChoiceProperty, child_args={'choices': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', 'OFF']})
         self.master_volume = IntProperty('master_volume', address + 0x16, 100)
 
 
