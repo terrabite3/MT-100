@@ -180,6 +180,28 @@ class BiasPointDirProperty(ChoiceProperty):
         ChoiceProperty.__init__(self, name, address, biases)
 
 
+class DummyProperty(Property):
+    def __init__(self, address):
+        Property.__init__(self, 'dummy', address)
+
+    def write_dict(self, parent):
+        pass
+
+    def load_dict(self, json):
+        pass
+
+    def load_from_memory(self, memory):
+        if self.address in memory:
+            raw_value = memory[self.address]
+            if raw_value != 0:
+                raise RuntimeError('Unexpected value {} in dummy at address {}'.format(raw_value, self.address))
+
+    def write_to_memory(self, memory):
+        if self.value != None:
+            memory[self.address] = 0
+
+    
+
 
 class GroupProperty(Property):
     def __init__(self, name, address):
@@ -190,11 +212,39 @@ class GroupProperty(Property):
             if isinstance(value, Property):
                 yield value
 
+    def has_value(self):
+        for prop in self.properties():
+            if isinstance(prop, DummyProperty):
+                continue
+            elif isinstance(prop, GroupProperty):
+                if prop.has_value():
+                    return True
+            else:
+                if prop.value != None:
+                    return True
+        return False
+
+    # Dummy properties should write 0 if anything else in this group is set
+    def update_dummies(self):
+        # First look for any dummy properties
+        dummies = []
+        for prop in self.properties():
+            if isinstance(prop, DummyProperty):
+                dummies.append(prop)
+
+        something_set = self.has_value()
+        for dummy in dummies:
+            dummy.value = 0 if something_set else None
+
+
+
     def load_from_memory(self, memory):
         for prop in self.properties():
             prop.load_from_memory(memory)
 
     def write_to_memory(self, memory):
+        self.update_dummies()
+
         for prop in self.properties():
             prop.write_to_memory(memory)
 
@@ -286,6 +336,7 @@ class Patch(GroupProperty):
         self.bender_range = IntProperty('bender_range', address + 0x04, 24)
         self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
         self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
+        self.dummy = DummyProperty(address + 0x07)
 
 
 class Timbre(GroupProperty):
@@ -297,6 +348,16 @@ class Timbre(GroupProperty):
         self.partial_param_2 = PartialParam('partial_parameter_2', address + 0x48)
         self.partial_param_3 = PartialParam('partial_parameter_3', address + native(0x1_02))
         self.partial_param_4 = PartialParam('partial_parameter_4', address + native(0x1_3C))
+        self.dummy6 = DummyProperty(address + native(0x1_76))
+        self.dummy7 = DummyProperty(address + native(0x1_77))
+        self.dummy8 = DummyProperty(address + native(0x1_78))
+        self.dummy9 = DummyProperty(address + native(0x1_79))
+        self.dummyA = DummyProperty(address + native(0x1_7A))
+        self.dummyB = DummyProperty(address + native(0x1_7B))
+        self.dummyC = DummyProperty(address + native(0x1_7C))
+        self.dummyD = DummyProperty(address + native(0x1_7D))
+        self.dummyE = DummyProperty(address + native(0x1_7E))
+        self.dummyF = DummyProperty(address + native(0x1_7F))
 
 
 class TimbreCommonParam(GroupProperty):
@@ -475,7 +536,13 @@ class PatchTemp(GroupProperty):
         self.bender_range = IntProperty('bender_range', address + 0x04, 24)
         self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
         self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
-        # Dummy at 0x07
+        self.dummy7 = DummyProperty(address + 0x7)
         self.output_level = IntProperty('output_level', address + 0x08, 100)
         self.panpot = IntProperty('panpot', address + 0x09, 14)
+        self.dummyA = DummyProperty(address + 0xA)
+        self.dummyB = DummyProperty(address + 0xB)
+        self.dummyC = DummyProperty(address + 0xC)
+        self.dummyD = DummyProperty(address + 0xD)
+        self.dummyE = DummyProperty(address + 0xE)
+        self.dummyF = DummyProperty(address + 0xF)
 
