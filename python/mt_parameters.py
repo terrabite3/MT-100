@@ -242,6 +242,7 @@ class MtParameters(GroupProperty):
     WRITE_REQUEST =         native(0x40_00_00)
 
     def __init__(self):
+        self.patch_temp = ListProperty('patch_temp', self.PATCH_TEMP, 9, 0x10, PatchTemp)
         self.rhythm_setup = ListProperty('rhythm_setup', self.RHYTHM_SETUP, 64, 0x04, Rhythm, 24)
         self.timbre_temp = ListProperty('timbre_temp', self.TIMBRE_TEMP, 8, native(0x2_00), Timbre)
         self.patch_memory = ListProperty('patch_memory', self.PATCH_MEMORY, 128, 0x08, Patch)
@@ -462,3 +463,19 @@ class TimbreReference(Property):
         if raw_value < 0 or raw_value >= 128:
             raise RuntimeError('Invalid value {} while writing {} to memory.'.format(raw_value, self.name))
         return raw_value
+
+class PatchTemp(GroupProperty):
+    def __init__(self, name, address):
+        GroupProperty.__init__(self, name, address)
+
+        self.timbre_group = ChoiceProperty('timbre_group', address + 0x00, ['a', 'b', 'i', 'r'])
+        self.timbre_number = IntProperty('timbre_number', address + 0x01, 63)
+        self.key_shift = IntProperty('key_shift', address + 0x02, 48, -24)
+        self.fine_tune = IntProperty('fine_tune', address + 0x03, 100, -50)
+        self.bender_range = IntProperty('bender_range', address + 0x04, 24)
+        self.assign_mode = ChoiceProperty('assign_mode', address + 0x05, ['POLY 1', 'POLY 2', 'POLY 3', 'POLY 4'])
+        self.reverb_switch = ChoiceProperty('reverb_switch', address + 0x06, ['OFF', 'ON'])
+        # Dummy at 0x07
+        self.output_level = IntProperty('output_level', address + 0x08, 100)
+        self.panpot = IntProperty('panpot', address + 0x09, 14)
+

@@ -1,5 +1,18 @@
 {
     "display": "Hello, world!",
+    "patch_temp": {
+        "1": {
+            "timbre_group": "a",
+            "timbre_number": 3,
+            "key_shift": 0,
+            "fine_tune": 0,
+            "bender_range": 2,
+            "assign_mode": "POLY 2",
+            "reverb_switch": "ON",
+            "output_level": 100,
+            "panpot": 7
+        }
+    },
     "rhythm_setup": {
         "24": {
             "timbre": "i1",
