@@ -181,7 +181,7 @@ class SysExMemory:
         self.memory = memory
 
 
-    def write_syx(self, out_file):
+    def write_syx(self, out_file=None):
         result = bytearray()
 
 
@@ -241,7 +241,10 @@ class SysExMemory:
             result.append(self.END_SYSEX)
 
 
-        open(out_file, 'wb').write(result)
+        if out_file:
+            open(out_file, 'wb').write(result)
+
+        return result
 
 
 
