@@ -6,6 +6,8 @@ from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
+from kivy.uix.dropdown import DropDown
+from kivy.uix.button import Button
 from kivy.properties import NumericProperty
 
 from mt_parameters import *
@@ -28,11 +30,22 @@ class SliderTextBox(GridLayout):
 
         self.parameter = parameter
 
-        self.slider = Slider(min=432.1, max=457.6, step=(457.6 - 432.1) / 128)
+        if isinstance(parameter, FloatProperty):
+            self.mode = 'float'
+            min_val = self.parameter.float_min
+            max_val = self.parameter.float_max
+            step = (max_val - min_val) / (self.parameter.raw_max - self.parameter.raw_min + 1)
+        elif isinstance(parameter, IntProperty):
+            self.mode = 'int'
+            min_val = parameter.offset
+            max_val = parameter.offset + parameter.max
+            step = 1
+
+        self.slider = Slider(min=min_val, max=max_val, step=step)
         self.add_widget(self.slider)
 
-        self.text = TextInput(text='0', multiline=False)
-        self.add_widget(self.text, index=1)
+        self.text = TextInput(text=str(min_val), multiline=False)
+        self.add_widget(self.text)
 
         self.slider.bind(value=self.on_slider_changed)
         self.bind(my_value=self.update_value)
@@ -42,33 +55,68 @@ class SliderTextBox(GridLayout):
 
 
     def on_slider_changed(self, instance, args):
-        self.my_value = float(args)
+        self.my_value = args
 
     def on_text_changed(self, instance):
-        self.my_value = float(instance.text)
+        if self.mode == 'float':
+            self.my_value = float(instance.text)
+        elif self.mode == 'int':
+            self.my_value = int(instance.text)
 
     def update_value(self, instance, args):
-        self.parameter.set_value(float(args))
+        if self.mode == 'float':
+            self.parameter.set_value(float(args))
+        elif self.mode == 'int':
+            self.parameter.set_value(int(args))
         actual_value = self.parameter.value
 
         self.text.text = str(actual_value)
         self.slider.value = float(actual_value)
 
 
+class ChoiceWidget(GridLayout):
+    def __init__(self, parameter, **kwargs):
+        super(ChoiceWidget, self).__init__(**kwargs)
+        self.cols = 1
+
+        self.parameter = parameter
+
+        self.dropdown = DropDown()
+
+        for choice in self.parameter.choices:
+            btn = Button(text=choice, size_hint_y=None, height=30)
+            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
+            self.dropdown.add_widget(btn)
+
+        self.mainbutton = Button(text=self.parameter.choices[0])
+        self.mainbutton.bind(on_release=self.dropdown.open)
+
+        self.dropdown.bind(on_select=self.option_selected)
+
+        self.add_widget(self.mainbutton)
+
+    def option_selected(self, instance, value):
+        self.mainbutton.text = value
+        self.parameter.set_value(value)
+
 
 
 class SystemLayout(GridLayout):
     def __init__(self, **kwargs):
         super(SystemLayout, self).__init__(**kwargs)
-        self.cols = 3
+        self.cols = 2
 
         self.add_widget(Label(text='Master Tune'))
+        self.add_widget(SliderTextBox(parameter=parameters.system.master_tune))
 
-        self.master_tune = SliderTextBox(parameter=parameters.system.master_tune)
-        self.add_widget(self.master_tune)
+        self.add_widget(Label(text='Reverb Mode'))
+        self.add_widget(ChoiceWidget(parameter=parameters.system.reverb_mode))
+        
+        self.add_widget(Label(text='Reverb Time'))
+        self.add_widget(SliderTextBox(parameter=parameters.system.reverb_time))
 
 
-
+        self.add_widget(Label(text=''))
 
 class MT_100(App):
 

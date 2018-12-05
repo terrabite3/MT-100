@@ -97,6 +97,11 @@ class IntProperty(Property):
             raise RuntimeError('Value too large {} while writing {} to memory.'.format(raw_value, self.name))
         return raw_value
 
+    def set_value(self, value):
+        value = min(value, self.offset + self.max)
+        value = max(value, self.offset)
+        self.value = value
+
 
 class FloatProperty(Property):
     def __init__(self, name, address, raw_min, raw_max, float_min, float_max):
