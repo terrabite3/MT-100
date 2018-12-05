@@ -28,6 +28,10 @@ class Property:
         if raw_value != None:
             memory[self.address] = raw_value
 
+    def set_value(self, value):
+        self.value = value
+
+
 class ChoiceProperty(Property):
     def __init__(self, name, address, choices):
         Property.__init__(self, name, address)
@@ -121,6 +125,13 @@ class FloatProperty(Property):
         raw_value = min(raw_value, self.raw_max)
         raw_value = max(raw_value, self.raw_min)
         return raw_value
+
+    def set_value(self, value):
+        value = min(value, self.float_max)
+        value = max(value, self.float_min)
+        self.value = value
+
+        self.load_raw_value(self.get_raw_value())
 
 
 class BitfieldProperty(Property):
