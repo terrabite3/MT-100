@@ -1,0 +1,20 @@
+#:kivy 1.10
+
+
+<SystemLayout>:
+    cols: 2
+
+    Label:
+        text: "Display"
+    TextInput:
+        on_text: root.params.display.set_value(self.text)
+
+    Label:
+        text: "Reverb Mode"
+    ChoiceWidget:
+        param: root.params.system.reverb_mode
+
+    Label:
+        text: "Reverb Time"
+    SliderTextBox:
+        param: root.params.system.reverb_time

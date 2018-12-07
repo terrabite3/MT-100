@@ -1,5 +1,5 @@
 import kivy
-kivy.require('1.10.1') # replace with your current kivy version !
+kivy.require('1.10.1')
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -9,36 +9,38 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
 from kivy.properties import NumericProperty
+from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
+from kivy.uix.widget import Widget
 
-from mt_parameters import *
+import mt_parameters as mt
 
 
-parameters = MtParameters()
-
-
-def set_value_callback(parameter, instance, args):
-    parameter.set_value(args)
+parameters = mt.MtParameters()
 
 
 class SliderTextBox(GridLayout):
 
     my_value = NumericProperty(0.)
+    param = ObjectProperty()
 
-    def __init__(self, parameter, **kwargs):
+    def __init__(self, **kwargs):
         super(SliderTextBox, self).__init__(**kwargs)
         self.cols = 2
 
-        self.parameter = parameter
+        self.bind(param=self.populate)
 
-        if isinstance(parameter, FloatProperty):
+
+    def populate(self, inst, args):
+        if isinstance(self.param, mt.FloatProperty):
             self.mode = 'float'
-            min_val = self.parameter.float_min
-            max_val = self.parameter.float_max
-            step = (max_val - min_val) / (self.parameter.raw_max - self.parameter.raw_min + 1)
-        elif isinstance(parameter, IntProperty):
+            min_val = self.param.float_min
+            max_val = self.param.float_max
+            step = (max_val - min_val) / (self.param.raw_max - self.param.raw_min + 1)
+        elif isinstance(self.param, mt.IntProperty):
             self.mode = 'int'
-            min_val = parameter.offset
-            max_val = parameter.offset + parameter.max
+            min_val = self.param.offset
+            max_val = self.param.offset + self.param.max
             step = 1
 
         self.slider = Slider(min=min_val, max=max_val, step=step)
@@ -65,30 +67,35 @@ class SliderTextBox(GridLayout):
 
     def update_value(self, instance, args):
         if self.mode == 'float':
-            self.parameter.set_value(float(args))
+            self.param.set_value(float(args))
         elif self.mode == 'int':
-            self.parameter.set_value(int(args))
-        actual_value = self.parameter.value
+            self.param.set_value(int(args))
+        actual_value = self.param.value
 
         self.text.text = str(actual_value)
         self.slider.value = float(actual_value)
 
 
 class ChoiceWidget(GridLayout):
-    def __init__(self, parameter, **kwargs):
+
+    param = ObjectProperty()
+
+    def __init__(self, **kwargs):
         super(ChoiceWidget, self).__init__(**kwargs)
         self.cols = 1
 
-        self.parameter = parameter
+        self.bind(param=self.populate)
+
+    def populate(self, inst, args):
 
         self.dropdown = DropDown()
 
-        for choice in self.parameter.choices:
+        for choice in self.param.choices:
             btn = Button(text=choice, size_hint_y=None, height=30)
             btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
             self.dropdown.add_widget(btn)
 
-        self.mainbutton = Button(text=self.parameter.choices[0])
+        self.mainbutton = Button(text=self.param.choices[0])
         self.mainbutton.bind(on_release=self.dropdown.open)
 
         self.dropdown.bind(on_select=self.option_selected)
@@ -97,36 +104,22 @@ class ChoiceWidget(GridLayout):
 
     def option_selected(self, instance, value):
         self.mainbutton.text = value
-        self.parameter.set_value(value)
+        self.param.set_value(value)
 
 
 
 class SystemLayout(GridLayout):
-    def __init__(self, **kwargs):
-        super(SystemLayout, self).__init__(**kwargs)
-        self.cols = 2
+    params = ObjectProperty()
 
-        self.add_widget(Label(text='Master Tune'))
-        self.add_widget(SliderTextBox(parameter=parameters.system.master_tune))
-
-        self.add_widget(Label(text='Reverb Mode'))
-        self.add_widget(ChoiceWidget(parameter=parameters.system.reverb_mode))
-        
-        self.add_widget(Label(text='Reverb Time'))
-        self.add_widget(SliderTextBox(parameter=parameters.system.reverb_time))
-
-
-        self.add_widget(Label(text=''))
-
-class MT_100(App):
+class MTApp(App):
 
 
     def build(self):
-        return SystemLayout()
+        return SystemLayout(params=parameters)
 
 
 if __name__ == '__main__':
-    MT_100().run()
+    MTApp().run()
 
     result = {}
     parameters.write_dict(result)
