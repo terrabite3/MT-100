@@ -1,17 +1,15 @@
 #:kivy 1.10
 
 
-<ParamSpinner@Spinner>:
-    param: None
-    on_param: self.text = self.param.choices[0]; self.values = self.param.choices
+<ParamSpinner>:
+    text: self.param.choices[0]
+    values: self.param.choices
     on_text: self.param.set_value(self.text)
 
-<IntSliderTextBox@GridLayout>:
-    cols: 2
-    value: 0
-    param: None
 
-    on_param: root.value = root.param.offset; s.min = root.param.offset; s.max = root.param.offset + root.param.max
+<IntSliderTextBox>:
+    cols: 2
+    value: root.param.offset
     on_value: self.param.set_value(self.value)
 
     TextInput:
@@ -22,6 +20,8 @@
 
     Slider:
         id: s
+        min: root.param.offset
+        max: root.param.offset + root.param.max
         step: 1
         value: root.value
         on_value: root.value = self.value
@@ -35,6 +35,7 @@
         text: "Display"
     TextInput:
         on_text: root.params.display.set_value(self.text)
+        multiline: False
 
     Label:
         text: "Reverb Mode"
@@ -45,3 +46,15 @@
         text: "Reverb Time"
     IntSliderTextBox:
         param: root.params.system.reverb_time
+
+
+<MainLayout>:
+    do_default_tab: False
+
+    TabbedPanelItem:
+        text: 'System'
+        SystemLayout:
+            params: root.params
+
+    TabbedPanelItem:
+        text: 'Other'
