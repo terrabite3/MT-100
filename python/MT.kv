@@ -26,7 +26,12 @@
         value: root.value
         on_value: root.value = self.value
 
+<ParamTextInput>:
+    
 
+<PitchEnvelope>:
+    Label:
+        text: "Hi"
 
 <SystemLayout>:
     cols: 2
@@ -34,6 +39,7 @@
     Label:
         text: "Display"
     TextInput:
+        text: root.params.display.value
         on_text: root.params.display.set_value(self.text)
         multiline: False
 
@@ -46,6 +52,13 @@
         text: "Reverb Time"
     IntSliderTextBox:
         param: root.params.system.reverb_time
+
+    # PitchEnvelope:
+    #     params: root.params.timbre_memory.children[0].partial_param_1.pitch.envelope
+
+
+# <TimbreLayout>:
+
 
 
 <MainLayout>:
