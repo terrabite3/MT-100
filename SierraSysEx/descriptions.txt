@@ -1,0 +1,126 @@
+AMONRA.SYX
+BAK.SYX
+BARON.SYX
+BRAIN.SYX
+BRAIN2.SYX
+CAMELOT.SYX
+CASTLE.SYX
+CB.SYX
+
+43  Atonal drop
+44  Atonal rise
+51  Harsh
+52  Soft noise
+54  Water drop
+
+CNI.SYX
+DRAGON.SYX
+ECO2.SYX
+ECOQUEST.SYX
+FIREHAWK.SYX
+
+1   Synth lead
+2   Snare
+3   _
+4   Tom
+5-9 _
+10  Percussive Synth
+11  Bass
+12  Synth lead 2
+13  Synth lead 3
+14  Percussive Synth 2
+15  Synth lead 4
+16  _
+17  Percussive synth 3
+18  Synth lead 5
+19  Synth bass
+20  Super saw   !
+21  Choir/Bell?
+22  Percussive synth lead
+23  Soft 
+24  Choir/Bell 2
+25  Percussive
+26  Laser
+27  Bell/piano?
+28  Bell
+29  Super saw 2
+30  Synth lead 6
+31  Another synth
+32  Buzzy
+33  Orch hit
+34  Organ
+35  Something
+36  Synth brass pad
+37  Synth cello?
+38  Popcorn
+39  Sweep pad   !
+40  Slow lead
+41  Sweep pad 2
+42  Machine gun
+43  Water drop
+44  Chromatic percussion
+45  Crash
+46  Woodpecker
+47  Laser 2
+48  _
+49  5th pad
+..
+72  Sweep pad 3
+73  Saw
+74  Short
+75  Weird pad
+76  Soft 2
+77  Orch hit 2
+78  Orch hit 3
+79  Clave
+82  Slow synth
+85  Reverse cymbal
+86  Zoom
+87  Laser 3
+88  Laser 4
+89  Crash 2
+90  Crash 3
+91  Crash 4
+92  Crash 5
+93  Laser 5
+94  Laser 6
+95  Laser 7
+96  Laser 8
+
+
+
+
+GK.SYX
+HOC.SYX
+ICEMAN.SYX
+JONES.SYX
+KQ1.SYX
+KQ4.SYX
+KQ5.SYX
+KQ6.SYX
+KQ7.SYX
+KRONDOR.SYX
+LSL1.SYX
+LSL2.SYX
+LSL3.SYX
+LSL5.SYX
+LSL6.SYX
+MG.SYX
+ROBIN.SYX
+ROTDVGA.SYX
+SILPHEED.SYX
+SORC.SYX
+SQ1.SYX
+SQ3.SYX
+SQ4.SYX
+SQ5.SYX
+SQ6.SYX
+STELLAR7.SYX
+
+1   Sweep pad
+2   Detuned sweep
+
+
+THEX2.SYX
+WILLY.SYX
+ZELIARD.SYX

@@ -1,2 +1,6 @@
 .vscode
 *.pyc
+.DS_Store
+temp/*
+GUI/JuceLibraryCode/*
+GUI/Builds/*
