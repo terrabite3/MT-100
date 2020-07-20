@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="i2z0JZ" name="MT-100" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="11">
   <MAINGROUP id="ecAk1L" name="MT-100">
     <GROUP id="{59551CE0-9E80-DB44-F1C7-CEF28AE4951A}" name="Source">
+      <FILE id="W3lDdC" name="json.hpp" compile="0" resource="0" file="Source/json.hpp"/>
       <FILE id="MK8FgY" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="Gw7wBB" name="SystemPanel.cpp" compile="1" resource="0" file="Source/SystemPanel.cpp"/>
+      <FILE id="MNx32O" name="SystemPanel.h" compile="0" resource="0" file="Source/SystemPanel.h"/>
       <FILE id="aqb1up" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="UfgclT" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
+    <FILE id="N0P4iO" name="MtModel.cpp" compile="1" resource="0" file="Source/MtModel.cpp"/>
+    <FILE id="TfFEer" name="MtModel.h" compile="0" resource="0" file="Source/MtModel.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>

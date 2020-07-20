@@ -1,5 +1,9 @@
 #pragma once
 
+#include "SystemPanel.h"
+
+#include "json.hpp"
+
 #include <JuceHeader.h>
 
 //==============================================================================
@@ -17,10 +21,17 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    
+    void loadJson();
+    void refresh();
 
 private:
     //==============================================================================
     // Your private member variables go here...
+    
+    SystemPanel mSystemPanel;
+    nlohmann::json mJson;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
