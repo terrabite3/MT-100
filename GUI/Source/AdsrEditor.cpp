@@ -8,14 +8,14 @@ using namespace juce;
 void AdsrEditor::EnvelopeData::drawDebugInformation(Graphics & g,
                                                     Rectangle<float> area) const
 {
-    g.setColour(Colours::grey.withAlpha(0.5f));
-    area.setHeight(area.getHeight() / 5.0f);
-    
-    show(g, "AttackLevel", attackLevel, area);
-    show(g, "attackTime",  attackTime, area);
-    show(g, "decay",       decay, area);
-    show(g, "sustain",     sustain, area);
-    show(g, "release",     release, area);
+//    g.setColour(Colours::grey.withAlpha(0.5f));
+//    area.setHeight(area.getHeight() / 5.0f);
+//    
+//    show(g, "AttackLevel", attackLevel, area);
+//    show(g, "attackTime",  attackTime, area);
+//    show(g, "decay",       decay, area);
+//    show(g, "sustain",     sustain, area);
+//    show(g, "release",     release, area);
 }
 
 void  AdsrEditor::EnvelopeData::show(Graphics & g,
@@ -40,29 +40,33 @@ void  AdsrEditor::EnvelopeData::show(Graphics & g,
 
 AdsrEditor::AdsrEditor()
 {
-    /* Attack. Y axis drag controls right side attack level. */
-    segments.add(new Segment(this, nullptr));
-    segments[kAttack]->setYAxisControls(false, true);
-                
-    /* Decay. Y axis drag controls left side attack level. */
-    segments.add(new Segment(this, segments[kAttack]));
-    segments[kDecay]->setYAxisControls(true, false);
+    auto attack = segments.add(new Segment(this, nullptr));
+    attack->setYAxisControls(false, true);
+    
+    auto retreat = segments.add(new Segment(this, attack));
+    retreat->setYAxisControls(false, true);
+    
+    auto regroup = segments.add(new Segment(this, retreat));
+    regroup->setYAxisControls(false, true);
+    
+    auto decay = segments.add(new Segment(this, regroup));
+    decay->setYAxisControls(false, true);
     
     /* Sustain.  Y axis drag controls both left and right sides, which
      remain in step. */
-    segments.add(new Segment(this, segments[kDecay]));
-    segments[kSustain]->setYAxisControls(true, true);
-    segments[kSustain]->setFixedDuration(0.5f);
+    auto sustain = segments.add(new Segment(this, decay));
+    sustain->setYAxisControls(true, true);
+    sustain->setFixedDuration(0.5f);
     
     /* Release.  Y axis drag controls left hand sustain segment. */
-    segments.add(new Segment(this, segments[kSustain]));
-    segments[kRelease]->setYAxisControls(true, false);
+    auto release = segments.add(new Segment(this, sustain));
+    release->setYAxisControls(true, false);
     
     for (auto s: segments)
         addAndMakeVisible(s);
     
     /* Some initial data. */
-    data = { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f };
+    data = { 1.0f, 0.5f, 0.5f, 0.3f, 0.7f, 0.2f, 0.3f, 0.4f, 0.5f };
     
     /* Set the initial positions. */
     update();
@@ -79,9 +83,13 @@ void AdsrEditor::updateFromSegments()
     updateSegmentPositions();
     data.attackLevel    = segments[kAttack]->getRightLevel();
     data.attackTime     = segments[kAttack]->getDuration();
-    data.decay          = segments[kDecay]->getDuration();
-    data.sustain        = segments[kSustain]->getLeftLevel();
-    data.release        = segments[kRelease]->getDuration();
+    data.retreatLevel   = segments[kRetreat]->getRightLevel();
+    data.retreatTime    = segments[kRetreat]->getDuration();
+    data.regroupLevel   = segments[kRegroup]->getRightLevel();
+    data.regroupTime    = segments[kRegroup]->getDuration();
+    data.decayTime      = segments[kDecay]->getDuration();
+    data.sustainLevel   = segments[kSustain]->getLeftLevel();
+    data.releaseTime    = segments[kRelease]->getDuration();
     
     notifyListeners();
 }
@@ -122,9 +130,13 @@ void AdsrEditor::update()
 {
     segments[kAttack]->setRightLevel(data.attackLevel);
     segments[kAttack]->setDuration(data.attackTime);
-    segments[kDecay]->setDuration(data.decay);
-    segments[kSustain]->setLeftLevel(data.sustain);
-    segments[kRelease]->setDuration(data.release);
+    segments[kRetreat]->setRightLevel(data.retreatLevel);
+    segments[kRetreat]->setDuration(data.retreatTime);
+    segments[kRegroup]->setRightLevel(data.regroupLevel);
+    segments[kRegroup]->setDuration(data.regroupTime);
+    segments[kDecay]->setDuration(data.decayTime);
+    segments[kSustain]->setLeftLevel(data.sustainLevel);
+    segments[kRelease]->setDuration(data.releaseTime);
     
     updateSegmentPositions();
 }

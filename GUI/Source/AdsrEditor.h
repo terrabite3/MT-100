@@ -44,9 +44,13 @@ public:
     {
         float attackLevel;
         float attackTime;
-        float decay;
-        float sustain; /** < 0.0 to 1.0. */
-        float release;
+        float retreatLevel;
+        float retreatTime;
+        float regroupLevel;
+        float regroupTime;
+        float decayTime;
+        float sustainLevel;
+        float releaseTime;
         
         void drawDebugInformation(juce::Graphics & g, juce::Rectangle<float> area) const;
     private:
@@ -84,6 +88,8 @@ private:
     enum SegmentOrder
     {
         kAttack,
+        kRetreat,
+        kRegroup,
         kDecay,
         kSustain,
         kRelease
@@ -142,9 +148,9 @@ private:
     Segment * left;
     Segment * right;
     
-    float leftLevel;
-    float rightLevel;
-    float duration;
+    float leftLevel = 0.0f;
+    float rightLevel = 0.0f;
+    float duration = 0.0f;
     
     bool controllingLeft;
     bool controllingRight;
