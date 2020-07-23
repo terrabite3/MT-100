@@ -6,7 +6,9 @@ MainComponent::MainComponent()
     addAndMakeVisible(mSystemPanel);
     setSize (600, 400);
     
+    addAndMakeVisible(mTvf);
     
+    mTvf.setBounds(300, 0, 400, 400);
 }
 
 MainComponent::~MainComponent()

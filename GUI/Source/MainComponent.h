@@ -3,6 +3,7 @@
 #include "SystemPanel.h"
 
 #include "json.hpp"
+#include "TvfPanel.h"
 
 #include <JuceHeader.h>
 
@@ -31,6 +32,8 @@ private:
     // Your private member variables go here...
     
     SystemPanel mSystemPanel;
+    TvfPanel mTvf;
+    
     nlohmann::json mJson;
 
 
