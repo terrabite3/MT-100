@@ -4,8 +4,8 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="11">
   <MAINGROUP id="ecAk1L" name="MT-100">
     <GROUP id="{59551CE0-9E80-DB44-F1C7-CEF28AE4951A}" name="Source">
-      <FILE id="RBNBRZ" name="adsr_editor.cpp" compile="1" resource="0" file="Source/adsr_editor.cpp"/>
-      <FILE id="ggEfNL" name="adsr_editor.h" compile="0" resource="0" file="Source/adsr_editor.h"/>
+      <FILE id="RBNBRZ" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/AdsrEditor.cpp"/>
+      <FILE id="ggEfNL" name="AdsrEditor.h" compile="0" resource="0" file="Source/AdsrEditor.h"/>
       <FILE id="W3lDdC" name="json.hpp" compile="0" resource="0" file="Source/json.hpp"/>
       <FILE id="MK8FgY" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="Gw7wBB" name="SystemPanel.cpp" compile="1" resource="0" file="Source/SystemPanel.cpp"/>
@@ -16,9 +16,9 @@
       <FILE id="l2tbDj" name="PartialPanel.cpp" compile="1" resource="0"
             file="Source/PartialPanel.cpp"/>
       <FILE id="y5bXB9" name="PartialPanel.h" compile="0" resource="0" file="Source/PartialPanel.h"/>
+      <FILE id="oN3rOM" name="TvfPanel.cpp" compile="1" resource="0" file="Source/TvfPanel.cpp"/>
+      <FILE id="NoVDKk" name="TvfPanel.h" compile="0" resource="0" file="Source/TvfPanel.h"/>
     </GROUP>
-    <FILE id="oN3rOM" name="TvfPanel.cpp" compile="1" resource="0" file="Source/TvfPanel.cpp"/>
-    <FILE id="NoVDKk" name="TvfPanel.h" compile="0" resource="0" file="Source/TvfPanel.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>

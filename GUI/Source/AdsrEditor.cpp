@@ -1,6 +1,6 @@
 
 
-#include "adsr_editor.h"
+#include "AdsrEditor.h"
 
 using namespace juce;
 
