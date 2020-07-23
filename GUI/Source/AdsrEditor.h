@@ -28,13 +28,13 @@ SOFTWARE.
 /** A grab-anywhere ADSR envelope that's a little easier to use than the ones
  * you have to grab specific handles on. There are lots of improvements that
  * could be made to this, but it's a useful starting point. */
-class ADSREditor
+class AdsrEditor
 :
 public juce::Component
 {
 public:
-    ADSREditor();
-    ~ADSREditor() {}
+    AdsrEditor();
+    ~AdsrEditor() {}
     
     /** Updates the segment positions from ADSR position information,
      call this when the host, or loading a new patch, has caused the 
@@ -74,7 +74,7 @@ public:
     public Component
     {
     public:
-        Segment(ADSREditor * owner, Segment * segmentOnLeft)
+        Segment(AdsrEditor * owner, Segment * segmentOnLeft)
         :
         owner(owner),
         right(nullptr),
@@ -121,7 +121,7 @@ public:
         bool leftRightLinked() const { return controllingLeft && controllingRight; }
 
 
-        ADSREditor * owner;
+        AdsrEditor * owner;
         
         Segment * left;
         Segment * right;

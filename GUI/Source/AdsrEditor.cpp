@@ -5,7 +5,7 @@
 using namespace juce;
 
 
-void ADSREditor::EnvelopeData::drawDebugInformation(Graphics & g,
+void AdsrEditor::EnvelopeData::drawDebugInformation(Graphics & g,
                                                     Rectangle<float> area) const
 {
     g.setColour(Colours::grey.withAlpha(0.5f));
@@ -18,7 +18,7 @@ void ADSREditor::EnvelopeData::drawDebugInformation(Graphics & g,
     show(g, "release",     release, area);
 }
 
-void  ADSREditor::EnvelopeData::show(Graphics & g,
+void  AdsrEditor::EnvelopeData::show(Graphics & g,
                                      const String & title,
                                      float value,
                                      Rectangle<float> & area) const
@@ -38,7 +38,7 @@ void  ADSREditor::EnvelopeData::show(Graphics & g,
 
 
 
-ADSREditor::ADSREditor()
+AdsrEditor::AdsrEditor()
 {
     /* Attack. Y axis drag controls right side attack level. */
     segments.add(new Segment(this, nullptr));
@@ -68,13 +68,13 @@ ADSREditor::ADSREditor()
     update();
 }
 
-void ADSREditor::resized()
+void AdsrEditor::resized()
 {
     updateSegmentPositions();
 }
 
 
-void ADSREditor::updateFromSegments()
+void AdsrEditor::updateFromSegments()
 {
     updateSegmentPositions();
     data.attackLevel    = segments[kAttack]->getRightLevel();
@@ -86,7 +86,7 @@ void ADSREditor::updateFromSegments()
     notifyListeners();
 }
 
-void ADSREditor::notifyListeners()
+void AdsrEditor::notifyListeners()
 {
     mListeners.call([this] (Listener& l)
     {
@@ -94,7 +94,7 @@ void ADSREditor::notifyListeners()
     });
 }
 
-void ADSREditor::updateSegmentPositions()
+void AdsrEditor::updateSegmentPositions()
 {
     float totalDuration = 0.0f;
     const float minDuration = 0.1f;
@@ -118,7 +118,7 @@ void ADSREditor::updateSegmentPositions()
     }
 }
 
-void ADSREditor::update()
+void AdsrEditor::update()
 {
     segments[kAttack]->setRightLevel(data.attackLevel);
     segments[kAttack]->setDuration(data.attackTime);
@@ -129,18 +129,18 @@ void ADSREditor::update()
     updateSegmentPositions();
 }
 
-void ADSREditor::addListener(ADSREditor::Listener *listener)
+void AdsrEditor::addListener(AdsrEditor::Listener *listener)
 {
     mListeners.add(listener);
 }
 
-void ADSREditor::removeListener(ADSREditor::Listener *listener)
+void AdsrEditor::removeListener(AdsrEditor::Listener *listener)
 {
     mListeners.remove(listener);
 }
 
 
-void ADSREditor::Segment::paint(Graphics & g)
+void AdsrEditor::Segment::paint(Graphics & g)
 {
     float height = (float) getHeight();
     float width = (float) getWidth();
@@ -186,7 +186,7 @@ void ADSREditor::Segment::paint(Graphics & g)
 }
 
 
-void ADSREditor::Segment::setLeftLevel(float newLevel, ChainDirection direction)
+void AdsrEditor::Segment::setLeftLevel(float newLevel, ChainDirection direction)
 {
     leftLevel = newLevel;
     
@@ -199,7 +199,7 @@ void ADSREditor::Segment::setLeftLevel(float newLevel, ChainDirection direction)
     repaint();
 }
 
-void ADSREditor::Segment::setRightLevel(float newLevel, ChainDirection direction)
+void AdsrEditor::Segment::setRightLevel(float newLevel, ChainDirection direction)
 {
     rightLevel = newLevel;
     
@@ -212,14 +212,14 @@ void ADSREditor::Segment::setRightLevel(float newLevel, ChainDirection direction
     repaint();
 }
 
-void ADSREditor::Segment::mouseDown(const MouseEvent & e)
+void AdsrEditor::Segment::mouseDown(const MouseEvent & e)
 {
     mouseDownData.left = leftLevel;
     mouseDownData.right = rightLevel;
     mouseDownData.duration = duration;
 }
 
-void ADSREditor::Segment::mouseDrag(const MouseEvent & e)
+void AdsrEditor::Segment::mouseDrag(const MouseEvent & e)
 {
     if (allowDurationChange)
     {
@@ -238,7 +238,7 @@ void ADSREditor::Segment::mouseDrag(const MouseEvent & e)
 }
 
 
-void ADSREditor::Segment::setYAxisControls(bool leftSide, bool rightSide)
+void AdsrEditor::Segment::setYAxisControls(bool leftSide, bool rightSide)
 {
     controllingLeft = leftSide;
     controllingRight = rightSide;
