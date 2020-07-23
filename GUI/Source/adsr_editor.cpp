@@ -82,6 +82,16 @@ void ADSREditor::updateFromSegments()
     data.decay          = segments[kDecay]->getDuration();
     data.sustain        = segments[kSustain]->getLeftLevel();
     data.release        = segments[kRelease]->getDuration();
+    
+    notifyListeners();
+}
+
+void ADSREditor::notifyListeners()
+{
+    mListeners.call([this] (Listener& l)
+    {
+        l.adsrValueChanged(&this->getData());
+    });
 }
 
 void ADSREditor::updateSegmentPositions()
@@ -117,6 +127,16 @@ void ADSREditor::update()
     segments[kRelease]->setDuration(data.release);
     
     updateSegmentPositions();
+}
+
+void ADSREditor::addListener(ADSREditor::Listener *listener)
+{
+    mListeners.add(listener);
+}
+
+void ADSREditor::removeListener(ADSREditor::Listener *listener)
+{
+    mListeners.remove(listener);
 }
 
 

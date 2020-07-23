@@ -54,6 +54,16 @@ public:
         void show(juce::Graphics & g, const juce::String & title, float value,
                   juce::Rectangle<float> & area) const;
     };
+    
+    class Listener
+    {
+    public:
+        virtual ~Listener() = default;
+        virtual void adsrValueChanged(EnvelopeData* envelope) = 0;
+    };
+    
+    void addListener(Listener* listener);
+    void removeListener(Listener* listener);
 
     /** Access the ADSR structure. Call update() if you change the values. */
     EnvelopeData & getData() { return data; }
@@ -142,6 +152,8 @@ private:
     /** Updates the bounds of the segment components. */
     void updateSegmentPositions();
     
+    void notifyListeners();
+    
     EnvelopeData data;
     enum SegmentOrder
     {
@@ -151,6 +163,8 @@ private:
         kRelease
     };
     juce::OwnedArray<Segment> segments;
+    
+    juce::ListenerList<Listener> mListeners;
 };
 
 #endif  // ADSR_EDITOR_H_INCLUDED

@@ -36,6 +36,7 @@
                                                                     //[/Comments]
 */
 class TvfPanel  : public juce::Component,
+                  public ADSREditor::Listener,
                   public juce::Slider::Listener
 {
 public:
@@ -45,6 +46,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void adsrValueChanged(ADSREditor::EnvelopeData* envelope) override;
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;

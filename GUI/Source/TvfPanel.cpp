@@ -36,7 +36,7 @@ TvfPanel::TvfPanel ()
     addAndMakeVisible (adsr.get());
     adsr->setName ("new component");
 
-    adsr->setBounds (40, 40, 200, 120);
+    adsr->setBounds (40, 40, 248, 120);
 
     juce__label.reset (new juce::Label ("new label",
                                         TRANS("Time 1")));
@@ -226,6 +226,7 @@ TvfPanel::TvfPanel ()
 
 
     //[Constructor] You can add your own custom stuff here..
+    adsr->addListener(this);
     //[/Constructor]
 }
 
@@ -340,6 +341,11 @@ void TvfPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+
+void TvfPanel::adsrValueChanged(ADSREditor::EnvelopeData* envelope)
+{
+    time1_slider->setValue(envelope->attackTime, juce::NotificationType::dontSendNotification);
+}
 //[/MiscUserCode]
 
 
@@ -353,12 +359,13 @@ void TvfPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="TvfPanel" componentName=""
-                 parentClasses="public juce::Component" constructorParams="" variableInitialisers=""
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
+                 parentClasses="public juce::Component, public ADSREditor::Listener"
+                 constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
+                 snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="600"
+                 initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44"/>
   <GENERICCOMPONENT name="new component" id="ee5f91a94c06992f" memberName="adsr"
-                    virtualName="" explicitFocusOrder="0" pos="40 40 200 120" class="ADSREditor"
+                    virtualName="" explicitFocusOrder="0" pos="40 40 248 120" class="ADSREditor"
                     params=""/>
   <LABEL name="new label" id="61fb3d84b4c83161" memberName="juce__label"
          virtualName="" explicitFocusOrder="0" pos="48 200 104 24" edTextCol="ff000000"
