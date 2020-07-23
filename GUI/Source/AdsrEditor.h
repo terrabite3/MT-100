@@ -1,5 +1,4 @@
-#ifndef ADSR_EDITOR_H_INCLUDED
-#define ADSR_EDITOR_H_INCLUDED
+#pragma once
 /*
 The MIT License (MIT)
 
@@ -23,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 /** A grab-anywhere ADSR envelope that's a little easier to use than the ones
  * you have to grab specific handles on. There are lots of improvements that
@@ -69,80 +68,7 @@ public:
     EnvelopeData & getData() { return data; }
     
     /** Several of these are arranged horizontally to make up the envelope. */
-    class Segment
-    :
-    public Component
-    {
-    public:
-        Segment(AdsrEditor * owner, Segment * segmentOnLeft)
-        :
-        owner(owner),
-        right(nullptr),
-        allowDurationChange(true)
-        {
-            if (segmentOnLeft != nullptr)
-                segmentOnLeft->right = this;
-            
-            left = segmentOnLeft;
-        }
-        void mouseDown(const juce::MouseEvent &) override;
-        void mouseDrag(const juce::MouseEvent &) override;
-        void paint(juce::Graphics &) override;
-        
-        enum ChainDirection
-        {
-            kLeft,
-            kRight,
-            kBoth
-        };
-        /** Returns the level, i.e. the Y amount, for this shape.
-         Values are normalised from 0.0 to 1.0. */
-        float getLeftLevel() const { return leftLevel; }
-        float getRightLevel() const { return rightLevel; }
-        
-        void setLeftLevel(float newLevel, ChainDirection d = kBoth);
-        void setRightLevel(float newLevel, ChainDirection d = kBoth);
-        void setDuration(float newDuration) { duration = newDuration; }
-        
-        void setFixedDuration(float fixedDuration) { duration = fixedDuration; allowDurationChange = false; }
-        
-        /** 
-         Returns the length of this segment.  Values are
-         normalised from 0.0 to 1.0.
-         */
-        float getDuration() const { return duration; }
-        
-        void setYAxisControls(bool leftSide, bool rightSide);
-        
-    private:
-
-        
-
-        bool leftRightLinked() const { return controllingLeft && controllingRight; }
-
-
-        AdsrEditor * owner;
-        
-        Segment * left;
-        Segment * right;
-        
-        float leftLevel;
-        float rightLevel;
-        float duration;
-        
-        bool controllingLeft;
-        bool controllingRight;
-        bool allowDurationChange;
-        
-        struct MouseDownInfo
-        {
-            float left;
-            float right;
-            float duration;
-        } mouseDownData;
-        
-        const float mouseSensitivity = 200.0f; /**< Increase to reduce senstivity. */
-    };
+    class Segment;
 
 
 private:
@@ -167,4 +93,69 @@ private:
     juce::ListenerList<Listener> mListeners;
 };
 
-#endif  // ADSR_EDITOR_H_INCLUDED
+
+
+class AdsrEditor::Segment
+:
+public Component
+{
+public:
+    Segment(AdsrEditor * owner, Segment * segmentOnLeft);
+    void mouseDown(const juce::MouseEvent &) override;
+    void mouseDrag(const juce::MouseEvent &) override;
+    void paint(juce::Graphics &) override;
+    
+    enum ChainDirection
+    {
+        kLeft,
+        kRight,
+        kBoth
+    };
+    /** Returns the level, i.e. the Y amount, for this shape.
+     Values are normalised from 0.0 to 1.0. */
+    float getLeftLevel() const { return leftLevel; }
+    float getRightLevel() const { return rightLevel; }
+    
+    void setLeftLevel(float newLevel, ChainDirection d = kBoth);
+    void setRightLevel(float newLevel, ChainDirection d = kBoth);
+    void setDuration(float newDuration) { duration = newDuration; }
+    
+    void setFixedDuration(float fixedDuration) { duration = fixedDuration; allowDurationChange = false; }
+    
+    /**
+     Returns the length of this segment.  Values are
+     normalised from 0.0 to 1.0.
+     */
+    float getDuration() const { return duration; }
+    
+    void setYAxisControls(bool leftSide, bool rightSide);
+    
+private:
+    
+    
+    
+    bool leftRightLinked() const { return controllingLeft && controllingRight; }
+    
+    
+    AdsrEditor * owner;
+    
+    Segment * left;
+    Segment * right;
+    
+    float leftLevel;
+    float rightLevel;
+    float duration;
+    
+    bool controllingLeft;
+    bool controllingRight;
+    bool allowDurationChange;
+    
+    struct MouseDownInfo
+    {
+        float left;
+        float right;
+        float duration;
+    } mouseDownData;
+    
+    const float mouseSensitivity = 200.0f; /**< Increase to reduce senstivity. */
+};

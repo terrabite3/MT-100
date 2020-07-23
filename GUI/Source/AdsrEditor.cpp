@@ -140,6 +140,19 @@ void AdsrEditor::removeListener(AdsrEditor::Listener *listener)
 }
 
 
+AdsrEditor::Segment::Segment(AdsrEditor * owner, AdsrEditor::Segment * segmentOnLeft)
+:
+owner(owner),
+right(nullptr),
+allowDurationChange(true)
+{
+    if (segmentOnLeft != nullptr)
+        segmentOnLeft->right = this;
+    
+    left = segmentOnLeft;
+}
+
+
 void AdsrEditor::Segment::paint(Graphics & g)
 {
     float height = (float) getHeight();
