@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="i2z0JZ" name="MT-100" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="11">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="11"
+              headerPath="Source">
   <MAINGROUP id="ecAk1L" name="MT-100">
     <GROUP id="{59551CE0-9E80-DB44-F1C7-CEF28AE4951A}" name="Source">
+      <GROUP id="{7292505A-B3A6-EC80-2332-1ED862990ABD}" name="Memory">
+        <FILE id="q23Fec" name="IMemory.h" compile="0" resource="0" file="Source/Memory/IMemory.h"/>
+        <FILE id="u2raFn" name="SysExMemory.cpp" compile="1" resource="0" file="Source/Memory/SysExMemory.cpp"/>
+        <FILE id="M2eWW0" name="SysExMemory.h" compile="0" resource="0" file="Source/Memory/SysExMemory.h"/>
+      </GROUP>
+      <GROUP id="{D92E4F6F-2856-25AA-907F-628F388692FC}" name="Property">
+        <FILE id="tU9HOm" name="IntProperty.h" compile="0" resource="0" file="Source/Property/IntProperty.h"/>
+        <FILE id="gV9dsc" name="IProperty.h" compile="0" resource="0" file="Source/Property/IProperty.h"/>
+      </GROUP>
       <FILE id="RBNBRZ" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/AdsrEditor.cpp"/>
       <FILE id="ggEfNL" name="AdsrEditor.h" compile="0" resource="0" file="Source/AdsrEditor.h"/>
       <FILE id="W3lDdC" name="json.hpp" compile="0" resource="0" file="Source/json.hpp"/>

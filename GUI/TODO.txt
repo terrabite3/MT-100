@@ -1,0 +1,87 @@
+
+FEATURES
+
+Reimplement a subset of the Python SysEx <-> JSON converter
+    Something simple like reverb mode
+
+PoC send SysEx
+    Just reverb mode
+
+MIDI through
+    Expose a MIDI in port to the app, and a MIDI out to drive the synth
+
+SysEx diff
+    Instead of sending the whole parameter set, only send the differences
+
+Sync on release
+    Parameter changes are queued up, and sent only after all keys are released
+
+Sync and repeat notes
+    If notes are pressed when the user triggers a sync, the app sends note-off messages, then the SysEx, then note on messages matching what is still pressed
+
+Load and save SysEx
+
+Enhanced SysEx diff
+    If two modified parameters are separated by a single unmodified parameter, it's more efficient to send a single SysEx with all three parameters than two separate SysEx messages.
+    Where is the break-even point?
+
+Patch library
+
+
+Parameter sections
+    Structure
+    Pitch Envelope
+    Pitch LFO
+    Filter Envelope
+    Amp Envelope
+
+QUESTIONS
+
+Can I do that LFO de-sync thing from the Youtube video? Or will sending SysEx reset the LFO?
+
+Is bender range 24 two octaves up and down, or two octaves total?
+
+Is there really no aftertouch, or can I enable it by writing to the addresses where it would be?
+
+What are the PCM samples?
+
+
+
+NOTES
+
+Two address data types
+    7-bit byte, 8-bit byte
+
+class SysExMemory
+    readSyx(filename)
+        Reads a bunch of SysEx messages
+        Each message is
+            header
+            address
+            data
+            end
+        Computes checksum
+    writeSyx(outFilename)
+        Constructs a series of SysEx messages to write
+        Computes checksum
+    readMemory(filename)
+        Reads a hex editor-style format
+    writeMemory(outFilename)
+        Writes a hex editor-style format
+    mData
+        Stored in 8-bit bytes
+        Addresses can be empty
+
+IProperty
+    name
+    address
+    value
+
+    virtual loadRawValue()
+    virtual saveRawValue()
+
+    loadJson()
+    saveJson()
+    loadMemory()
+    saveMemory()
+    setValue()
