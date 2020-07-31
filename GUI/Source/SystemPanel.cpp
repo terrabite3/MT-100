@@ -272,27 +272,17 @@ void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
-void SystemPanel::refresh(nlohmann::json jSystem)
+void SystemPanel::refresh()
 {
-    if (jSystem.count("master_tune"))
+    if (mMasterVolume->isSet())
     {
-        masterTune_slider->setValue(jSystem["master_tune"].get<double>());
+        masterVolume_slider->setValue(mMasterVolume->value(), juce::NotificationType::dontSendNotification);
     }
+}
 
-    if (jSystem.count("reverb_mode"))
-    {
-        reverbMode_comboBox->setText(jSystem["reverb_mode"].get<std::string>());
-    }
-
-    if (jSystem.count("reverb_time"))
-    {
-        reverbTime_slider->setValue(jSystem["reverb_time"].get<int>());
-    }
-
-    if (jSystem.count("reverb_level"))
-    {
-        reverbLevel_slider->setValue(jSystem["reverb_level"].get<int>());
-    }
+void SystemPanel::bindProperty(std::shared_ptr<IntProperty> prop)
+{
+    mMasterVolume = prop;
 }
 
 //[/MiscUserCode]

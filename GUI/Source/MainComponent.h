@@ -2,8 +2,8 @@
 
 #include "SystemPanel.h"
 
-#include "json.hpp"
 #include "TvfPanel.h"
+#include "Property/IntProperty.h"
 
 #include <JuceHeader.h>
 
@@ -25,7 +25,6 @@ public:
     
     
     void loadJson();
-    void refresh();
 
 private:
     //==============================================================================
@@ -33,9 +32,8 @@ private:
     
     SystemPanel mSystemPanel;
     TvfPanel mTvf;
-    
-    nlohmann::json mJson;
 
+    std::shared_ptr<IntProperty> mMasterVolume;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

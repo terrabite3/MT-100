@@ -1,9 +1,15 @@
 #include "MainComponent.h"
 
+#include "Memory/IMemory.h"
+
 //==============================================================================
 MainComponent::MainComponent()
+: mMasterVolume(std::make_shared<IntProperty>("master_volume", SevenAddr(0x10, 0, 0x16).toNative(), 1, 100))
 {
     addAndMakeVisible(mSystemPanel);
+    
+    mSystemPanel.bindProperty(mMasterVolume);
+    
     setSize (600, 400);
     
     addAndMakeVisible(mTvf);
@@ -42,16 +48,14 @@ void MainComponent::loadJson()
         
         auto jsonText = jsonFile.loadFileAsString();
         
-        mJson = nlohmann::json::parse(jsonText.toStdString());
+        auto json = nlohmann::json::parse(jsonText.toStdString());
         
-        refresh();
-    }
-}
-
-void MainComponent::refresh()
-{
-    if (mJson.count("system"))
-    {
-        mSystemPanel.refresh(mJson["system"]);
+        if (json.count("system"))
+        {
+            auto jSystem = json["system"];
+            mMasterVolume->readJson(jSystem);
+            
+            mSystemPanel.refresh();
+        }
     }
 }
