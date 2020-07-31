@@ -144,12 +144,19 @@ SystemPanel::SystemPanel ()
 
     juce__label5->setBounds (8, 88, 120, 24);
 
-    juce__textButton.reset (new juce::TextButton ("new button"));
-    addAndMakeVisible (juce__textButton.get());
-    juce__textButton->setButtonText (TRANS("Load JSON..."));
-    juce__textButton->addListener (this);
+    loadJson_button.reset (new juce::TextButton ("loadJson_button"));
+    addAndMakeVisible (loadJson_button.get());
+    loadJson_button->setButtonText (TRANS("Load JSON..."));
+    loadJson_button->addListener (this);
 
-    juce__textButton->setBounds (16, 16, 150, 24);
+    loadJson_button->setBounds (16, 16, 150, 24);
+
+    saveJson_button.reset (new juce::TextButton ("saveJson_button"));
+    addAndMakeVisible (saveJson_button.get());
+    saveJson_button->setButtonText (TRANS("Save JSON..."));
+    saveJson_button->addListener (this);
+
+    saveJson_button->setBounds (184, 16, 150, 24);
 
 
     //[UserPreSize]
@@ -178,7 +185,8 @@ SystemPanel::~SystemPanel()
     juce__label4 = nullptr;
     masterVolume_slider = nullptr;
     juce__label5 = nullptr;
-    juce__textButton = nullptr;
+    loadJson_button = nullptr;
+    saveJson_button = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -229,6 +237,7 @@ void SystemPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == masterVolume_slider.get())
     {
         //[UserSliderCode_masterVolume_slider] -- add your slider handling code here..
+        mMasterVolume->setValue(sliderThatWasMoved->getValue());
         //[/UserSliderCode_masterVolume_slider]
     }
 
@@ -256,12 +265,19 @@ void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == juce__textButton.get())
+    if (buttonThatWasClicked == loadJson_button.get())
     {
-        //[UserButtonCode_juce__textButton] -- add your button handler code here..
+        //[UserButtonCode_loadJson_button] -- add your button handler code here..
         auto main = findParentComponentOfClass<MainComponent>();
         main->loadJson();
-        //[/UserButtonCode_juce__textButton]
+        //[/UserButtonCode_loadJson_button]
+    }
+    else if (buttonThatWasClicked == saveJson_button.get())
+    {
+        //[UserButtonCode_saveJson_button] -- add your button handler code here..
+        auto main = findParentComponentOfClass<MainComponent>();
+        main->saveJson();
+        //[/UserButtonCode_saveJson_button]
     }
 
     //[UserbuttonClicked_Post]
@@ -353,8 +369,11 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Master Volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
-  <TEXTBUTTON name="new button" id="ad3eb5b2816f1bcd" memberName="juce__textButton"
+  <TEXTBUTTON name="loadJson_button" id="ad3eb5b2816f1bcd" memberName="loadJson_button"
               virtualName="" explicitFocusOrder="0" pos="16 16 150 24" buttonText="Load JSON..."
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="saveJson_button" id="c4743d8e89e5733f" memberName="saveJson_button"
+              virtualName="" explicitFocusOrder="0" pos="184 16 150 24" buttonText="Save JSON..."
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 

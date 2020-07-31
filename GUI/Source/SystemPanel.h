@@ -76,7 +76,8 @@ private:
     std::unique_ptr<juce::Label> juce__label4;
     std::unique_ptr<juce::Slider> masterVolume_slider;
     std::unique_ptr<juce::Label> juce__label5;
-    std::unique_ptr<juce::TextButton> juce__textButton;
+    std::unique_ptr<juce::TextButton> loadJson_button;
+    std::unique_ptr<juce::TextButton> saveJson_button;
 
 
     //==============================================================================

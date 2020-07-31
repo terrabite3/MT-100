@@ -4,7 +4,7 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-: mMasterVolume(std::make_shared<IntProperty>("master_volume", SevenAddr(0x10, 0, 0x16).toNative(), 1, 100))
+: mMasterVolume(std::make_shared<IntProperty>("master_volume", SevenAddr(0x10, 0, 0x16).toNative(), 100))
 {
     addAndMakeVisible(mSystemPanel);
     
@@ -57,5 +57,26 @@ void MainComponent::loadJson()
             
             mSystemPanel.refresh();
         }
+    }
+}
+
+void MainComponent::saveJson()
+{
+    juce::FileChooser chooser ("Select a JSON file to save...",
+                               juce::File::getSpecialLocation(juce::File::currentApplicationFile),
+                               "*.json");
+    if (chooser.browseForFileToSave(true))
+    {
+        juce::File jsonFile = chooser.getResult();
+        
+        nlohmann::json json;
+        json["system"] = nlohmann::json::object();
+        
+        auto& jSystem = json["system"];
+        mMasterVolume->writeJson(jSystem);
+        
+        auto jsonText = json.dump(4);
+        
+        jsonFile.replaceWithText(jsonText);
     }
 }
