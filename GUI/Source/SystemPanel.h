@@ -21,8 +21,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-#include "json.hpp"
-#include "Property/IntProperty.h"
+#include "Property/SystemProperty.h"
 //[/Headers]
 
 
@@ -48,7 +47,7 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     void refresh();
-    void bindProperty(std::shared_ptr<IntProperty> prop);
+    void bindProperty(SystemProperty* prop);
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;
@@ -61,7 +60,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    std::shared_ptr<IntProperty> mMasterVolume;
+    IntProperty* mMasterVolume = nullptr;
     //[/UserVariables]
 
     //==============================================================================

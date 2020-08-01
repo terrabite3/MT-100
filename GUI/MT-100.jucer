@@ -14,6 +14,8 @@
         <FILE id="f8TbXc" name="GroupProperty.h" compile="0" resource="0" file="Source/Property/GroupProperty.h"/>
         <FILE id="tU9HOm" name="IntProperty.h" compile="0" resource="0" file="Source/Property/IntProperty.h"/>
         <FILE id="gV9dsc" name="IProperty.h" compile="0" resource="0" file="Source/Property/IProperty.h"/>
+        <FILE id="RotMJ4" name="SystemProperty.h" compile="0" resource="0"
+              file="Source/Property/SystemProperty.h"/>
       </GROUP>
       <FILE id="RBNBRZ" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/AdsrEditor.cpp"/>
       <FILE id="ggEfNL" name="AdsrEditor.h" compile="0" resource="0" file="Source/AdsrEditor.h"/>

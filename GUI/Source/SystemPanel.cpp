@@ -290,15 +290,15 @@ void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
 
 void SystemPanel::refresh()
 {
-    if (mMasterVolume->isSet())
+    if (mMasterVolume && mMasterVolume->isSet())
     {
         masterVolume_slider->setValue(mMasterVolume->value(), juce::NotificationType::dontSendNotification);
     }
 }
 
-void SystemPanel::bindProperty(std::shared_ptr<IntProperty> prop)
+void SystemPanel::bindProperty(SystemProperty* prop)
 {
-    mMasterVolume = prop;
+    mMasterVolume = &prop->masterVolume;
 }
 
 //[/MiscUserCode]

@@ -3,7 +3,7 @@
 #include "SystemPanel.h"
 
 #include "TvfPanel.h"
-#include "Property/IntProperty.h"
+#include "Property/SystemProperty.h"
 
 #include <JuceHeader.h>
 
@@ -34,7 +34,7 @@ private:
     SystemPanel mSystemPanel;
     TvfPanel mTvf;
 
-    std::shared_ptr<IntProperty> mMasterVolume;
+    SystemProperty mSystemProp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

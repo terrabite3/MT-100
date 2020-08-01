@@ -4,11 +4,11 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-: mMasterVolume(std::make_shared<IntProperty>("master_volume", SevenAddr(0x10, 0, 0x16).toNative(), 100))
+: mSystemProp(SevenAddr(0x10, 0, 0x16).toNative())
 {
     addAndMakeVisible(mSystemPanel);
     
-    mSystemPanel.bindProperty(mMasterVolume);
+    mSystemPanel.bindProperty(&mSystemProp);
     
     setSize (600, 400);
     
@@ -50,13 +50,9 @@ void MainComponent::loadJson()
         
         auto json = nlohmann::json::parse(jsonText.toStdString());
         
-        if (json.count("system"))
-        {
-            auto jSystem = json["system"];
-            mMasterVolume->readJson(jSystem);
-            
-            mSystemPanel.refresh();
-        }
+        mSystemProp.readJson(json);
+        
+        mSystemPanel.refresh();
     }
 }
 
@@ -70,10 +66,7 @@ void MainComponent::saveJson()
         juce::File jsonFile = chooser.getResult();
         
         nlohmann::json json;
-        json["system"] = nlohmann::json::object();
-        
-        auto& jSystem = json["system"];
-        mMasterVolume->writeJson(jSystem);
+        mSystemProp.writeJson(json);
         
         auto jsonText = json.dump(4);
         
