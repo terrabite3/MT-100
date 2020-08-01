@@ -15,11 +15,11 @@
 #include <stdexcept>
 #include <string>
 
-class IntProperty : public IProperty<int>
+class IntProperty : public IProperty
 {
 public:
     IntProperty(std::string name, int address, int8_t maxRaw = 127, int offset = 0)
-    : IProperty<int>(name, address)
+    : IProperty(name, address)
     , mMaxRaw(maxRaw)
     , mOffset(offset)
     {}
@@ -33,13 +33,38 @@ public:
         return mOffset;
     }
     
-    void setValue(int val) override
+    int value() const
+    {
+        if (mSet)
+            return mValue;
+        return 0;
+    }
+    
+    void setValue(int val)
     {
         if (val < getMin() || val > getMax())
             throw std::runtime_error("Value out of range: " + std::to_string(val));
         
-        IProperty<int>::setValue(val);
+        mValue = val;
+        mSet = true;
     }
+    
+    virtual void readJson(nlohmann::json jParent) override
+    {
+        if (jParent.count(mName))
+        {
+            setValue(jParent[mName].get<int>());
+        }
+    }
+    
+    virtual void writeJson(nlohmann::json& jParent) const override
+    {
+        if (mSet)
+        {
+            jParent[mName] = mValue;
+        }
+    }
+    
     
     int8_t getRawValue() const override
     {
@@ -54,6 +79,7 @@ public:
     }
     
 private:
+    int mValue;
     int8_t mMaxRaw;
     int mOffset;
 };

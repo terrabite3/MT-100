@@ -15,7 +15,6 @@
 
 #include <string>
 
-template <typename ValueType>
 class IProperty
 {
 public:
@@ -32,39 +31,18 @@ public:
     int address() const
     { return mAddress; }
     
-    virtual ValueType value() const
-    { return mValue; }
-    virtual void setValue(ValueType val)
-    {
-        mValue = val;
-        mSet = true;
-    }
-    bool isSet() const
+    virtual bool isSet() const
     {
         return mSet;
     }
     
-    void reset()
+    virtual void reset()
     {
-        mValue = ValueType();
         mSet = false;
     }
     
-    virtual void readJson(nlohmann::json jParent)
-    {
-        if (jParent.count(mName))
-        {
-            setValue(jParent[mName].template get<ValueType>());
-        }
-    }
-    
-    virtual void writeJson(nlohmann::json& jParent) const
-    {
-        if (mSet)
-        {
-            jParent[mName] = mValue;
-        }
-    }
+    virtual void readJson(nlohmann::json jParent) = 0;
+    virtual void writeJson(nlohmann::json& jParent) const = 0;
     
     virtual void readMemory(const IMemory& memory)
     {
@@ -86,9 +64,8 @@ public:
     virtual int8_t getRawValue() const = 0;
     virtual void setRawValue(int8_t val) = 0;
     
-private:
+protected:
     std::string mName;
     int mAddress;
     bool mSet;
-    ValueType mValue;
 };

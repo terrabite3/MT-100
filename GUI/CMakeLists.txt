@@ -11,6 +11,7 @@ CONAN_BASIC_SETUP()
 add_executable(${PROJECT_NAME}
     Source/Property/IProperty.h
     Source/Property/IntProperty.h
+    Source/Property/GroupProperty.h
 
     Source/Memory/IMemory.h
     Source/Memory/SysExMemory.cpp
@@ -20,6 +21,7 @@ add_executable(${PROJECT_NAME}
 
     test/SysExMemory_test.cpp
     test/IntProperty_test.cpp
+    test/GroupProperty_test.cpp
 
     test/Memory_mock.h
 )
