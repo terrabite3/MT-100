@@ -26,6 +26,9 @@ public:
     
     void loadJson();
     void saveJson();
+    
+    void sendSysEx();
+    void sendNote();
 
 private:
     //==============================================================================
@@ -35,6 +38,8 @@ private:
     TvfPanel mTvf;
 
     SystemProperty mSystemProp;
+    
+    std::unique_ptr<juce::MidiOutput> mMidiOut;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

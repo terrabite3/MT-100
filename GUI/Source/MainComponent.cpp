@@ -4,7 +4,7 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-: mSystemProp(SevenAddr(0x10, 0, 0x16).toNative())
+: mSystemProp(SevenAddr(0x10, 0, 0).toNative())
 {
     addAndMakeVisible(mSystemPanel);
     
@@ -15,6 +15,14 @@ MainComponent::MainComponent()
     addAndMakeVisible(mTvf);
     
     mTvf.setBounds(300, 0, 400, 400);
+    
+
+    
+    auto devInfo = juce::MidiOutput::getDefaultDevice();
+    mMidiOut = juce::MidiOutput::openDevice(devInfo.identifier);
+    
+    if (!mMidiOut)
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::AlertIconType::InfoIcon, "MIDI", "Could not open MIDI device");
 }
 
 MainComponent::~MainComponent()
@@ -73,3 +81,36 @@ void MainComponent::saveJson()
         jsonFile.replaceWithText(jsonText);
     }
 }
+
+void MainComponent::sendSysEx()
+{
+    if (mMidiOut)
+    {
+        SysExMemory mem;
+        mSystemProp.writeMemory(mem);
+        
+        auto sysEx = mem.writeSyx();
+        
+        if (sysEx.empty()) return;
+        
+        // Strip off the start and end bytes because createSysExMessage() adds them too
+        sysEx.erase(sysEx.begin());
+        sysEx.erase(sysEx.end() - 1);
+        
+        auto message = juce::MidiMessage::createSysExMessage((void*)sysEx.data(), (int)sysEx.size());
+        
+        mMidiOut->sendMessageNow(message);
+    }
+}
+
+void MainComponent::sendNote()
+{
+    if (mMidiOut)
+    {
+        mMidiOut->sendMessageNow(juce::MidiMessage::noteOn(2, 60, (uint8_t)127));
+    }
+}
+
+
+
+

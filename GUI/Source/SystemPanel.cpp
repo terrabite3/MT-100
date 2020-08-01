@@ -37,7 +37,7 @@ SystemPanel::SystemPanel ()
                                                           TRANS("Reverb")));
     addAndMakeVisible (juce__groupComponent.get());
 
-    juce__groupComponent->setBounds (8, 120, 280, 136);
+    juce__groupComponent->setBounds (8, 152, 280, 136);
 
     masterTune_slider.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (masterTune_slider.get());
@@ -46,7 +46,7 @@ SystemPanel::SystemPanel ()
     masterTune_slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     masterTune_slider->addListener (this);
 
-    masterTune_slider->setBounds (129, 56, 150, 24);
+    masterTune_slider->setBounds (129, 88, 150, 24);
 
     juce__label.reset (new juce::Label ("new label",
                                         TRANS("Master Tune")));
@@ -57,7 +57,7 @@ SystemPanel::SystemPanel ()
     juce__label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label->setBounds (8, 56, 120, 24);
+    juce__label->setBounds (8, 88, 120, 24);
 
     reverbMode_comboBox.reset (new juce::ComboBox ("new combo box"));
     addAndMakeVisible (reverbMode_comboBox.get());
@@ -71,7 +71,7 @@ SystemPanel::SystemPanel ()
     reverbMode_comboBox->addItem (TRANS("Tap delay"), 4);
     reverbMode_comboBox->addListener (this);
 
-    reverbMode_comboBox->setBounds (112, 152, 150, 24);
+    reverbMode_comboBox->setBounds (112, 184, 150, 24);
 
     juce__label2.reset (new juce::Label ("new label",
                                          TRANS("Mode")));
@@ -82,7 +82,7 @@ SystemPanel::SystemPanel ()
     juce__label2->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label2->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label2->setBounds (32, 152, 72, 24);
+    juce__label2->setBounds (32, 184, 72, 24);
 
     juce__label3.reset (new juce::Label ("new label",
                                          TRANS("Time")));
@@ -93,7 +93,7 @@ SystemPanel::SystemPanel ()
     juce__label3->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label3->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label3->setBounds (32, 184, 70, 24);
+    juce__label3->setBounds (32, 216, 70, 24);
 
     reverbTime_slider.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (reverbTime_slider.get());
@@ -102,7 +102,7 @@ SystemPanel::SystemPanel ()
     reverbTime_slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     reverbTime_slider->addListener (this);
 
-    reverbTime_slider->setBounds (112, 184, 150, 24);
+    reverbTime_slider->setBounds (112, 216, 150, 24);
 
     reverbLevel_slider.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (reverbLevel_slider.get());
@@ -111,7 +111,7 @@ SystemPanel::SystemPanel ()
     reverbLevel_slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     reverbLevel_slider->addListener (this);
 
-    reverbLevel_slider->setBounds (112, 216, 150, 24);
+    reverbLevel_slider->setBounds (112, 248, 150, 24);
 
     juce__label4.reset (new juce::Label ("new label",
                                          TRANS("Level")));
@@ -122,7 +122,7 @@ SystemPanel::SystemPanel ()
     juce__label4->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label4->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label4->setBounds (32, 216, 70, 24);
+    juce__label4->setBounds (32, 248, 70, 24);
 
     masterVolume_slider.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (masterVolume_slider.get());
@@ -131,7 +131,7 @@ SystemPanel::SystemPanel ()
     masterVolume_slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     masterVolume_slider->addListener (this);
 
-    masterVolume_slider->setBounds (129, 88, 150, 24);
+    masterVolume_slider->setBounds (129, 120, 150, 24);
 
     juce__label5.reset (new juce::Label ("new label",
                                          TRANS("Master Volume")));
@@ -142,7 +142,7 @@ SystemPanel::SystemPanel ()
     juce__label5->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label5->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label5->setBounds (8, 88, 120, 24);
+    juce__label5->setBounds (8, 120, 120, 24);
 
     loadJson_button.reset (new juce::TextButton ("loadJson_button"));
     addAndMakeVisible (loadJson_button.get());
@@ -157,6 +157,20 @@ SystemPanel::SystemPanel ()
     saveJson_button->addListener (this);
 
     saveJson_button->setBounds (184, 16, 150, 24);
+
+    sendSysEx_button.reset (new juce::TextButton ("loadJson_button"));
+    addAndMakeVisible (sendSysEx_button.get());
+    sendSysEx_button->setButtonText (TRANS("Send SysEx"));
+    sendSysEx_button->addListener (this);
+
+    sendSysEx_button->setBounds (16, 56, 150, 24);
+
+    sendNote_button.reset (new juce::TextButton ("loadJson_button"));
+    addAndMakeVisible (sendNote_button.get());
+    sendNote_button->setButtonText (TRANS("Send Note"));
+    sendNote_button->addListener (this);
+
+    sendNote_button->setBounds (184, 56, 150, 24);
 
 
     //[UserPreSize]
@@ -187,6 +201,8 @@ SystemPanel::~SystemPanel()
     juce__label5 = nullptr;
     loadJson_button = nullptr;
     saveJson_button = nullptr;
+    sendSysEx_button = nullptr;
+    sendNote_button = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -279,6 +295,20 @@ void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
         main->saveJson();
         //[/UserButtonCode_saveJson_button]
     }
+    else if (buttonThatWasClicked == sendSysEx_button.get())
+    {
+        //[UserButtonCode_sendSysEx_button] -- add your button handler code here..
+        auto main = findParentComponentOfClass<MainComponent>();
+        main->sendSysEx();
+        //[/UserButtonCode_sendSysEx_button]
+    }
+    else if (buttonThatWasClicked == sendNote_button.get())
+    {
+        //[UserButtonCode_sendNote_button] -- add your button handler code here..
+        auto main = findParentComponentOfClass<MainComponent>();
+        main->sendNote();
+        //[/UserButtonCode_sendNote_button]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -319,53 +349,53 @@ BEGIN_JUCER_METADATA
                  fixedSize="0" initialWidth="400" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44"/>
   <GROUPCOMPONENT name="new group" id="8c61cd31a96458fe" memberName="juce__groupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="8 120 280 136" title="Reverb"/>
+                  virtualName="" explicitFocusOrder="0" pos="8 152 280 136" title="Reverb"/>
   <SLIDER name="new slider" id="536593ca9edbe74e" memberName="masterTune_slider"
-          virtualName="" explicitFocusOrder="0" pos="129 56 150 24" min="432.1"
+          virtualName="" explicitFocusOrder="0" pos="129 88 150 24" min="432.1"
           max="457.6" int="0.2" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <LABEL name="new label" id="b49a9c11373decc8" memberName="juce__label"
-         virtualName="" explicitFocusOrder="0" pos="8 56 120 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 88 120 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Master Tune" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="new combo box" id="fbc69bb10c1e060e" memberName="reverbMode_comboBox"
-            virtualName="" explicitFocusOrder="0" pos="112 152 150 24" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="112 184 150 24" editable="0"
             layout="33" items="Room&#10;Hall&#10;Plate&#10;Tap delay" textWhenNonSelected=""
             textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="75f662e1f1b8cdab" memberName="juce__label2"
-         virtualName="" explicitFocusOrder="0" pos="32 152 72 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="32 184 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Mode" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="5003a96c77b2cbb7" memberName="juce__label3"
-         virtualName="" explicitFocusOrder="0" pos="32 184 70 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="32 216 70 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Time" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <SLIDER name="new slider" id="7a5a00097533061a" memberName="reverbTime_slider"
-          virtualName="" explicitFocusOrder="0" pos="112 184 150 24" min="1.0"
+          virtualName="" explicitFocusOrder="0" pos="112 216 150 24" min="1.0"
           max="8.0" int="1.0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <SLIDER name="new slider" id="c8f7c9ced28f8ad0" memberName="reverbLevel_slider"
-          virtualName="" explicitFocusOrder="0" pos="112 216 150 24" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="112 248 150 24" min="0.0"
           max="7.0" int="1.0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <LABEL name="new label" id="893d27a9a430f55d" memberName="juce__label4"
-         virtualName="" explicitFocusOrder="0" pos="32 216 70 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="32 248 70 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Level" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <SLIDER name="new slider" id="a50251e38f0886b" memberName="masterVolume_slider"
-          virtualName="" explicitFocusOrder="0" pos="129 88 150 24" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="129 120 150 24" min="0.0"
           max="100.0" int="1.0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <LABEL name="new label" id="8df0bca0698f1f39" memberName="juce__label5"
-         virtualName="" explicitFocusOrder="0" pos="8 88 120 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 120 120 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Master Volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
@@ -374,6 +404,12 @@ BEGIN_JUCER_METADATA
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="saveJson_button" id="c4743d8e89e5733f" memberName="saveJson_button"
               virtualName="" explicitFocusOrder="0" pos="184 16 150 24" buttonText="Save JSON..."
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="loadJson_button" id="823280f84a220c34" memberName="sendSysEx_button"
+              virtualName="" explicitFocusOrder="0" pos="16 56 150 24" buttonText="Send SysEx"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="loadJson_button" id="d967f2d24ea19773" memberName="sendNote_button"
+              virtualName="" explicitFocusOrder="0" pos="184 56 150 24" buttonText="Send Note"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 

@@ -77,6 +77,8 @@ private:
     std::unique_ptr<juce::Label> juce__label5;
     std::unique_ptr<juce::TextButton> loadJson_button;
     std::unique_ptr<juce::TextButton> saveJson_button;
+    std::unique_ptr<juce::TextButton> sendSysEx_button;
+    std::unique_ptr<juce::TextButton> sendNote_button;
 
 
     //==============================================================================
