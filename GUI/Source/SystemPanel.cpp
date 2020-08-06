@@ -206,6 +206,7 @@ void SystemPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == masterTune_slider.get())
     {
         //[UserSliderCode_masterTune_slider] -- add your slider handling code here..
+        mMasterTune->setValue(sliderThatWasMoved->getValue());
         //[/UserSliderCode_masterTune_slider]
     }
     else if (sliderThatWasMoved == reverbTime_slider.get())
@@ -250,6 +251,11 @@ void SystemPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
 
 void SystemPanel::refresh()
 {
+    if (mMasterTune && mMasterTune->isSet())
+    {
+        masterTune_slider->setValue(mMasterTune->value(), juce::NotificationType::dontSendNotification);
+    }
+    
     if (mMasterVolume && mMasterVolume->isSet())
     {
         masterVolume_slider->setValue(mMasterVolume->value(), juce::NotificationType::dontSendNotification);
@@ -258,6 +264,10 @@ void SystemPanel::refresh()
 
 void SystemPanel::bindProperty(SystemProperty* prop)
 {
+    mMasterTune = &prop->masterTune;
+    masterTune_slider->setRange({mMasterTune->getMin(), mMasterTune->getMax()}, mMasterTune->getStep());
+    masterTune_slider->setNumDecimalPlacesToDisplay(1);
+    
     mMasterVolume = &prop->masterVolume;
 }
 
