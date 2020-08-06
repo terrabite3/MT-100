@@ -7,22 +7,17 @@ MainComponent::MainComponent()
 : mSystemProp(SevenAddr(0x10, 0, 0).toNative())
 {
     addAndMakeVisible(mSystemPanel);
+    addAndMakeVisible(mControlPanel);
+    addAndMakeVisible(mTvf);
+    
+    mControlPanel.setTopLeftPosition(0, 0);
+    mSystemPanel.setTopLeftPosition(0, 120);
+    mTvf.setTopLeftPosition(350, 0);
     
     mSystemPanel.bindProperty(&mSystemProp);
     
-    setSize (600, 400);
+    setSize (620, 380);
     
-    addAndMakeVisible(mTvf);
-    
-    mTvf.setBounds(300, 0, 400, 400);
-    
-
-    
-    auto devInfo = juce::MidiOutput::getDefaultDevice();
-    mMidiOut = juce::MidiOutput::openDevice(devInfo.identifier);
-    
-    if (!mMidiOut)
-        juce::AlertWindow::showMessageBox(juce::AlertWindow::AlertIconType::InfoIcon, "MIDI", "Could not open MIDI device");
 }
 
 MainComponent::~MainComponent()
@@ -84,31 +79,26 @@ void MainComponent::saveJson()
 
 void MainComponent::sendSysEx()
 {
-    if (mMidiOut)
-    {
-        SysExMemory mem;
-        mSystemProp.writeMemory(mem);
-        
-        auto sysEx = mem.writeSyx();
-        
-        if (sysEx.empty()) return;
-        
-        // Strip off the start and end bytes because createSysExMessage() adds them too
-        sysEx.erase(sysEx.begin());
-        sysEx.erase(sysEx.end() - 1);
-        
-        auto message = juce::MidiMessage::createSysExMessage((void*)sysEx.data(), (int)sysEx.size());
-        
-        mMidiOut->sendMessageNow(message);
-    }
+    SysExMemory mem;
+    mSystemProp.writeMemory(mem);
+    
+    auto sysEx = mem.writeSyx();
+    
+    if (sysEx.empty()) return;
+    
+    // Strip off the start and end bytes because createSysExMessage() adds them too
+    sysEx.erase(sysEx.begin());
+    sysEx.erase(sysEx.end() - 1);
+    
+    auto message = juce::MidiMessage::createSysExMessage((void*)sysEx.data(), (int)sysEx.size());
+    
+    mControlPanel.sendMidi(message);
 }
 
 void MainComponent::sendNote()
 {
-    if (mMidiOut)
-    {
-        mMidiOut->sendMessageNow(juce::MidiMessage::noteOn(2, 60, (uint8_t)127));
-    }
+    auto message = juce::MidiMessage::noteOn(2, 60, (uint8_t)127);
+    mControlPanel.sendMidi(message);
 }
 
 

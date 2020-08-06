@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SystemPanel.h"
+#include "ControlPanel.h"
 
 #include "TvfPanel.h"
 #include "Property/SystemProperty.h"
@@ -34,12 +35,12 @@ private:
     //==============================================================================
     // Your private member variables go here...
     
+    ControlPanel mControlPanel;
     SystemPanel mSystemPanel;
     TvfPanel mTvf;
 
     SystemProperty mSystemProp;
     
-    std::unique_ptr<juce::MidiOutput> mMidiOut;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

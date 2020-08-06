@@ -31,6 +31,9 @@
       <FILE id="y5bXB9" name="PartialPanel.h" compile="0" resource="0" file="Source/PartialPanel.h"/>
       <FILE id="oN3rOM" name="TvfPanel.cpp" compile="1" resource="0" file="Source/TvfPanel.cpp"/>
       <FILE id="NoVDKk" name="TvfPanel.h" compile="0" resource="0" file="Source/TvfPanel.h"/>
+      <FILE id="pIZGyl" name="ControlPanel.cpp" compile="1" resource="0"
+            file="Source/ControlPanel.cpp"/>
+      <FILE id="sJlx1S" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
