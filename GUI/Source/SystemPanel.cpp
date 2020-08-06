@@ -238,6 +238,7 @@ void SystemPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
     if (comboBoxThatHasChanged == reverbMode_comboBox.get())
     {
         //[UserComboBoxCode_reverbMode_comboBox] -- add your combo box handling code here..
+        mReverbMode->setValue(comboBoxThatHasChanged->getText().toStdString());
         //[/UserComboBoxCode_reverbMode_comboBox]
     }
 
@@ -256,6 +257,12 @@ void SystemPanel::refresh()
         masterTune_slider->setValue(mMasterTune->value(), juce::NotificationType::dontSendNotification);
     }
     
+    if (mReverbMode && mReverbMode->isSet())
+    {
+        reverbMode_comboBox->setText(mReverbMode->value(), juce::NotificationType::dontSendNotification);
+    }
+
+
     if (mMasterVolume && mMasterVolume->isSet())
     {
         masterVolume_slider->setValue(mMasterVolume->value(), juce::NotificationType::dontSendNotification);
@@ -267,6 +274,13 @@ void SystemPanel::bindProperty(SystemProperty* prop)
     mMasterTune = &prop->masterTune;
     masterTune_slider->setRange({mMasterTune->getMin(), mMasterTune->getMax()}, mMasterTune->getStep());
     masterTune_slider->setNumDecimalPlacesToDisplay(1);
+    
+    mReverbMode = &prop->reverbMode;
+    reverbMode_comboBox->clear();
+    for (auto choice : mReverbMode->getChoices())
+    {
+        reverbMode_comboBox->addItem(choice, reverbMode_comboBox->getNumItems() + 1);
+    }
     
     mMasterVolume = &prop->masterVolume;
 }

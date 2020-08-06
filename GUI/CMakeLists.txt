@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     Source/Property/IntProperty.h
     Source/Property/FloatProperty.h
     Source/Property/GroupProperty.h
+    Source/Property/ChoiceProperty.h
 
     Source/Memory/IMemory.h
     Source/Memory/SysExMemory.cpp
@@ -24,6 +25,7 @@ add_executable(${PROJECT_NAME}
     test/IntProperty_test.cpp
     test/FloatProperty_test.cpp
     test/GroupProperty_test.cpp
+    test/ChoiceProperty_test.cpp
 
     test/Memory_mock.h
 )

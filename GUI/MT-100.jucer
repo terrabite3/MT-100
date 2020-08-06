@@ -11,6 +11,8 @@
         <FILE id="M2eWW0" name="SysExMemory.h" compile="0" resource="0" file="Source/Memory/SysExMemory.h"/>
       </GROUP>
       <GROUP id="{D92E4F6F-2856-25AA-907F-628F388692FC}" name="Property">
+        <FILE id="DrAnUY" name="ChoiceProperty.h" compile="0" resource="0"
+              file="Source/Property/ChoiceProperty.h"/>
         <FILE id="hF3FWv" name="FloatProperty.h" compile="0" resource="0" file="Source/Property/FloatProperty.h"/>
         <FILE id="f8TbXc" name="GroupProperty.h" compile="0" resource="0" file="Source/Property/GroupProperty.h"/>
         <FILE id="tU9HOm" name="IntProperty.h" compile="0" resource="0" file="Source/Property/IntProperty.h"/>
