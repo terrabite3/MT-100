@@ -13,7 +13,7 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::Component
+class MainComponent  : public juce::Component, public IPropertyListener
 {
 public:
     //==============================================================================
@@ -40,6 +40,8 @@ private:
     TvfPanel mTvf;
 
     SystemProperty mSystemProp;
+    
+    void notify(std::string name) override;
     
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

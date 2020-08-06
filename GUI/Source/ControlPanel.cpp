@@ -41,7 +41,7 @@ ControlPanel::ControlPanel ()
     midiIn_combo->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     midiIn_combo->addListener (this);
 
-    midiIn_combo->setBounds (120, 40, 206, 24);
+    midiIn_combo->setBounds (120, 88, 206, 24);
 
     midiOut_combo.reset (new juce::ComboBox ("new combo box"));
     addAndMakeVisible (midiOut_combo.get());
@@ -51,7 +51,7 @@ ControlPanel::ControlPanel ()
     midiOut_combo->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     midiOut_combo->addListener (this);
 
-    midiOut_combo->setBounds (120, 72, 206, 24);
+    midiOut_combo->setBounds (120, 120, 206, 24);
 
     load_button.reset (new juce::TextButton ("load_button"));
     addAndMakeVisible (load_button.get());
@@ -83,7 +83,7 @@ ControlPanel::ControlPanel ()
     juce__label2->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label2->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label2->setBounds (8, 72, 96, 24);
+    juce__label2->setBounds (8, 120, 96, 24);
 
     juce__label.reset (new juce::Label ("new label",
                                         TRANS("MIDI In")));
@@ -94,19 +94,47 @@ ControlPanel::ControlPanel ()
     juce__label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label->setBounds (8, 40, 96, 24);
+    juce__label->setBounds (8, 88, 96, 24);
+
+    syncMode_combo.reset (new juce::ComboBox ("new combo box"));
+    addAndMakeVisible (syncMode_combo.get());
+    syncMode_combo->setEditableText (false);
+    syncMode_combo->setJustificationType (juce::Justification::centredLeft);
+    syncMode_combo->setTextWhenNothingSelected (juce::String());
+    syncMode_combo->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    syncMode_combo->addItem (TRANS("Manual"), 1);
+    syncMode_combo->addItem (TRANS("Note Release"), 2);
+    syncMode_combo->addItem (TRANS("Immediate"), 3);
+    syncMode_combo->addItem (TRANS("Continuous"), 4);
+    syncMode_combo->addListener (this);
+
+    syncMode_combo->setBounds (120, 48, 206, 24);
+
+    juce__label3.reset (new juce::Label ("new label",
+                                         TRANS("Sync Mode")));
+    addAndMakeVisible (juce__label3.get());
+    juce__label3->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    juce__label3->setJustificationType (juce::Justification::centredLeft);
+    juce__label3->setEditable (false, false, false);
+    juce__label3->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    juce__label3->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    juce__label3->setBounds (8, 48, 96, 24);
 
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (336, 104);
+    setSize (336, 160);
 
 
     //[Constructor] You can add your own custom stuff here..
-    
+
+    syncMode_combo->setText(syncMode_combo->getItemText(0));
+
+
     mCallback = std::make_unique<Callback>(this);
-    
+
     juce::StringArray midiInputNames;
     midiInputNames.add("Disabled");
     for (auto input : juce::MidiInput::getAvailableDevices())
@@ -114,7 +142,7 @@ ControlPanel::ControlPanel ()
         midiInputNames.add(input.name);
     }
     midiIn_combo->addItemList(midiInputNames, 1);
-    
+
     juce::StringArray midiOutputNames;
     midiOutputNames.add("Disabled");
     for (auto output : juce::MidiOutput::getAvailableDevices())
@@ -122,7 +150,7 @@ ControlPanel::ControlPanel ()
         midiOutputNames.add(output.name);
     }
     midiOut_combo->addItemList(midiOutputNames, 1);
-         
+
     //[/Constructor]
 }
 
@@ -138,6 +166,8 @@ ControlPanel::~ControlPanel()
     sendSysEx_button = nullptr;
     juce__label2 = nullptr;
     juce__label = nullptr;
+    syncMode_combo = nullptr;
+    juce__label3 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -197,6 +227,9 @@ void ControlPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
             }
         }
         
+        numPressedNotes = 0;
+        mPendingMessage = {};
+
         //[/UserComboBoxCode_midiIn_combo]
     }
     else if (comboBoxThatHasChanged == midiOut_combo.get())
@@ -222,7 +255,34 @@ void ControlPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
                 }
             }
         }
+        
+        numPressedNotes = 0;
+        mPendingMessage = {};
+        
         //[/UserComboBoxCode_midiOut_combo]
+    }
+    else if (comboBoxThatHasChanged == syncMode_combo.get())
+    {
+        //[UserComboBoxCode_syncMode_combo] -- add your combo box handling code here..
+        auto main = findParentComponentOfClass<MainComponent>();
+        auto mode = comboBoxThatHasChanged->getText();
+        if (mode == "Manual")
+        {
+            configureSlidersToNotifyOnRelease(main, true);
+        }
+        else if (mode == "Note Release")
+        {
+            configureSlidersToNotifyOnRelease(main, false);
+        }
+        else if (mode == "Immediate")
+        {
+            configureSlidersToNotifyOnRelease(main, true);
+        }
+        else if (mode == "Continuous")
+        {
+            configureSlidersToNotifyOnRelease(main, false);
+        }
+        //[/UserComboBoxCode_syncMode_combo]
     }
 
     //[UsercomboBoxChanged_Post]
@@ -263,11 +323,35 @@ void ControlPanel::buttonClicked (juce::Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
 
-void ControlPanel::sendMidi(const juce::MidiMessage& message) const
+void ControlPanel::sendMidi(const juce::MidiMessage& message)
 {
     if (mMidiOut)
     {
-        mMidiOut->sendMessageNow(message);
+        if (getSyncMode() == "Note Release" && numPressedNotes > 0)
+        {
+            mPendingMessage = new juce::MidiMessage(message);
+        }
+        else
+            mMidiOut->sendMessageNow(message);
+    }
+}
+
+std::string ControlPanel::getSyncMode() const
+{
+    return syncMode_combo->getText().toStdString();
+}
+
+void ControlPanel::configureSlidersToNotifyOnRelease(Component* comp, bool notifyOnRelease) const
+{
+    auto compAsSlider = dynamic_cast<juce::Slider*>(comp);
+    if (compAsSlider)
+    {
+        compAsSlider->setChangeNotificationOnlyOnRelease(notifyOnRelease);
+    }
+    
+    for (auto child : comp->getChildren())
+    {
+        configureSlidersToNotifyOnRelease(child, notifyOnRelease);
     }
 }
 
@@ -275,6 +359,22 @@ void Callback::handleIncomingMidiMessage(juce::MidiInput* source, const juce::Mi
 {
     if (mParent->mMidiOut)
         mParent->mMidiOut->sendMessageNow(message);
+    
+    if (message.isNoteOn())
+    {
+        auto& count = mParent->numPressedNotes;
+        count++;
+    }
+    if (message.isNoteOff())
+    {
+        auto& count = mParent->numPressedNotes;
+        count--;
+        if (mParent->numPressedNotes == 0 && mParent->mPendingMessage != nullptr)
+        {
+            mParent->sendMidi(*mParent->mPendingMessage);
+            mParent->mPendingMessage = nullptr;
+        }
+    }
 }
 //[/MiscUserCode]
 
@@ -291,13 +391,13 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="ControlPanel" componentName=""
                  parentClasses="public juce::Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="336" initialHeight="104">
+                 fixedSize="0" initialWidth="336" initialHeight="160">
   <BACKGROUND backgroundColour="ff323e44"/>
   <COMBOBOX name="new combo box" id="f3df4114d4adac0" memberName="midiIn_combo"
-            virtualName="" explicitFocusOrder="0" pos="120 40 206 24" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="120 88 206 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <COMBOBOX name="new combo box" id="f55ca67533510438" memberName="midiOut_combo"
-            virtualName="" explicitFocusOrder="0" pos="120 72 206 24" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="120 120 206 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <TEXTBUTTON name="load_button" id="72ddefec56efcea6" memberName="load_button"
               virtualName="" explicitFocusOrder="0" pos="8 8 96 24" buttonText="Load File..."
@@ -309,13 +409,22 @@ BEGIN_JUCER_METADATA
               virtualName="" explicitFocusOrder="0" pos="232 8 96 24" buttonText="Send SysEx"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="new label" id="e573f6dc0385be1" memberName="juce__label2"
-         virtualName="" explicitFocusOrder="0" pos="8 72 96 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 120 96 24" edTextCol="ff000000"
          edBkgCol="0" labelText="MIDI Out" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="55cd72467155de36" memberName="juce__label"
-         virtualName="" explicitFocusOrder="0" pos="8 40 96 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 88 96 24" edTextCol="ff000000"
          edBkgCol="0" labelText="MIDI In" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="new combo box" id="481a2ddc073e522a" memberName="syncMode_combo"
+            virtualName="" explicitFocusOrder="0" pos="120 48 206 24" editable="0"
+            layout="33" items="Manual&#10;Note Release&#10;Immediate&#10;Continuous"
+            textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="new label" id="6c876079d0de6ab2" memberName="juce__label3"
+         virtualName="" explicitFocusOrder="0" pos="8 48 96 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Sync Mode" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>

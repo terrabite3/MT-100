@@ -46,7 +46,8 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void sendMidi(const juce::MidiMessage& message) const;
+    void sendMidi(const juce::MidiMessage& message);
+    std::string getSyncMode() const;
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;
@@ -59,10 +60,15 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     friend Callback;
-    
+
     std::unique_ptr<Callback> mCallback;
     std::unique_ptr<juce::MidiInput> mMidiIn;
     std::unique_ptr<juce::MidiOutput> mMidiOut;
+    
+    int numPressedNotes = 0;
+    juce::MidiMessage* mPendingMessage = nullptr;
+    
+    void configureSlidersToNotifyOnRelease(Component* comp, bool notifyOnRelease) const;
     //[/UserVariables]
 
     //==============================================================================
@@ -73,6 +79,8 @@ private:
     std::unique_ptr<juce::TextButton> sendSysEx_button;
     std::unique_ptr<juce::Label> juce__label2;
     std::unique_ptr<juce::Label> juce__label;
+    std::unique_ptr<juce::ComboBox> syncMode_combo;
+    std::unique_ptr<juce::Label> juce__label3;
 
 
     //==============================================================================
@@ -87,9 +95,9 @@ public:
     Callback(ControlPanel* parent)
     : mParent(parent)
     {}
-    
+
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
-    
+
 private:
     ControlPanel* mParent;
 };

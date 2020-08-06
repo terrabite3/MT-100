@@ -31,7 +31,7 @@ public:
     
     std::string value() const
     {
-        if (mSet)
+        if (isSet())
             return mValue;
         return "";
     }
@@ -43,7 +43,7 @@ public:
             if (val == mChoices[i])
             {
                 mValue = val;
-                mSet = true;
+                setAndNotify();
                 return;
             }
         }
@@ -61,7 +61,7 @@ public:
     
     virtual void writeJson(nlohmann::json& jParent) const override
     {
-        if (mSet)
+        if (isSet())
         {
             jParent[mName] = mValue;
         }

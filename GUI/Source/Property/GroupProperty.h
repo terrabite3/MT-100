@@ -12,7 +12,7 @@
 
 #include "IProperty.h"
 
-class GroupProperty : public IProperty
+class GroupProperty : public IProperty, public IPropertyListener
 {
 public:
     GroupProperty(std::string name, int address)
@@ -84,6 +84,15 @@ public:
     virtual std::vector<const IProperty*> getChildren() const = 0;
     virtual std::vector<IProperty*> getChildren() = 0;
     
+protected:
+    void registerWithChildren()
+    {
+        for (auto child : getChildren())
+        {
+            child->registerListener(this);
+        }
+    }
+    
     
 private:
     
@@ -94,4 +103,9 @@ private:
     
     void setRawValue(int8_t) override
     {}
+    
+    void notify(std::string name) override
+    {
+        notifyByName(mName + "." + name);
+    }
 };

@@ -43,7 +43,7 @@ public:
     
     float value() const
     {
-        if (mSet)
+        if (isSet())
             return mValue;
         return mMinFloat;
     }
@@ -54,7 +54,7 @@ public:
             throw std::runtime_error("Value out of range: " + std::to_string(val));
         
         mValue = val;
-        mSet = true;
+        setAndNotify();
     }
     
     virtual void readJson(nlohmann::json jParent) override
@@ -67,7 +67,7 @@ public:
     
     virtual void writeJson(nlohmann::json& jParent) const override
     {
-        if (mSet)
+        if (isSet())
         {
             jParent[mName] = mValue;
         }

@@ -11,12 +11,14 @@ MainComponent::MainComponent()
     addAndMakeVisible(mTvf);
     
     mControlPanel.setTopLeftPosition(0, 0);
-    mSystemPanel.setTopLeftPosition(0, 120);
+    mSystemPanel.setTopLeftPosition(0, 176);
     mTvf.setTopLeftPosition(350, 0);
+    
+    mSystemProp.registerListener(this);
     
     mSystemPanel.bindProperty(&mSystemProp);
     
-    setSize (620, 380);
+    setSize (620, 436);
     
 }
 
@@ -101,6 +103,12 @@ void MainComponent::sendNote()
     mControlPanel.sendMidi(message);
 }
 
-
+void MainComponent::notify(std::string name)
+{
+    if (mControlPanel.getSyncMode() != "Manual")
+    {
+        sendSysEx();
+    }
+}
 
 

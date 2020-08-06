@@ -25,7 +25,9 @@ public:
     , reverbTime("reverb_time", address + 0x02, 7, 1)
     , reverbLevel("reverb_level", address + 0x03, 7)
     , masterVolume("master_volume", address + 0x16, 100)
-    {}
+    {
+        registerWithChildren();
+    }
     
     FloatProperty masterTune;
     ChoiceProperty reverbMode;

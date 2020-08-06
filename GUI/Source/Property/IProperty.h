@@ -12,6 +12,7 @@
 
 #include "json.hpp"
 #include "Memory/SysExMemory.h"
+#include "IPropertyListener.h"
 
 #include <string>
 
@@ -64,8 +65,29 @@ public:
     virtual int8_t getRawValue() const = 0;
     virtual void setRawValue(int8_t val) = 0;
     
+    void registerListener(IPropertyListener* listener)
+    {
+        mListener = listener;
+    }
+    
 protected:
     std::string mName;
     int mAddress;
+    
+    void setAndNotify()
+    {
+        mSet = true;
+        if (mListener) mListener->notify(mName);
+    }
+    
+    void notifyByName(std::string name)
+    {
+        if (mListener) mListener->notify(name);
+    }
+    
+private:
+    IPropertyListener* mListener = nullptr;
     bool mSet;
+    
+    
 };
