@@ -58,9 +58,9 @@ TEST(IntProperty_test, simple_memory)
     IntProperty dut("dut", 123);
 
     Memory_mock mem;
-    EXPECT_CALL(mem, set(123))
+    EXPECT_CALL(mem, isSet(123))
         .WillOnce(Return(true));
-    EXPECT_CALL(mem, at(123))
+    EXPECT_CALL(mem, read(123))
         .WillOnce(Return(3));
     EXPECT_CALL(mem, write(123, 3));
     
@@ -118,9 +118,9 @@ TEST(IntProperty_test, max_memory)
     IntProperty dut("dut", 123, 10);
 
     Memory_mock mem;
-    EXPECT_CALL(mem, set(123))
+    EXPECT_CALL(mem, isSet(123))
         .WillRepeatedly(Return(true));
-    EXPECT_CALL(mem, at(123))
+    EXPECT_CALL(mem, read(123))
         .WillOnce(Return(11))
         .WillOnce(Return(-1));
 
@@ -203,9 +203,9 @@ TEST(IntProperty_test, offset_memory)
     IntProperty dut("dut", 123, 127, 1);
 
     Memory_mock mem;
-    EXPECT_CALL(mem, set(123))
+    EXPECT_CALL(mem, isSet(123))
         .WillRepeatedly(Return(true));
-    EXPECT_CALL(mem, at(123))
+    EXPECT_CALL(mem, read(123))
         .WillOnce(Return(0))
         .WillOnce(Return(127))
         .WillOnce(Return(128))
@@ -291,9 +291,9 @@ TEST(IntProperty_test, max_offset_memory)
     IntProperty dut("dut", 123, 10, 1);
 
     Memory_mock mem;
-    EXPECT_CALL(mem, set(123))
+    EXPECT_CALL(mem, isSet(123))
         .WillRepeatedly(Return(true));
-    EXPECT_CALL(mem, at(123))
+    EXPECT_CALL(mem, read(123))
         .WillOnce(Return(0))
         .WillOnce(Return(10))
         .WillOnce(Return(11))

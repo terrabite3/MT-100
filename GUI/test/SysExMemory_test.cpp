@@ -21,8 +21,8 @@ TEST_F(SysExMemory_tf, first)
     
     SevenAddr addr(0x10, 0x00, 0x16);
     
-    EXPECT_TRUE(mDut.set(addr.toNative()));
-    EXPECT_EQ(mDut.at(addr.toNative()), 100);
+    EXPECT_TRUE(mDut.isSet(addr.toNative()));
+    EXPECT_EQ(mDut.read(addr.toNative()), 100);
     
     auto output = mDut.writeSyx();
     EXPECT_EQ(hello, output);

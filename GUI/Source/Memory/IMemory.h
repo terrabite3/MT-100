@@ -50,7 +50,7 @@ class IMemory
 public:
     virtual ~IMemory() = default;
     
-    virtual Byt at(NativeAddr addr) const = 0;
+    virtual Byt read(NativeAddr addr) const = 0;
     virtual void write(NativeAddr addr, Byt val) = 0;
-    virtual bool set(NativeAddr addr) const = 0;
+    virtual bool isSet(NativeAddr addr) const = 0;
 };

@@ -246,7 +246,7 @@ std::vector<int8_t> SysExMemory::writeSyx() const
     return result;
 }
 
-Byt SysExMemory::at(NativeAddr addr) const
+Byt SysExMemory::read(NativeAddr addr) const
 {
     if (mData.count(addr))
         return mData.at(addr);
@@ -258,7 +258,7 @@ void SysExMemory::write(NativeAddr addr, Byt val)
     mData[addr] = val;
 }
 
-bool SysExMemory::set(NativeAddr addr) const
+bool SysExMemory::isSet(NativeAddr addr) const
 {
     return mData.count(addr);
 }

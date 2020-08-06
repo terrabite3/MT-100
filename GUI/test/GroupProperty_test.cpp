@@ -107,13 +107,13 @@ TEST(GroupProperty_test, readMemory)
     SampleGroupProperty dut(10);
 
     Memory_mock mem;
-    EXPECT_CALL(mem, set(10))
+    EXPECT_CALL(mem, isSet(10))
         .WillOnce(Return(true));
-    EXPECT_CALL(mem, at(10))
+    EXPECT_CALL(mem, read(10))
         .WillOnce(Return(5));
-    EXPECT_CALL(mem, set(11))
+    EXPECT_CALL(mem, isSet(11))
         .WillOnce(Return(true));
-    EXPECT_CALL(mem, at(11))
+    EXPECT_CALL(mem, read(11))
         .WillOnce(Return(7));
 
     dut.readMemory(mem);

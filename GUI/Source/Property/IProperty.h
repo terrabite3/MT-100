@@ -46,9 +46,9 @@ public:
     
     virtual void readMemory(const IMemory& memory)
     {
-        if (memory.set(mAddress))
+        if (memory.isSet(mAddress))
         {
-            setRawValue(memory.at(mAddress));
+            setRawValue(memory.read(mAddress));
             mSet = true;
         }
     }
