@@ -60,6 +60,8 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     FloatProperty* mMasterTune = nullptr;
     ChoiceProperty* mReverbMode = nullptr;
+    IntProperty* mReverbTime = nullptr;
+    IntProperty* mReverbLevel = nullptr;
     IntProperty* mMasterVolume = nullptr;
     //[/UserVariables]
 

@@ -22,13 +22,15 @@ public:
     : GroupProperty("system", address)
     , masterTune("master_tune", address + 0x00, 0, 127, 432.1, 457.6)
     , reverbMode("reverb_mode", address + 0x01, {"Room", "Hall", "Plate", "Tap delay"})
+    , reverbTime("reverb_time", address + 0x02, 7, 1)
+    , reverbLevel("reverb_level", address + 0x03, 7)
     , masterVolume("master_volume", address + 0x16, 100)
     {}
     
     FloatProperty masterTune;
     ChoiceProperty reverbMode;
-    // reverb_time
-    // reverb_level
+    IntProperty reverbTime;
+    IntProperty reverbLevel;
     // partial_reserve
     // midi_channel
     IntProperty masterVolume;
@@ -36,11 +38,11 @@ public:
     
     std::vector<const IProperty*> getChildren() const override
     {
-        return { &masterTune, &reverbMode, &masterVolume };
+        return { &masterTune, &reverbMode, &reverbTime, &reverbLevel, &masterVolume };
     }
     
     std::vector<IProperty*> getChildren() override
     {
-        return { &masterTune, &reverbMode, &masterVolume };
+        return { &masterTune, &reverbMode, &reverbTime, &reverbLevel, &masterVolume };
     }
 };

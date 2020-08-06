@@ -212,11 +212,13 @@ void SystemPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == reverbTime_slider.get())
     {
         //[UserSliderCode_reverbTime_slider] -- add your slider handling code here..
+        mReverbTime->setValue(sliderThatWasMoved->getValue());
         //[/UserSliderCode_reverbTime_slider]
     }
     else if (sliderThatWasMoved == reverbLevel_slider.get())
     {
         //[UserSliderCode_reverbLevel_slider] -- add your slider handling code here..
+        mReverbLevel->setValue(sliderThatWasMoved->getValue());
         //[/UserSliderCode_reverbLevel_slider]
     }
     else if (sliderThatWasMoved == masterVolume_slider.get())
@@ -261,6 +263,16 @@ void SystemPanel::refresh()
     {
         reverbMode_comboBox->setText(mReverbMode->value(), juce::NotificationType::dontSendNotification);
     }
+    
+    if (mReverbTime && mReverbTime->isSet())
+    {
+        reverbTime_slider->setValue(mReverbTime->value(), juce::NotificationType::dontSendNotification);
+    }
+    
+    if (mReverbLevel && mReverbLevel->isSet())
+    {
+        reverbLevel_slider->setValue(mReverbLevel->value(), juce::NotificationType::dontSendNotification);
+    }
 
 
     if (mMasterVolume && mMasterVolume->isSet())
@@ -281,6 +293,12 @@ void SystemPanel::bindProperty(SystemProperty* prop)
     {
         reverbMode_comboBox->addItem(choice, reverbMode_comboBox->getNumItems() + 1);
     }
+    
+    mReverbTime = &prop->reverbTime;
+    reverbTime_slider->setRange(mReverbTime->getMin(), mReverbTime->getMax(), 1);
+    
+    mReverbLevel = &prop->reverbLevel;
+    reverbLevel_slider->setRange(mReverbLevel->getMin(), mReverbLevel->getMax(), 1);
     
     mMasterVolume = &prop->masterVolume;
 }
