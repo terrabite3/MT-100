@@ -343,6 +343,7 @@ class Patch(GroupProperty):
     def __init__(self, name, address):
         GroupProperty.__init__(self, name, address)
 
+        # Group A, Group B, Memory, Rhythm
         self.timbre_group = ChoiceProperty('timbre_group', address + 0x00, ['a', 'b', 'i', 'r'])
         self.timbre_number = IntProperty('timbre_number', address + 0x01, 63)
         self.key_shift = IntProperty('key_shift', address + 0x02, 48, -24)

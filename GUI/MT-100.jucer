@@ -40,6 +40,8 @@
             file="Source/ControlPanel.cpp"/>
       <FILE id="sJlx1S" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>
     </GROUP>
+    <FILE id="OKdYDW" name="TimbrePanel.cpp" compile="1" resource="0" file="Source/TimbrePanel.cpp"/>
+    <FILE id="QPgAwE" name="TimbrePanel.h" compile="0" resource="0" file="Source/TimbrePanel.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>

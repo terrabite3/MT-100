@@ -30,6 +30,8 @@ public:
     
     void sendSysEx();
     void sendNote();
+    void fuzz();
+    void updateValue(juce::String address, int value);
 
 private:
     //==============================================================================
@@ -40,6 +42,7 @@ private:
     TvfPanel mTvf;
 
     SystemProperty mSystemProp;
+    ChoiceProperty mWaveformProp;
     
     void notify(std::string name) override;
     

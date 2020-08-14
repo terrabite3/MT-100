@@ -144,11 +144,61 @@ SystemPanel::SystemPanel ()
 
     juce__label5->setBounds (8, 40, 120, 24);
 
+    waveform_toggle.reset (new juce::ToggleButton ("new toggle button"));
+    addAndMakeVisible (waveform_toggle.get());
+    waveform_toggle->setButtonText (TRANS("Waveform"));
+    waveform_toggle->addListener (this);
+
+    waveform_toggle->setBounds (176, 72, 150, 24);
+
+    address_textEdit.reset (new juce::TextEditor ("new text editor"));
+    addAndMakeVisible (address_textEdit.get());
+    address_textEdit->setMultiLine (false);
+    address_textEdit->setReturnKeyStartsNewLine (false);
+    address_textEdit->setReadOnly (false);
+    address_textEdit->setScrollbarsShown (true);
+    address_textEdit->setCaretVisible (true);
+    address_textEdit->setPopupMenuEnabled (true);
+    address_textEdit->setText (juce::String());
+
+    address_textEdit->setBounds (128, 216, 150, 24);
+
+    juce__label6.reset (new juce::Label ("new label",
+                                         TRANS("Address")));
+    addAndMakeVisible (juce__label6.get());
+    juce__label6->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    juce__label6->setJustificationType (juce::Justification::centredLeft);
+    juce__label6->setEditable (false, false, false);
+    juce__label6->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    juce__label6->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    juce__label6->setBounds (16, 216, 150, 24);
+
+    juce__label7.reset (new juce::Label ("new label",
+                                         TRANS("Value")));
+    addAndMakeVisible (juce__label7.get());
+    juce__label7->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    juce__label7->setJustificationType (juce::Justification::centredLeft);
+    juce__label7->setEditable (false, false, false);
+    juce__label7->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    juce__label7->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    juce__label7->setBounds (16, 248, 150, 24);
+
+    value_slider.reset (new juce::Slider ("new slider"));
+    addAndMakeVisible (value_slider.get());
+    value_slider->setRange (0, 127, 1);
+    value_slider->setSliderStyle (juce::Slider::LinearHorizontal);
+    value_slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
+    value_slider->addListener (this);
+
+    value_slider->setBounds (64, 248, 432, 24);
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (296, 216);
+    setSize (500, 280);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -171,6 +221,11 @@ SystemPanel::~SystemPanel()
     juce__label4 = nullptr;
     masterVolume_slider = nullptr;
     juce__label5 = nullptr;
+    waveform_toggle = nullptr;
+    address_textEdit = nullptr;
+    juce__label6 = nullptr;
+    juce__label7 = nullptr;
+    value_slider = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -227,6 +282,13 @@ void SystemPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
         mMasterVolume->setValue(sliderThatWasMoved->getValue());
         //[/UserSliderCode_masterVolume_slider]
     }
+    else if (sliderThatWasMoved == value_slider.get())
+    {
+        //[UserSliderCode_value_slider] -- add your slider handling code here..
+        auto main = findParentComponentOfClass<MainComponent>();
+        main->updateValue(address_textEdit->getText(), sliderThatWasMoved->getValue());
+        //[/UserSliderCode_value_slider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -248,6 +310,22 @@ void SystemPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
+void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == waveform_toggle.get())
+    {
+        //[UserButtonCode_waveform_toggle] -- add your button handler code here..
+        mWaveform->setValue(buttonThatWasClicked->getToggleState() ? "SAW" : "SQU");
+        //[/UserButtonCode_waveform_toggle]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -258,17 +336,17 @@ void SystemPanel::refresh()
     {
         masterTune_slider->setValue(mMasterTune->value(), juce::NotificationType::dontSendNotification);
     }
-    
+
     if (mReverbMode && mReverbMode->isSet())
     {
         reverbMode_comboBox->setText(mReverbMode->value(), juce::NotificationType::dontSendNotification);
     }
-    
+
     if (mReverbTime && mReverbTime->isSet())
     {
         reverbTime_slider->setValue(mReverbTime->value(), juce::NotificationType::dontSendNotification);
     }
-    
+
     if (mReverbLevel && mReverbLevel->isSet())
     {
         reverbLevel_slider->setValue(mReverbLevel->value(), juce::NotificationType::dontSendNotification);
@@ -286,23 +364,27 @@ void SystemPanel::bindProperty(SystemProperty* prop)
     mMasterTune = &prop->masterTune;
     masterTune_slider->setRange({mMasterTune->getMin(), mMasterTune->getMax()}, mMasterTune->getStep());
     masterTune_slider->setNumDecimalPlacesToDisplay(1);
-    
+
     mReverbMode = &prop->reverbMode;
     reverbMode_comboBox->clear();
     for (auto choice : mReverbMode->getChoices())
     {
         reverbMode_comboBox->addItem(choice, reverbMode_comboBox->getNumItems() + 1);
     }
-    
+
     mReverbTime = &prop->reverbTime;
     reverbTime_slider->setRange(mReverbTime->getMin(), mReverbTime->getMax(), 1);
-    
+
     mReverbLevel = &prop->reverbLevel;
     reverbLevel_slider->setRange(mReverbLevel->getMin(), mReverbLevel->getMax(), 1);
-    
+
     mMasterVolume = &prop->masterVolume;
 }
 
+void SystemPanel::bindWaveformProp(ChoiceProperty* prop)
+{
+    mWaveform = prop;
+}
 //[/MiscUserCode]
 
 
@@ -318,7 +400,7 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="SystemPanel" componentName=""
                  parentClasses="public juce::Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="296" initialHeight="216">
+                 fixedSize="0" initialWidth="500" initialHeight="280">
   <BACKGROUND backgroundColour="ff323e44"/>
   <GROUPCOMPONENT name="new group" id="8c61cd31a96458fe" memberName="juce__groupComponent"
                   virtualName="" explicitFocusOrder="0" pos="8 72 280 136" title="Reverb"/>
@@ -371,6 +453,28 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Master Volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
+  <TOGGLEBUTTON name="new toggle button" id="adaf0db3be772bf7" memberName="waveform_toggle"
+                virtualName="" explicitFocusOrder="0" pos="176 72 150 24" buttonText="Waveform"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+  <TEXTEDITOR name="new text editor" id="1cdba291652913dc" memberName="address_textEdit"
+              virtualName="" explicitFocusOrder="0" pos="128 216 150 24" initialText=""
+              multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="1"
+              caret="1" popupmenu="1"/>
+  <LABEL name="new label" id="85af0c1331cde33a" memberName="juce__label6"
+         virtualName="" explicitFocusOrder="0" pos="16 216 150 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Address" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="469c1889c941841" memberName="juce__label7"
+         virtualName="" explicitFocusOrder="0" pos="16 248 150 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Value" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
+  <SLIDER name="new slider" id="2b1492194938005b" memberName="value_slider"
+          virtualName="" explicitFocusOrder="0" pos="64 248 432 24" min="0.0"
+          max="127.0" int="1.0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
+          needsCallback="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

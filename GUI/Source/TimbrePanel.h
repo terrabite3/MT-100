@@ -21,7 +21,6 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-#include "Property/SystemProperty.h"
 //[/Headers]
 
 
@@ -34,62 +33,39 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class SystemPanel  : public juce::Component,
-                     public juce::Slider::Listener,
-                     public juce::ComboBox::Listener,
+class TimbrePanel  : public juce::Component,
                      public juce::Button::Listener
 {
 public:
     //==============================================================================
-    SystemPanel ();
-    ~SystemPanel() override;
+    TimbrePanel ();
+    ~TimbrePanel() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void refresh();
-    void bindProperty(SystemProperty* prop);
-    void bindWaveformProp(ChoiceProperty* prop);
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;
     void resized() override;
-    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
-    void comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged) override;
     void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    FloatProperty* mMasterTune = nullptr;
-    ChoiceProperty* mReverbMode = nullptr;
-    IntProperty* mReverbTime = nullptr;
-    IntProperty* mReverbLevel = nullptr;
-    IntProperty* mMasterVolume = nullptr;
-    ChoiceProperty* mWaveform = nullptr;
     //[/UserVariables]
 
     //==============================================================================
     std::unique_ptr<juce::GroupComponent> juce__groupComponent;
-    std::unique_ptr<juce::Slider> masterTune_slider;
     std::unique_ptr<juce::Label> juce__label;
-    std::unique_ptr<juce::ComboBox> reverbMode_comboBox;
+    std::unique_ptr<juce::TextEditor> juce__textEditor;
     std::unique_ptr<juce::Label> juce__label2;
     std::unique_ptr<juce::Label> juce__label3;
-    std::unique_ptr<juce::Slider> reverbTime_slider;
-    std::unique_ptr<juce::Slider> reverbLevel_slider;
-    std::unique_ptr<juce::Label> juce__label4;
-    std::unique_ptr<juce::Slider> masterVolume_slider;
-    std::unique_ptr<juce::Label> juce__label5;
-    std::unique_ptr<juce::ToggleButton> waveform_toggle;
-    std::unique_ptr<juce::TextEditor> address_textEdit;
-    std::unique_ptr<juce::Label> juce__label6;
-    std::unique_ptr<juce::Label> juce__label7;
-    std::unique_ptr<juce::Slider> value_slider;
+    std::unique_ptr<juce::ToggleButton> juce__toggleButton;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SystemPanel)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimbrePanel)
 };
 
 //[EndFile] You can add extra defines here...
