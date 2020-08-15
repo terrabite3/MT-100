@@ -9,11 +9,13 @@ MainComponent::MainComponent()
 {
     addAndMakeVisible(mSystemPanel);
     addAndMakeVisible(mControlPanel);
-    addAndMakeVisible(mTvf);
+//    addAndMakeVisible(mTvf);
+    addAndMakeVisible(mPartial);
     
     mControlPanel.setTopLeftPosition(0, 0);
     mSystemPanel.setTopLeftPosition(0, 176);
-    mTvf.setTopLeftPosition(350, 0);
+//    mTvf.setTopLeftPosition(350, 0);
+    mPartial.setTopLeftPosition(350, 0);
     
     mSystemProp.registerListener(this);
     mWaveformProp.registerListener(this);
@@ -21,7 +23,7 @@ MainComponent::MainComponent()
     mSystemPanel.bindProperty(&mSystemProp);
     mSystemPanel.bindWaveformProp(&mWaveformProp);
     
-    setSize (620, 436);
+    setSize (1250, 900);
     
 }
 

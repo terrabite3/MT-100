@@ -4,6 +4,7 @@
 #include "ControlPanel.h"
 
 #include "TvfPanel.h"
+#include "PartialPanel.h"
 #include "Property/SystemProperty.h"
 
 #include <JuceHeader.h>
@@ -39,7 +40,8 @@ private:
     
     ControlPanel mControlPanel;
     SystemPanel mSystemPanel;
-    TvfPanel mTvf;
+//    TvfPanel mTvf;
+    PartialPanel mPartial;
 
     SystemProperty mSystemProp;
     ChoiceProperty mWaveformProp;

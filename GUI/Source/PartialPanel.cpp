@@ -32,6 +32,12 @@ PartialPanel::PartialPanel ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
+    juce__groupComponent2.reset (new juce::GroupComponent ("new group",
+                                                           TRANS("Pitch")));
+    addAndMakeVisible (juce__groupComponent2.get());
+
+    juce__groupComponent2->setBounds (16, 152, 272, 656);
+
     juce__groupComponent5.reset (new juce::GroupComponent ("new group",
                                                            TRANS("Filter")));
     addAndMakeVisible (juce__groupComponent5.get());
@@ -42,13 +48,7 @@ PartialPanel::PartialPanel ()
                                                            TRANS("Envelope")));
     addAndMakeVisible (juce__groupComponent4.get());
 
-    juce__groupComponent4->setBounds (40, 512, 224, 224);
-
-    juce__groupComponent2.reset (new juce::GroupComponent ("new group",
-                                                           TRANS("Pitch")));
-    addAndMakeVisible (juce__groupComponent2.get());
-
-    juce__groupComponent2->setBounds (16, 152, 272, 592);
+    juce__groupComponent4->setBounds (40, 568, 224, 224);
 
     juce__groupComponent.reset (new juce::GroupComponent ("new group",
                                                           TRANS("Wave")));
@@ -143,15 +143,6 @@ PartialPanel::PartialPanel ()
 
     juce__label4->setBounds (112, 208, 47, 24);
 
-    juce__slider5.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (juce__slider5.get());
-    juce__slider5->setRange (0, 10, 1);
-    juce__slider5->setSliderStyle (juce::Slider::Rotary);
-    juce__slider5->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
-    juce__slider5->addListener (this);
-
-    juce__slider5->setBounds (16, 56, 48, 48);
-
     juce__label5.reset (new juce::Label ("new label",
                                          TRANS("Width")));
     addAndMakeVisible (juce__label5.get());
@@ -162,16 +153,6 @@ PartialPanel::PartialPanel ()
     juce__label5->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
     juce__label5->setBounds (16, 104, 47, 24);
-
-    juce__imageButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (juce__imageButton.get());
-    juce__imageButton->addListener (this);
-
-    juce__imageButton->setImages (false, true, true,
-                                  juce::ImageCache::getFromMemory (keyfollow_png, keyfollow_pngSize), 1.000f, juce::Colour (0x00000000),
-                                  juce::Image(), 1.000f, juce::Colour (0x00000000),
-                                  juce::Image(), 1.000f, juce::Colour (0x00000000));
-    juce__imageButton->setBounds (56, 240, 175, 144);
 
     juce__toggleButton2.reset (new juce::ToggleButton ("new toggle button"));
     addAndMakeVisible (juce__toggleButton2.get());
@@ -187,7 +168,7 @@ PartialPanel::PartialPanel ()
     juce__slider6->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     juce__slider6->addListener (this);
 
-    juce__slider6->setBounds (48, 416, 48, 48);
+    juce__slider6->setBounds (48, 480, 48, 48);
 
     juce__label6.reset (new juce::Label ("new label",
                                          TRANS("Rate")));
@@ -198,7 +179,7 @@ PartialPanel::PartialPanel ()
     juce__label6->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label6->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label6->setBounds (48, 464, 47, 24);
+    juce__label6->setBounds (48, 528, 47, 24);
 
     juce__slider7.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider7.get());
@@ -207,7 +188,7 @@ PartialPanel::PartialPanel ()
     juce__slider7->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     juce__slider7->addListener (this);
 
-    juce__slider7->setBounds (112, 416, 48, 48);
+    juce__slider7->setBounds (112, 480, 48, 48);
 
     juce__label7.reset (new juce::Label ("new label",
                                          TRANS("Depth")));
@@ -218,7 +199,7 @@ PartialPanel::PartialPanel ()
     juce__label7->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label7->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label7->setBounds (112, 464, 47, 24);
+    juce__label7->setBounds (112, 528, 47, 24);
 
     juce__slider8.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider8.get());
@@ -227,7 +208,7 @@ PartialPanel::PartialPanel ()
     juce__slider8->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     juce__slider8->addListener (this);
 
-    juce__slider8->setBounds (176, 416, 48, 48);
+    juce__slider8->setBounds (176, 480, 48, 48);
 
     juce__label8.reset (new juce::Label ("new label",
                                          TRANS("Mod")));
@@ -238,7 +219,7 @@ PartialPanel::PartialPanel ()
     juce__label8->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label8->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label8->setBounds (176, 464, 47, 24);
+    juce__label8->setBounds (176, 528, 47, 24);
 
     juce__imageButton2.reset (new juce::ImageButton ("new button"));
     addAndMakeVisible (juce__imageButton2.get());
@@ -257,7 +238,7 @@ PartialPanel::PartialPanel ()
     juce__slider9->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     juce__slider9->addListener (this);
 
-    juce__slider9->setBounds (72, 648, 48, 48);
+    juce__slider9->setBounds (72, 704, 48, 48);
 
     juce__label9.reset (new juce::Label ("new label",
                                          TRANS("Vel.Sen.")));
@@ -268,7 +249,7 @@ PartialPanel::PartialPanel ()
     juce__label9->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label9->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label9->setBounds (64, 696, 64, 24);
+    juce__label9->setBounds (64, 752, 64, 24);
 
     juce__slider10.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider10.get());
@@ -277,7 +258,7 @@ PartialPanel::PartialPanel ()
     juce__slider10->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     juce__slider10->addListener (this);
 
-    juce__slider10->setBounds (152, 648, 48, 48);
+    juce__slider10->setBounds (152, 704, 48, 48);
 
     juce__label10.reset (new juce::Label ("new label",
                                           TRANS("Keyfollow")));
@@ -288,13 +269,13 @@ PartialPanel::PartialPanel ()
     juce__label10->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     juce__label10->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    juce__label10->setBounds (144, 696, 64, 24);
+    juce__label10->setBounds (144, 752, 64, 24);
 
     juce__groupComponent3.reset (new juce::GroupComponent ("new group",
                                                            TRANS("LFO")));
     addAndMakeVisible (juce__groupComponent3.get());
 
-    juce__groupComponent3->setBounds (40, 408, 200, 86);
+    juce__groupComponent3->setBounds (40, 472, 200, 86);
 
     juce__slider11.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider11.get());
@@ -375,7 +356,7 @@ PartialPanel::PartialPanel ()
                                    juce::ImageCache::getFromMemory (pitchEnv_png, pitchEnv_pngSize), 1.000f, juce::Colour (0x00000000),
                                    juce::Image(), 1.000f, juce::Colour (0x00000000),
                                    juce::Image(), 1.000f, juce::Colour (0x00000000));
-    juce__imageButton5->setBounds (56, 544, 200, 104);
+    juce__imageButton5->setBounds (56, 600, 200, 104);
 
     juce__imageButton6.reset (new juce::ImageButton ("new button"));
     addAndMakeVisible (juce__imageButton6.get());
@@ -577,11 +558,28 @@ PartialPanel::PartialPanel ()
 
     juce__groupComponent6->setBounds (616, 32, 256, 648);
 
+    pitch_keyfollow.reset (new Keyfollow());
+    addAndMakeVisible (pitch_keyfollow.get());
+    pitch_keyfollow->setName ("new component");
+
+    pitch_keyfollow->setBounds (40, 240, 224, 224);
+
+    juce__label23.reset (new juce::Label ("new label",
+                                          TRANS("Keyfollow")));
+    addAndMakeVisible (juce__label23.get());
+    juce__label23->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    juce__label23->setJustificationType (juce::Justification::centredLeft);
+    juce__label23->setEditable (false, false, false);
+    juce__label23->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    juce__label23->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    juce__label23->setBounds (40, 236, 150, 24);
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (900, 900);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -593,9 +591,9 @@ PartialPanel::~PartialPanel()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    juce__groupComponent2 = nullptr;
     juce__groupComponent5 = nullptr;
     juce__groupComponent4 = nullptr;
-    juce__groupComponent2 = nullptr;
     juce__groupComponent = nullptr;
     juce__toggleButton = nullptr;
     juce__slider = nullptr;
@@ -606,9 +604,7 @@ PartialPanel::~PartialPanel()
     juce__label3 = nullptr;
     juce__slider4 = nullptr;
     juce__label4 = nullptr;
-    juce__slider5 = nullptr;
     juce__label5 = nullptr;
-    juce__imageButton = nullptr;
     juce__toggleButton2 = nullptr;
     juce__slider6 = nullptr;
     juce__label6 = nullptr;
@@ -650,6 +646,8 @@ PartialPanel::~PartialPanel()
     juce__imageButton10 = nullptr;
     juce__label22 = nullptr;
     juce__groupComponent6 = nullptr;
+    pitch_keyfollow = nullptr;
+    juce__label23 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -686,11 +684,6 @@ void PartialPanel::buttonClicked (juce::Button* buttonThatWasClicked)
     {
         //[UserButtonCode_juce__toggleButton] -- add your button handler code here..
         //[/UserButtonCode_juce__toggleButton]
-    }
-    else if (buttonThatWasClicked == juce__imageButton.get())
-    {
-        //[UserButtonCode_juce__imageButton] -- add your button handler code here..
-        //[/UserButtonCode_juce__imageButton]
     }
     else if (buttonThatWasClicked == juce__toggleButton2.get())
     {
@@ -771,11 +764,6 @@ void PartialPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     {
         //[UserSliderCode_juce__slider4] -- add your slider handling code here..
         //[/UserSliderCode_juce__slider4]
-    }
-    else if (sliderThatWasMoved == juce__slider5.get())
-    {
-        //[UserSliderCode_juce__slider5] -- add your slider handling code here..
-        //[/UserSliderCode_juce__slider5]
     }
     else if (sliderThatWasMoved == juce__slider6.get())
     {
@@ -860,14 +848,14 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="PartialPanel" componentName=""
                  parentClasses="public juce::Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
+                 fixedSize="0" initialWidth="900" initialHeight="900">
   <BACKGROUND backgroundColour="ff323e44"/>
+  <GROUPCOMPONENT name="new group" id="839f42ec567e21c2" memberName="juce__groupComponent2"
+                  virtualName="" explicitFocusOrder="0" pos="16 152 272 656" title="Pitch"/>
   <GROUPCOMPONENT name="new group" id="1222c0352671103d" memberName="juce__groupComponent5"
                   virtualName="" explicitFocusOrder="0" pos="328 24 248 856" title="Filter"/>
   <GROUPCOMPONENT name="new group" id="615e3bd46be46624" memberName="juce__groupComponent4"
-                  virtualName="" explicitFocusOrder="0" pos="40 512 224 224" title="Envelope"/>
-  <GROUPCOMPONENT name="new group" id="839f42ec567e21c2" memberName="juce__groupComponent2"
-                  virtualName="" explicitFocusOrder="0" pos="16 152 272 592" title="Pitch"/>
+                  virtualName="" explicitFocusOrder="0" pos="40 568 224 224" title="Envelope"/>
   <GROUPCOMPONENT name="new group" id="2a2c0ef6541b1426" memberName="juce__groupComponent"
                   virtualName="" explicitFocusOrder="0" pos="8 8 128 128" title="Wave"/>
   <TOGGLEBUTTON name="new toggle button" id="6b482788fa46849c" memberName="juce__toggleButton"
@@ -909,48 +897,38 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Fine" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
-  <SLIDER name="new slider" id="925ec19b1488fa23" memberName="juce__slider5"
-          virtualName="" explicitFocusOrder="0" pos="16 56 48 48" min="0.0"
-          max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="4c09434ac699535c" memberName="juce__label5"
          virtualName="" explicitFocusOrder="0" pos="16 104 47 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Width" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
-  <IMAGEBUTTON name="new button" id="e4b4e0144d5faace" memberName="juce__imageButton"
-               virtualName="" explicitFocusOrder="0" pos="56 240 175 144" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="keyfollow_png" opacityNormal="1.0" colourNormal="0"
-               resourceOver="" opacityOver="1.0" colourOver="0" resourceDown=""
-               opacityDown="1.0" colourDown="0"/>
   <TOGGLEBUTTON name="new toggle button" id="22f570b8cb430a45" memberName="juce__toggleButton2"
                 virtualName="" explicitFocusOrder="0" pos="176 184 96 24" buttonText="Bend"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <SLIDER name="new slider" id="83e57dedb7c35aca" memberName="juce__slider6"
-          virtualName="" explicitFocusOrder="0" pos="48 416 48 48" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="48 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="335fb8fbea433025" memberName="juce__label6"
-         virtualName="" explicitFocusOrder="0" pos="48 464 47 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="48 528 47 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Rate" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="4526f131b87f991c" memberName="juce__slider7"
-          virtualName="" explicitFocusOrder="0" pos="112 416 48 48" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="112 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="3959b90a3f023a3a" memberName="juce__label7"
-         virtualName="" explicitFocusOrder="0" pos="112 464 47 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="112 528 47 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Depth" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="2a8d66bd7609b8ab" memberName="juce__slider8"
-          virtualName="" explicitFocusOrder="0" pos="176 416 48 48" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="176 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="81ca4a0d30419821" memberName="juce__label8"
-         virtualName="" explicitFocusOrder="0" pos="176 464 47 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="176 528 47 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Mod" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
@@ -961,25 +939,25 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1.0" colourOver="0" resourceDown=""
                opacityDown="1.0" colourDown="0"/>
   <SLIDER name="new slider" id="1f9c675c22a28b6c" memberName="juce__slider9"
-          virtualName="" explicitFocusOrder="0" pos="72 648 48 48" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="72 704 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="f7513aff1566db56" memberName="juce__label9"
-         virtualName="" explicitFocusOrder="0" pos="64 696 64 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="64 752 64 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Vel.Sen." editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="525c237f068c54b6" memberName="juce__slider10"
-          virtualName="" explicitFocusOrder="0" pos="152 648 48 48" min="0.0"
+          virtualName="" explicitFocusOrder="0" pos="152 704 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="new label" id="1135a80ea2617d64" memberName="juce__label10"
-         virtualName="" explicitFocusOrder="0" pos="144 696 64 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="144 752 64 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Keyfollow" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
   <GROUPCOMPONENT name="new group" id="e84f6b8d6841971c" memberName="juce__groupComponent3"
-                  virtualName="" explicitFocusOrder="0" pos="40 408 200 86" title="LFO"/>
+                  virtualName="" explicitFocusOrder="0" pos="40 472 200 86" title="LFO"/>
   <SLIDER name="new slider" id="d264454f65148a13" memberName="juce__slider11"
           virtualName="" explicitFocusOrder="0" pos="400 48 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
@@ -1016,7 +994,7 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <IMAGEBUTTON name="new button" id="f0b3954ef72c4818" memberName="juce__imageButton5"
-               virtualName="" explicitFocusOrder="0" pos="56 544 200 104" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="56 600 200 104" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="pitchEnv_png" opacityNormal="1.0" colourNormal="0"
                resourceOver="" opacityOver="1.0" colourOver="0" resourceDown=""
@@ -1118,6 +1096,14 @@ BEGIN_JUCER_METADATA
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <GROUPCOMPONENT name="new group" id="ef4a2812f7334f30" memberName="juce__groupComponent6"
                   virtualName="" explicitFocusOrder="0" pos="616 32 256 648" title="Amp"/>
+  <GENERICCOMPONENT name="new component" id="e8f75c0a3f23874d" memberName="pitch_keyfollow"
+                    virtualName="" explicitFocusOrder="0" pos="40 240 224 224" class="Keyfollow"
+                    params=""/>
+  <LABEL name="new label" id="d3b421a3cedfa16f" memberName="juce__label23"
+         virtualName="" explicitFocusOrder="0" pos="40 236 150 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Keyfollow" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

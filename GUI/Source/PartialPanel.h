@@ -21,6 +21,8 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
+
+#include "Component/Keyfollow.h"
 //[/Headers]
 
 
@@ -67,9 +69,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    std::unique_ptr<juce::GroupComponent> juce__groupComponent2;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent5;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent4;
-    std::unique_ptr<juce::GroupComponent> juce__groupComponent2;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent;
     std::unique_ptr<juce::ToggleButton> juce__toggleButton;
     std::unique_ptr<juce::Slider> juce__slider;
@@ -80,9 +82,7 @@ private:
     std::unique_ptr<juce::Label> juce__label3;
     std::unique_ptr<juce::Slider> juce__slider4;
     std::unique_ptr<juce::Label> juce__label4;
-    std::unique_ptr<juce::Slider> juce__slider5;
     std::unique_ptr<juce::Label> juce__label5;
-    std::unique_ptr<juce::ImageButton> juce__imageButton;
     std::unique_ptr<juce::ToggleButton> juce__toggleButton2;
     std::unique_ptr<juce::Slider> juce__slider6;
     std::unique_ptr<juce::Label> juce__label6;
@@ -124,6 +124,8 @@ private:
     std::unique_ptr<juce::ImageButton> juce__imageButton10;
     std::unique_ptr<juce::Label> juce__label22;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent6;
+    std::unique_ptr<Keyfollow> pitch_keyfollow;
+    std::unique_ptr<juce::Label> juce__label23;
 
 
     //==============================================================================

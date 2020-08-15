@@ -8,6 +8,8 @@
       <GROUP id="{43809E1D-D131-69FA-748E-D5E2BCDAE8D6}" name="Component">
         <FILE id="KziHsF" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/Component/AdsrEditor.cpp"/>
         <FILE id="Na1D7t" name="AdsrEditor.h" compile="0" resource="0" file="Source/Component/AdsrEditor.h"/>
+        <FILE id="dJV1HS" name="Keyfollow.cpp" compile="1" resource="0" file="Source/Component/Keyfollow.cpp"/>
+        <FILE id="VJaZcB" name="Keyfollow.h" compile="0" resource="0" file="Source/Component/Keyfollow.h"/>
       </GROUP>
       <GROUP id="{7292505A-B3A6-EC80-2332-1ED862990ABD}" name="Memory">
         <FILE id="q23Fec" name="IMemory.h" compile="0" resource="0" file="Source/Memory/IMemory.h"/>
