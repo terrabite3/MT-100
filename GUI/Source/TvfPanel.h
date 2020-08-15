@@ -22,7 +22,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
 
-#include "AdsrEditor.h"
+#include "Component/AdsrEditor.h"
 //[/Headers]
 
 

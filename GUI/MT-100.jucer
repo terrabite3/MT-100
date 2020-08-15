@@ -5,6 +5,10 @@
               headerPath="../../Source">
   <MAINGROUP id="ecAk1L" name="MT-100">
     <GROUP id="{59551CE0-9E80-DB44-F1C7-CEF28AE4951A}" name="Source">
+      <GROUP id="{43809E1D-D131-69FA-748E-D5E2BCDAE8D6}" name="Component">
+        <FILE id="KziHsF" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/Component/AdsrEditor.cpp"/>
+        <FILE id="Na1D7t" name="AdsrEditor.h" compile="0" resource="0" file="Source/Component/AdsrEditor.h"/>
+      </GROUP>
       <GROUP id="{7292505A-B3A6-EC80-2332-1ED862990ABD}" name="Memory">
         <FILE id="q23Fec" name="IMemory.h" compile="0" resource="0" file="Source/Memory/IMemory.h"/>
         <FILE id="u2raFn" name="SysExMemory.cpp" compile="1" resource="0" file="Source/Memory/SysExMemory.cpp"/>
@@ -22,8 +26,6 @@
         <FILE id="RotMJ4" name="SystemProperty.h" compile="0" resource="0"
               file="Source/Property/SystemProperty.h"/>
       </GROUP>
-      <FILE id="RBNBRZ" name="AdsrEditor.cpp" compile="1" resource="0" file="Source/AdsrEditor.cpp"/>
-      <FILE id="ggEfNL" name="AdsrEditor.h" compile="0" resource="0" file="Source/AdsrEditor.h"/>
       <FILE id="W3lDdC" name="json.hpp" compile="0" resource="0" file="Source/json.hpp"/>
       <FILE id="MK8FgY" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="Gw7wBB" name="SystemPanel.cpp" compile="1" resource="0" file="Source/SystemPanel.cpp"/>
