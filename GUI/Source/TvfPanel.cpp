@@ -226,7 +226,7 @@ TvfPanel::TvfPanel ()
 
 
     //[Constructor] You can add your own custom stuff here..
-    adsr->addListener(this);
+//    adsr->addListener(this);
     //[/Constructor]
 }
 

@@ -72,6 +72,56 @@ AdsrEditor::AdsrEditor()
     update();
 }
 
+void AdsrEditor::bindProperty(FilterEnvelopeProperty *prop)
+{
+    if (prop)
+    {
+        mTime1 = &prop->time1;
+        mTime2 = &prop->time2;
+        mTime3 = &prop->time3;
+        mTime4 = &prop->time4;
+        mTime5 = &prop->time5;
+        mLevel1 = &prop->level1;
+        mLevel2 = &prop->level2;
+        mLevel3 = &prop->level3;
+        mLevelSustain = &prop->levelSustain;
+    }
+    else
+    {
+        mTime1 = nullptr;
+        mTime2 = nullptr;
+        mTime3 = nullptr;
+        mTime4 = nullptr;
+        mTime5 = nullptr;
+        mLevel1 = nullptr;
+        mLevel2 = nullptr;
+        mLevel3 = nullptr;
+        mLevelSustain = nullptr;
+    }
+}
+
+void AdsrEditor::refreshFromProperty()
+{
+
+    auto updateIfChangedLambda = [](IntProperty* prop, float& value)
+    {
+        if (prop)
+            value = prop->value() / 100.f;
+    };
+
+    updateIfChangedLambda(mTime1, data.attackTime);
+    updateIfChangedLambda(mTime2, data.retreatTime);
+    updateIfChangedLambda(mTime3, data.regroupTime);
+    updateIfChangedLambda(mTime4, data.decayTime);
+    updateIfChangedLambda(mTime5, data.releaseTime);
+    updateIfChangedLambda(mLevel1, data.attackLevel);
+    updateIfChangedLambda(mLevel2, data.retreatLevel);
+    updateIfChangedLambda(mLevel3, data.regroupLevel);
+    updateIfChangedLambda(mLevelSustain, data.sustainLevel);
+
+    update();
+}
+
 void AdsrEditor::resized()
 {
     updateSegmentPositions();
@@ -96,10 +146,21 @@ void AdsrEditor::updateFromSegments()
 
 void AdsrEditor::notifyListeners()
 {
-    mListeners.call([this] (Listener& l)
+    auto updateIfChangedLambda = [](IntProperty* prop, float value)
     {
-        l.adsrValueChanged(&this->getData());
-    });
+        if (prop && prop->value() != value * 100)
+            prop->setValue(value * 100);
+    };
+
+    updateIfChangedLambda(mTime1, data.attackTime);
+    updateIfChangedLambda(mTime2, data.retreatTime);
+    updateIfChangedLambda(mTime3, data.regroupTime);
+    updateIfChangedLambda(mTime4, data.decayTime);
+    updateIfChangedLambda(mTime5, data.releaseTime);
+    updateIfChangedLambda(mLevel1, data.attackLevel);
+    updateIfChangedLambda(mLevel2, data.retreatLevel);
+    updateIfChangedLambda(mLevel3, data.regroupLevel);
+    updateIfChangedLambda(mLevelSustain, data.sustainLevel);
 }
 
 void AdsrEditor::updateSegmentPositions()
@@ -139,16 +200,6 @@ void AdsrEditor::update()
     segments[kRelease]->setDuration(data.releaseTime);
     
     updateSegmentPositions();
-}
-
-void AdsrEditor::addListener(AdsrEditor::Listener *listener)
-{
-    mListeners.add(listener);
-}
-
-void AdsrEditor::removeListener(AdsrEditor::Listener *listener)
-{
-    mListeners.remove(listener);
 }
 
 

@@ -1,21 +1,6 @@
 
 FEATURES
 
-Reimplement a subset of the Python SysEx <-> JSON converter
-    Something simple like reverb mode
-
-PoC send SysEx
-    Just reverb mode
-
-MIDI through
-    Expose a MIDI in port to the app, and a MIDI out to drive the synth
-
-SysEx diff
-    Instead of sending the whole parameter set, only send the differences
-
-Sync on release
-    Parameter changes are queued up, and sent only after all keys are released
-
 Sync and repeat notes
     If notes are pressed when the user triggers a sync, the app sends note-off messages, then the SysEx, then note on messages matching what is still pressed
 
@@ -85,3 +70,21 @@ IProperty
     loadMemory()
     saveMemory()
     setValue()
+
+
+
+SysEx manager
+    Collects SysEx changes and transmits them later, in a separate thread.
+    When to send
+        Manual -- wait for the user to push a button
+        Note Release -- wait for all MIDI notes to be released
+        Auto -- when notified of a parameter change, the SysEx is sent promptly (when the thread next runs). Afterwords, the thread will sleep (say 10ms).
+    Maintains two SysExMemory objects
+        The first is directly modified every time a parameter is changed
+        The second reflects the current state of the device
+        A temporary third is created from the first when the thread starts sending messages
+    What to send
+        Normally just the changes
+        When instructed to, it sends the whole state
+        As an advanced feature, it will fill gaps between changed parameters to reduce the number of messages
+    

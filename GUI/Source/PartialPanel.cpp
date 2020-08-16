@@ -18,11 +18,11 @@
 */
 
 //[Headers] You can add your own extra header files here...
+#include "SliderUtil.h"
 //[/Headers]
 
 #include "PartialPanel.h"
 
-#include "SliderUtil.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
@@ -339,16 +339,6 @@ PartialPanel::PartialPanel ()
                                    juce::Image(), 1.000f, juce::Colour (0x00000000));
     juce__imageButton5->setBounds (56, 600, 200, 104);
 
-    juce__imageButton6.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (juce__imageButton6.get());
-    juce__imageButton6->addListener (this);
-
-    juce__imageButton6->setImages (false, true, true,
-                                   juce::ImageCache::getFromMemory (pitchEnv_png, pitchEnv_pngSize), 1.000f, juce::Colour (0x00000000),
-                                   juce::Image(), 1.000f, juce::Colour (0x00000000),
-                                   juce::Image(), 1.000f, juce::Colour (0x00000000));
-    juce__imageButton6->setBounds (360, 432, 200, 104);
-
     juce__slider13.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider13.get());
     juce__slider13->setRange (0, 10, 1);
@@ -581,6 +571,12 @@ PartialPanel::PartialPanel ()
 
     keyfollow5->setBounds (664, 368, 144, 136);
 
+    filter_envelope.reset (new AdsrEditor());
+    addAndMakeVisible (filter_envelope.get());
+    filter_envelope->setName ("new component");
+
+    filter_envelope->setBounds (344, 416, 216, 144);
+
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -630,7 +626,6 @@ PartialPanel::~PartialPanel()
     juce__imageButton4 = nullptr;
     juce__label13 = nullptr;
     juce__imageButton5 = nullptr;
-    juce__imageButton6 = nullptr;
     juce__slider13 = nullptr;
     juce__label14 = nullptr;
     juce__slider14 = nullptr;
@@ -656,6 +651,7 @@ PartialPanel::~PartialPanel()
     keyfollow3 = nullptr;
     keyfollow4 = nullptr;
     keyfollow5 = nullptr;
+    filter_envelope = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -827,11 +823,6 @@ void PartialPanel::buttonClicked (juce::Button* buttonThatWasClicked)
         //[UserButtonCode_juce__imageButton5] -- add your button handler code here..
         //[/UserButtonCode_juce__imageButton5]
     }
-    else if (buttonThatWasClicked == juce__imageButton6.get())
-    {
-        //[UserButtonCode_juce__imageButton6] -- add your button handler code here..
-        //[/UserButtonCode_juce__imageButton6]
-    }
     else if (buttonThatWasClicked == juce__imageButton10.get())
     {
         //[UserButtonCode_juce__imageButton10] -- add your button handler code here..
@@ -867,6 +858,8 @@ void PartialPanel::refreshFromProperty()
     }
 
     pitch_keyfollow->refreshFromProperty();
+    
+    filter_envelope->refreshFromProperty();
 }
 
 void PartialPanel::bindProperty(PartialProperty* prop)
@@ -884,18 +877,20 @@ void PartialPanel::bindProperty(PartialProperty* prop)
         pulseWidthVel_knob->setPopupDisplayEnabled(true, false, this);
 
         pitch_keyfollow->bindProperty(&prop->waveGenerator.pitchKeyfollow);
-        
+
         mLfoRate = &prop->pitch.lfo.rate;
         setupKnob(lfoRate_knob.get(), mLfoRate);
         lfoRate_knob->setPopupDisplayEnabled(true, false, this);
-        
+
         mLfoDepth = &prop->pitch.lfo.depth;
         setupKnob(lfoDepth_knob.get(), mLfoDepth);
         lfoDepth_knob->setPopupDisplayEnabled(true, false, this);
-        
+
         mLfoMod = &prop->pitch.lfo.modSensitivity;
         setupKnob(lfoMod_knob.get(), mLfoMod);
         lfoMod_knob->setPopupDisplayEnabled(true, false, this);
+        
+        filter_envelope->bindProperty(&prop->filter.envelope);
     }
     else
     {
@@ -904,6 +899,12 @@ void PartialPanel::bindProperty(PartialProperty* prop)
         mPulseWidthVeloSens = nullptr;
 
         pitch_keyfollow->bindProperty(nullptr);
+        
+        mLfoRate = nullptr;
+        mLfoDepth = nullptr;
+        mLfoMod = nullptr;
+        
+        filter_envelope->bindProperty(nullptr);
     }
 }
 //[/MiscUserCode]
@@ -1060,12 +1061,6 @@ BEGIN_JUCER_METADATA
                resourceNormal="pitchEnv_png" opacityNormal="1.0" colourNormal="0"
                resourceOver="" opacityOver="1.0" colourOver="0" resourceDown=""
                opacityDown="1.0" colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="40c634e1f093786a" memberName="juce__imageButton6"
-               virtualName="" explicitFocusOrder="0" pos="360 432 200 104" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="pitchEnv_png" opacityNormal="1.0" colourNormal="0"
-               resourceOver="" opacityOver="1.0" colourOver="0" resourceDown=""
-               opacityDown="1.0" colourDown="0"/>
   <SLIDER name="new slider" id="947ac1e9bb06b518" memberName="juce__slider13"
           virtualName="" explicitFocusOrder="0" pos="408 544 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
@@ -1174,6 +1169,9 @@ BEGIN_JUCER_METADATA
                     params=""/>
   <GENERICCOMPONENT name="new component" id="269f5b7acfd1142c" memberName="keyfollow5"
                     virtualName="" explicitFocusOrder="0" pos="664 368 144 136" class="Keyfollow"
+                    params=""/>
+  <GENERICCOMPONENT name="new component" id="f8454fb1cde0d0d6" memberName="filter_envelope"
+                    virtualName="" explicitFocusOrder="0" pos="344 416 216 144" class="AdsrEditor"
                     params=""/>
 </JUCER_COMPONENT>
 

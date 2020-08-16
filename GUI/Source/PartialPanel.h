@@ -23,6 +23,7 @@
 #include <JuceHeader.h>
 
 #include "Component/Keyfollow.h"
+#include "Component/AdsrEditor.h"
 
 #include "Property/PartialProperty.h"
 #include "Property/IntProperty.h"
@@ -111,7 +112,6 @@ private:
     std::unique_ptr<juce::ImageButton> juce__imageButton4;
     std::unique_ptr<juce::Label> juce__label13;
     std::unique_ptr<juce::ImageButton> juce__imageButton5;
-    std::unique_ptr<juce::ImageButton> juce__imageButton6;
     std::unique_ptr<juce::Slider> juce__slider13;
     std::unique_ptr<juce::Label> juce__label14;
     std::unique_ptr<juce::Slider> juce__slider14;
@@ -137,6 +137,7 @@ private:
     std::unique_ptr<Keyfollow> keyfollow3;
     std::unique_ptr<Keyfollow> keyfollow4;
     std::unique_ptr<Keyfollow> keyfollow5;
+    std::unique_ptr<AdsrEditor> filter_envelope;
 
 
     //==============================================================================

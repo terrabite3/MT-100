@@ -24,6 +24,8 @@ SOFTWARE.
 */
 #include <JuceHeader.h>
 
+#include "Property/FilterEnvelopeProperty.h"
+
 /** A grab-anywhere ADSR envelope that's a little easier to use than the ones
  * you have to grab specific handles on. There are lots of improvements that
  * could be made to this, but it's a useful starting point. */
@@ -34,6 +36,9 @@ public juce::Component
 public:
     AdsrEditor();
     ~AdsrEditor() {}
+    
+    void bindProperty(FilterEnvelopeProperty* prop);
+    void refreshFromProperty();
     
     /** Updates the segment positions from ADSR position information,
      call this when the host, or loading a new patch, has caused the 
@@ -64,9 +69,6 @@ public:
         virtual ~Listener() = default;
         virtual void adsrValueChanged(EnvelopeData* envelope) = 0;
     };
-    
-    void addListener(Listener* listener);
-    void removeListener(Listener* listener);
 
     /** Access the ADSR structure. Call update() if you change the values. */
     EnvelopeData & getData() { return data; }
@@ -96,7 +98,15 @@ private:
     };
     juce::OwnedArray<Segment> segments;
     
-    juce::ListenerList<Listener> mListeners;
+    IntProperty* mTime1 = nullptr;
+    IntProperty* mTime2 = nullptr;
+    IntProperty* mTime3 = nullptr;
+    IntProperty* mTime4 = nullptr;
+    IntProperty* mTime5 = nullptr;
+    IntProperty* mLevel1 = nullptr;
+    IntProperty* mLevel2 = nullptr;
+    IntProperty* mLevel3 = nullptr;
+    IntProperty* mLevelSustain = nullptr;
 };
 
 
