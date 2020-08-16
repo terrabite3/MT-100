@@ -144,13 +144,6 @@ SystemPanel::SystemPanel ()
 
     juce__label5->setBounds (8, 40, 120, 24);
 
-    waveform_toggle.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (waveform_toggle.get());
-    waveform_toggle->setButtonText (TRANS("Waveform"));
-    waveform_toggle->addListener (this);
-
-    waveform_toggle->setBounds (176, 72, 150, 24);
-
     address_textEdit.reset (new juce::TextEditor ("new text editor"));
     addAndMakeVisible (address_textEdit.get());
     address_textEdit->setMultiLine (false);
@@ -221,7 +214,6 @@ SystemPanel::~SystemPanel()
     juce__label4 = nullptr;
     masterVolume_slider = nullptr;
     juce__label5 = nullptr;
-    waveform_toggle = nullptr;
     address_textEdit = nullptr;
     juce__label6 = nullptr;
     juce__label7 = nullptr;
@@ -310,22 +302,6 @@ void SystemPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
-void SystemPanel::buttonClicked (juce::Button* buttonThatWasClicked)
-{
-    //[UserbuttonClicked_Pre]
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == waveform_toggle.get())
-    {
-        //[UserButtonCode_waveform_toggle] -- add your button handler code here..
-        mWaveform->setValue(buttonThatWasClicked->getToggleState() ? "SAW" : "SQU");
-        //[/UserButtonCode_waveform_toggle]
-    }
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
-}
-
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -379,11 +355,6 @@ void SystemPanel::bindProperty(SystemProperty* prop)
     reverbLevel_slider->setRange(mReverbLevel->getMin(), mReverbLevel->getMax(), 1);
 
     mMasterVolume = &prop->masterVolume;
-}
-
-void SystemPanel::bindWaveformProp(ChoiceProperty* prop)
-{
-    mWaveform = prop;
 }
 //[/MiscUserCode]
 
@@ -453,9 +424,6 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Master Volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
-  <TOGGLEBUTTON name="new toggle button" id="adaf0db3be772bf7" memberName="waveform_toggle"
-                virtualName="" explicitFocusOrder="0" pos="176 72 150 24" buttonText="Waveform"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <TEXTEDITOR name="new text editor" id="1cdba291652913dc" memberName="address_textEdit"
               virtualName="" explicitFocusOrder="0" pos="128 216 150 24" initialText=""
               multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="1"

@@ -36,8 +36,7 @@
 */
 class SystemPanel  : public juce::Component,
                      public juce::Slider::Listener,
-                     public juce::ComboBox::Listener,
-                     public juce::Button::Listener
+                     public juce::ComboBox::Listener
 {
 public:
     //==============================================================================
@@ -48,14 +47,12 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     void refresh();
     void bindProperty(SystemProperty* prop);
-    void bindWaveformProp(ChoiceProperty* prop);
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;
     void resized() override;
     void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
     void comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged) override;
-    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
 
 
@@ -66,7 +63,6 @@ private:
     IntProperty* mReverbTime = nullptr;
     IntProperty* mReverbLevel = nullptr;
     IntProperty* mMasterVolume = nullptr;
-    ChoiceProperty* mWaveform = nullptr;
     //[/UserVariables]
 
     //==============================================================================
@@ -81,7 +77,6 @@ private:
     std::unique_ptr<juce::Label> juce__label4;
     std::unique_ptr<juce::Slider> masterVolume_slider;
     std::unique_ptr<juce::Label> juce__label5;
-    std::unique_ptr<juce::ToggleButton> waveform_toggle;
     std::unique_ptr<juce::TextEditor> address_textEdit;
     std::unique_ptr<juce::Label> juce__label6;
     std::unique_ptr<juce::Label> juce__label7;

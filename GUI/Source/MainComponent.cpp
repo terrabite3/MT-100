@@ -105,46 +105,6 @@ void MainComponent::sendNote()
 }
 
 
-
-void MainComponent::fuzz()
-{
-    juce::Random rand;
-    
-    std::vector<uint8_t> message
-    {
-        0x41, 0x10, 0x16, 0x12
-    };
-    
-    uint8_t sum = 0;
-    
-    static int address = 0;
-    
-    // address
-    uint8_t a2 = (address >> 14) & 0x7f;
-    uint8_t a1 = (address >> 7)  & 0x7f;
-    uint8_t a0 =  address        & 0x7f;
-    
-    sum += a2 + a1 + a0;
-    message.emplace_back(a2);
-    message.emplace_back(a1);
-    message.emplace_back(a0);
-    
-    address += 256;
-    
-    // data
-    for (int i = 0; i < 256; ++i)
-    {
-        uint8_t d = rand.nextInt(0x7f);
-        sum += d;
-        message.emplace_back(d);
-    }
-    
-    // sum
-    message.emplace_back(0x80 - (sum & 0x7f));
-    
-    mControlPanel.sendMidi(juce::MidiMessage::createSysExMessage((void*)message.data(), (int)message.size()));
-}
-
 void MainComponent::updateValue(juce::String address, int value)
 {
     auto addr = address.getHexValue32();

@@ -31,7 +31,6 @@ public:
     
     void sendSysEx();
     void sendNote();
-    void fuzz();
     void updateValue(juce::String address, int value);
 
 private:

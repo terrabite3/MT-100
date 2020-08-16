@@ -81,7 +81,6 @@ private:
     std::unique_ptr<juce::Label> juce__label;
     std::unique_ptr<juce::ComboBox> syncMode_combo;
     std::unique_ptr<juce::Label> juce__label3;
-    std::unique_ptr<juce::TextButton> fuzz_button;
 
 
     //==============================================================================

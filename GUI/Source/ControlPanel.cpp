@@ -121,13 +121,6 @@ ControlPanel::ControlPanel ()
 
     juce__label3->setBounds (8, 48, 96, 24);
 
-    fuzz_button.reset (new juce::TextButton ("new button"));
-    addAndMakeVisible (fuzz_button.get());
-    fuzz_button->setButtonText (TRANS("Fuzz"));
-    fuzz_button->addListener (this);
-
-    fuzz_button->setBounds (40, 72, 64, 24);
-
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -175,7 +168,6 @@ ControlPanel::~ControlPanel()
     juce__label = nullptr;
     syncMode_combo = nullptr;
     juce__label3 = nullptr;
-    fuzz_button = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -321,12 +313,6 @@ void ControlPanel::buttonClicked (juce::Button* buttonThatWasClicked)
         main->sendSysEx();
         //[/UserButtonCode_sendSysEx_button]
     }
-    else if (buttonThatWasClicked == fuzz_button.get())
-    {
-        //[UserButtonCode_fuzz_button] -- add your button handler code here..
-        main->fuzz();
-        //[/UserButtonCode_fuzz_button]
-    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -441,9 +427,6 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Sync Mode" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
-  <TEXTBUTTON name="new button" id="2879a1b4ce82cfa3" memberName="fuzz_button"
-              virtualName="" explicitFocusOrder="0" pos="40 72 64 24" buttonText="Fuzz"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
