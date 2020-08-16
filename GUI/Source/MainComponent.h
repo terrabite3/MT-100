@@ -29,8 +29,6 @@ public:
     void loadJson();
     void saveJson();
     
-    void sendSysEx();
-    void sendNote();
     void updateValue(juce::String address, int value);
 
 private:

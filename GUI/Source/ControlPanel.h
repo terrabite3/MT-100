@@ -22,7 +22,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
 
-class Callback;
+#include "SysExManager.h"
 //[/Headers]
 
 
@@ -46,7 +46,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void sendMidi(const juce::MidiMessage& message);
+    void updateFromProperty(IProperty* prop);
     std::string getSyncMode() const;
     //[/UserMethods]
 
@@ -59,15 +59,8 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    friend Callback;
-
-    std::unique_ptr<Callback> mCallback;
-    std::unique_ptr<juce::MidiInput> mMidiIn;
-    std::unique_ptr<juce::MidiOutput> mMidiOut;
-
-    int numPressedNotes = 0;
-    juce::MidiMessage* mPendingMessage = nullptr;
-
+    std::unique_ptr<SysExManager> mSysExManager;
+    
     void configureSlidersToNotifyOnRelease(Component* comp, bool notifyOnRelease) const;
     //[/UserVariables]
 
@@ -88,19 +81,5 @@ private:
 };
 
 //[EndFile] You can add extra defines here...
-
-class Callback : public juce::MidiInputCallback
-{
-public:
-    Callback(ControlPanel* parent)
-    : mParent(parent)
-    {}
-
-    void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
-
-private:
-    ControlPanel* mParent;
-};
-
 //[/EndFile]
 

@@ -28,6 +28,8 @@ public:
     
     void readSyx(std::vector<int8_t> syxContents);
     std::vector<int8_t> writeSyx() const;
+    // Create a SysExMemory that only includes the values of this memory that differ from the other.
+    SysExMemory diff(const SysExMemory& other) const;
     
     void readMemory(std::string memContents);
     std::string writeMemory() const;

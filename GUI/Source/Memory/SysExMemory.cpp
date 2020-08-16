@@ -246,6 +246,33 @@ std::vector<int8_t> SysExMemory::writeSyx() const
     return result;
 }
 
+SysExMemory SysExMemory::diff(const SysExMemory& other) const
+{
+    SysExMemory result;
+    
+    for (auto pair : mData)
+    {
+        NativeAddr addr = pair.first;
+        Byt data = pair.second;
+        
+        if (other.mData.count(addr))
+        {
+            if (other.mData.at(addr) != data)
+            {
+                // If this address in other has different data, include it in the diff
+                result.mData.emplace(addr, data);
+            }
+        }
+        else
+        {
+            // If this address in other has no data, include it in the diff
+            result.mData.emplace(addr, data);
+        }
+    }
+    
+    return result;
+}
+
 Byt SysExMemory::read(NativeAddr addr) const
 {
     if (mData.count(addr))

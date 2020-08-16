@@ -28,6 +28,71 @@ TEST_F(SysExMemory_tf, first)
     EXPECT_EQ(hello, output);
 }
 
+TEST_F(SysExMemory_tf, diff)
+{
+    SysExMemory other;
+
+    // Neither is set at address 0
+    // This is set at address 1, other is not
+    mDut.write(1, 1);
+    // This is not set at address 2, other is
+    other.write(2, 2);
+    // This is set at address 3, other has same value
+    mDut.write(3, 3);
+    other.write(3, 3);
+    // This is set at address 4, other has different value
+    mDut.write(4, 4);
+    other.write(4, 0);
+
+    SysExMemory diff = mDut.diff(other);
+
+    // Diff is not set at address 0
+    EXPECT_FALSE(diff.isSet(0));
+    // Diff has value at address 1
+    EXPECT_TRUE(diff.isSet(1));
+    EXPECT_EQ(diff.read(1), 1);
+    // Diff is not set at address 2
+    EXPECT_FALSE(diff.isSet(2));
+    // Diff is not set at address 3
+    EXPECT_FALSE(diff.isSet(3));
+    // Diff has our value at address 4
+    EXPECT_TRUE(diff.isSet(4));
+    EXPECT_EQ(diff.read(4), 4);
+
+    // Apply the update message to other
+    std::vector<int8_t> diffMessage = diff.writeSyx();
+    EXPECT_FALSE(diffMessage.empty());
+
+    other.readSyx(diffMessage);
+
+    // We don't expect other to be equal to this because unset values in this don't clear other.
+
+    // Still not set at address 0
+    EXPECT_FALSE(other.isSet(0));
+    // Now set at address 1
+    EXPECT_TRUE(other.isSet(1));
+    EXPECT_EQ(other.read(1), 1);
+    // Still have original value at address 2
+    EXPECT_TRUE(other.isSet(2));
+    EXPECT_EQ(other.read(2), 2);
+    // Still have original value at address 3
+    EXPECT_TRUE(other.isSet(3));
+    EXPECT_EQ(other.read(3), 3);
+    // Now have new value at address 4
+    EXPECT_TRUE(other.isSet(4));
+    EXPECT_EQ(other.read(4), 4);
+
+    // But we do expect the diff to be empty.
+    SysExMemory diffAfter = mDut.diff(other);
+    EXPECT_FALSE(diffAfter.isSet(0));
+    EXPECT_FALSE(diffAfter.isSet(1));
+    EXPECT_FALSE(diffAfter.isSet(2));
+    EXPECT_FALSE(diffAfter.isSet(3));
+    EXPECT_FALSE(diffAfter.isSet(4));
+
+    EXPECT_TRUE(diffAfter.writeSyx().empty());
+}
+
 TEST(SevenAddr, foo)
 {
     using Sev = SevenAddr;

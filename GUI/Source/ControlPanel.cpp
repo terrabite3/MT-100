@@ -129,11 +129,12 @@ ControlPanel::ControlPanel ()
 
 
     //[Constructor] You can add your own custom stuff here..
+    
+    mSysExManager = std::make_unique<SysExManager>();
 
     syncMode_combo->setText(syncMode_combo->getItemText(0));
 
 
-    mCallback = std::make_unique<Callback>(this);
 
     juce::StringArray midiInputNames;
     midiInputNames.add("Disabled");
@@ -198,67 +199,20 @@ void ControlPanel::resized()
 void ControlPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
-//    auto main = findParentComponentOfClass<MainComponent>();
     //[/UsercomboBoxChanged_Pre]
 
     if (comboBoxThatHasChanged == midiIn_combo.get())
     {
         //[UserComboBoxCode_midiIn_combo] -- add your combo box handling code here..
         auto selectedName = comboBoxThatHasChanged->getText();
-        if (selectedName == "Disabled")
-        {
-            mMidiIn = nullptr;
-        }
-        else if (mMidiIn && mMidiIn->getName() == selectedName)
-        {
-            // Do nothing
-        }
-        else
-        {
-            for (auto input : juce::MidiInput::getAvailableDevices())
-            {
-                if (selectedName == input.name)
-                {
-                    mMidiIn = juce::MidiInput::openDevice(input.identifier, mCallback.get());
-                    if (mMidiIn)
-                        mMidiIn->start();
-                    break;
-                }
-            }
-        }
-
-        numPressedNotes = 0;
-        mPendingMessage = {};
-
+        mSysExManager->openMidiIn(selectedName);
         //[/UserComboBoxCode_midiIn_combo]
     }
     else if (comboBoxThatHasChanged == midiOut_combo.get())
     {
         //[UserComboBoxCode_midiOut_combo] -- add your combo box handling code here..
         auto selectedName = comboBoxThatHasChanged->getText();
-        if (selectedName == "Disabled")
-        {
-            mMidiOut = nullptr;
-        }
-        else if (mMidiOut && mMidiOut->getName() == selectedName)
-        {
-            // Do nothing
-        }
-        else
-        {
-            for (auto output : juce::MidiOutput::getAvailableDevices())
-            {
-                if (selectedName == output.name)
-                {
-                    mMidiOut = juce::MidiOutput::openDevice(output.identifier);
-                    break;
-                }
-            }
-        }
-
-        numPressedNotes = 0;
-        mPendingMessage = {};
-
+        mSysExManager->openMidiOut(selectedName);
         //[/UserComboBoxCode_midiOut_combo]
     }
     else if (comboBoxThatHasChanged == syncMode_combo.get())
@@ -268,18 +222,22 @@ void ControlPanel::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
         auto mode = comboBoxThatHasChanged->getText();
         if (mode == "Manual")
         {
+            mSysExManager->setUpdateMode(SysExManager::UpdateMode::MANUAL);
             configureSlidersToNotifyOnRelease(main, true);
         }
         else if (mode == "Note Release")
         {
+            mSysExManager->setUpdateMode(SysExManager::UpdateMode::NOTE_OFF);
             configureSlidersToNotifyOnRelease(main, false);
         }
         else if (mode == "Immediate")
         {
+            mSysExManager->setUpdateMode(SysExManager::UpdateMode::AUTO);
             configureSlidersToNotifyOnRelease(main, true);
         }
         else if (mode == "Continuous")
         {
+            mSysExManager->setUpdateMode(SysExManager::UpdateMode::AUTO);
             configureSlidersToNotifyOnRelease(main, false);
         }
         //[/UserComboBoxCode_syncMode_combo]
@@ -310,7 +268,7 @@ void ControlPanel::buttonClicked (juce::Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == sendSysEx_button.get())
     {
         //[UserButtonCode_sendSysEx_button] -- add your button handler code here..
-        main->sendSysEx();
+        mSysExManager->flushAll();
         //[/UserButtonCode_sendSysEx_button]
     }
 
@@ -322,18 +280,9 @@ void ControlPanel::buttonClicked (juce::Button* buttonThatWasClicked)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
-
-void ControlPanel::sendMidi(const juce::MidiMessage& message)
+void ControlPanel::updateFromProperty(IProperty* prop)
 {
-    if (mMidiOut)
-    {
-        if (getSyncMode() == "Note Release" && numPressedNotes > 0)
-        {
-            mPendingMessage = new juce::MidiMessage(message);
-        }
-        else
-            mMidiOut->sendMessageNow(message);
-    }
+    mSysExManager->updateFromProperty(prop);
 }
 
 std::string ControlPanel::getSyncMode() const
@@ -352,28 +301,6 @@ void ControlPanel::configureSlidersToNotifyOnRelease(Component* comp, bool notif
     for (auto child : comp->getChildren())
     {
         configureSlidersToNotifyOnRelease(child, notifyOnRelease);
-    }
-}
-
-void Callback::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
-{
-    if (mParent->mMidiOut)
-        mParent->mMidiOut->sendMessageNow(message);
-
-    if (message.isNoteOn())
-    {
-        auto& count = mParent->numPressedNotes;
-        count++;
-    }
-    if (message.isNoteOff())
-    {
-        auto& count = mParent->numPressedNotes;
-        count--;
-        if (mParent->numPressedNotes == 0 && mParent->mPendingMessage != nullptr)
-        {
-            mParent->sendMidi(*mParent->mPendingMessage);
-            mParent->mPendingMessage = nullptr;
-        }
     }
 }
 //[/MiscUserCode]

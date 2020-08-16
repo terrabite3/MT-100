@@ -80,71 +80,20 @@ void MainComponent::saveJson()
     }
 }
 
-void MainComponent::sendSysEx()
-{
-    SysExMemory mem;
-    mProp.writeMemory(mem);
-    
-    auto sysEx = mem.writeSyx();
-    
-    if (sysEx.empty()) return;
-    
-    // Strip off the start and end bytes because createSysExMessage() adds them too
-    sysEx.erase(sysEx.begin());
-    sysEx.erase(sysEx.end() - 1);
-    
-    auto message = juce::MidiMessage::createSysExMessage((void*)sysEx.data(), (int)sysEx.size());
-    
-    mControlPanel.sendMidi(message);
-}
-
-void MainComponent::sendNote()
-{
-    auto message = juce::MidiMessage::noteOn(2, 60, (uint8_t)127);
-    mControlPanel.sendMidi(message);
-}
-
 
 void MainComponent::updateValue(juce::String address, int value)
 {
     auto addr = address.getHexValue32();
     
-    std::vector<uint8_t> message
-    {
-        0x41, 0x10, 0x16, 0x12
-    };
+    IntProperty temp("name", addr);
+    temp.setValue(value);
     
-    uint8_t sum = 0;
-    
-    // address
-    uint8_t a2 = (addr >> 16) & 0x7f;
-    uint8_t a1 = (addr >> 8)  & 0x7f;
-    uint8_t a0 =  addr        & 0x7f;
-    
-    sum += a2 + a1 + a0;
-    message.emplace_back(a2);
-    message.emplace_back(a1);
-    message.emplace_back(a0);
-    
-    // data
-    uint8_t d = value;
-    sum += d;
-    message.emplace_back(d);
-    
-    // sum
-    message.emplace_back(0x80 - (sum & 0x7f));
-    
-    mControlPanel.sendMidi(juce::MidiMessage::createSysExMessage((void*)message.data(), (int)message.size()));
-    
-    
+    mControlPanel.updateFromProperty(&temp);
 }
 
 void MainComponent::notify(std::string name)
 {
-    if (mControlPanel.getSyncMode() != "Manual")
-    {
-        sendSysEx();
-    }
+    mControlPanel.updateFromProperty(&mProp);
 }
 
 
