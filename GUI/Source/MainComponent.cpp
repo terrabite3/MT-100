@@ -4,24 +4,19 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-: mSystemProp(SevenAddr(0x10, 0, 0).toNative())
-, mWaveformProp("waveform", SevenAddr(8, 1 + 1, 0x2 + 4).toNative(), {"SQU", "SAW"})
 {
     addAndMakeVisible(mSystemPanel);
     addAndMakeVisible(mControlPanel);
-//    addAndMakeVisible(mTvf);
     addAndMakeVisible(mPartial);
     
     mControlPanel.setTopLeftPosition(0, 0);
     mSystemPanel.setTopLeftPosition(0, 176);
-//    mTvf.setTopLeftPosition(350, 0);
     mPartial.setTopLeftPosition(350, 0);
     
-    mSystemProp.registerListener(this);
-    mWaveformProp.registerListener(this);
+    mProp.registerListener(this);
     
-    mSystemPanel.bindProperty(&mSystemProp);
-    mSystemPanel.bindWaveformProp(&mWaveformProp);
+    mSystemPanel.bindProperty(&mProp.system);
+    mPartial.bindProperty(&mProp.timbreTemp.children[0].get()->partial1);
     
     setSize (1250, 900);
     
@@ -60,9 +55,10 @@ void MainComponent::loadJson()
         
         auto json = nlohmann::json::parse(jsonText.toStdString());
         
-        mSystemProp.readJson(json);
+        mProp.readJson(json);
         
         mSystemPanel.refresh();
+        mPartial.refreshFromProperty();
     }
 }
 
@@ -76,7 +72,7 @@ void MainComponent::saveJson()
         juce::File jsonFile = chooser.getResult();
         
         nlohmann::json json;
-        mSystemProp.writeJson(json);
+        mProp.writeJson(json);
         
         auto jsonText = json.dump(4);
         
@@ -87,8 +83,7 @@ void MainComponent::saveJson()
 void MainComponent::sendSysEx()
 {
     SysExMemory mem;
-    mSystemProp.writeMemory(mem);
-    mWaveformProp.writeMemory(mem);
+    mProp.writeMemory(mem);
     
     auto sysEx = mem.writeSyx();
     

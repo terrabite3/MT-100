@@ -22,6 +22,21 @@ void Keyfollow::resized()
     
 }
 
+
+void Keyfollow::refreshFromProperty()
+{
+    if (mProp)
+    {
+        mSelectedSlopeIndex = mProp->getRawValue();
+        repaint();
+    }
+}
+
+void Keyfollow::bindProperty(ChoiceProperty* prop)
+{
+    mProp = prop;
+}
+
 void Keyfollow::paint(Graphics& g)
 {
     float margin = 20;
@@ -167,6 +182,11 @@ void Keyfollow::mouseWheelMove(const MouseEvent& event, const MouseWheelDetails&
     {
         if (mSelectedSlopeIndex > 0)
             mSelectedSlopeIndex--;
+    }
+    
+    if (mProp)
+    {
+        mProp->setRawValue(mSelectedSlopeIndex);
     }
     
     repaint();

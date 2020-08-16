@@ -23,6 +23,8 @@
 #include <JuceHeader.h>
 
 #include "Component/Keyfollow.h"
+
+#include "Property/PartialProperty.h"
 //[/Headers]
 
 
@@ -46,6 +48,8 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void refreshFromProperty();
+    void bindProperty(PartialProperty* prop);
     //[/UserMethods]
 
     void paint (juce::Graphics& g) override;

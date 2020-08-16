@@ -25,8 +25,16 @@
         <FILE id="gV9dsc" name="IProperty.h" compile="0" resource="0" file="Source/Property/IProperty.h"/>
         <FILE id="JL67eR" name="IPropertyListener.h" compile="0" resource="0"
               file="Source/Property/IPropertyListener.h"/>
+        <FILE id="LTd03i" name="ListProperty.h" compile="0" resource="0" file="Source/Property/ListProperty.h"/>
+        <FILE id="JG9C7Z" name="PartialProperty.h" compile="0" resource="0"
+              file="Source/Property/PartialProperty.h"/>
         <FILE id="RotMJ4" name="SystemProperty.h" compile="0" resource="0"
               file="Source/Property/SystemProperty.h"/>
+        <FILE id="jeqlQK" name="TimbreProperty.h" compile="0" resource="0"
+              file="Source/Property/TimbreProperty.h"/>
+        <FILE id="XWvLH4" name="TopProperty.h" compile="0" resource="0" file="Source/Property/TopProperty.h"/>
+        <FILE id="ccl6Bj" name="WaveGeneratorProperty.h" compile="0" resource="0"
+              file="Source/Property/WaveGeneratorProperty.h"/>
       </GROUP>
       <FILE id="W3lDdC" name="json.hpp" compile="0" resource="0" file="Source/json.hpp"/>
       <FILE id="MK8FgY" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

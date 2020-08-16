@@ -833,6 +833,22 @@ void PartialPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+
+void PartialPanel::refreshFromProperty()
+{
+    pitch_keyfollow->refreshFromProperty();
+}
+
+void PartialPanel::bindProperty(PartialProperty* prop)
+{
+    ChoiceProperty* pitchKeyfollow = nullptr;
+    if (prop)
+    {
+        pitchKeyfollow = &prop->waveGenerator.pitchKeyfollow;
+    }
+    
+    pitch_keyfollow->bindProperty(pitchKeyfollow);
+}
 //[/MiscUserCode]
 
 

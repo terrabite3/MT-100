@@ -12,12 +12,16 @@
 
 #include <JuceHeader.h>
 
+#include "Property/ChoiceProperty.h"
+
 class Keyfollow : public juce::Component
 {
 public:
     Keyfollow();
     ~Keyfollow() = default;
     
+    void refreshFromProperty();
+    void bindProperty(ChoiceProperty* prop);
     
 private:
     void resized() override;
@@ -26,4 +30,6 @@ private:
     
     int mSelectedSlopeIndex = 11;
     const static int mNumSlopes = 16;
+    
+    ChoiceProperty* mProp = nullptr;
 };

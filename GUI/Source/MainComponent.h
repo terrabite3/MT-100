@@ -5,7 +5,7 @@
 
 #include "TvfPanel.h"
 #include "PartialPanel.h"
-#include "Property/SystemProperty.h"
+#include "Property/TopProperty.h"
 
 #include <JuceHeader.h>
 
@@ -40,11 +40,9 @@ private:
     
     ControlPanel mControlPanel;
     SystemPanel mSystemPanel;
-//    TvfPanel mTvf;
     PartialPanel mPartial;
 
-    SystemProperty mSystemProp;
-    ChoiceProperty mWaveformProp;
+    TopProperty mProp;
     
     void notify(std::string name) override;
     
