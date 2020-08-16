@@ -72,9 +72,13 @@ private:
     ChoiceProperty* mWaveform = nullptr;
     IntProperty* mPulseWidth = nullptr;
     IntProperty* mPulseWidthVeloSens = nullptr;
+    IntProperty* mLfoRate = nullptr;
+    IntProperty* mLfoDepth = nullptr;
+    IntProperty* mLfoMod = nullptr;
     //[/UserVariables]
 
     //==============================================================================
+    std::unique_ptr<juce::GroupComponent> juce__groupComponent3;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent6;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent2;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent5;
@@ -89,18 +93,17 @@ private:
     std::unique_ptr<juce::Label> juce__label4;
     std::unique_ptr<juce::Label> juce__label5;
     std::unique_ptr<juce::ToggleButton> juce__toggleButton2;
-    std::unique_ptr<juce::Slider> juce__slider6;
+    std::unique_ptr<juce::Slider> lfoRate_knob;
     std::unique_ptr<juce::Label> juce__label6;
-    std::unique_ptr<juce::Slider> juce__slider7;
+    std::unique_ptr<juce::Slider> lfoDepth_knob;
     std::unique_ptr<juce::Label> juce__label7;
-    std::unique_ptr<juce::Slider> juce__slider8;
+    std::unique_ptr<juce::Slider> lfoMod_knob;
     std::unique_ptr<juce::Label> juce__label8;
     std::unique_ptr<juce::ImageButton> juce__imageButton2;
     std::unique_ptr<juce::Slider> juce__slider9;
     std::unique_ptr<juce::Label> juce__label9;
     std::unique_ptr<juce::Slider> juce__slider10;
     std::unique_ptr<juce::Label> juce__label10;
-    std::unique_ptr<juce::GroupComponent> juce__groupComponent3;
     std::unique_ptr<juce::Slider> juce__slider11;
     std::unique_ptr<juce::Label> juce__label11;
     std::unique_ptr<juce::Slider> juce__slider12;

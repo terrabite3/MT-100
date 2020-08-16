@@ -22,6 +22,7 @@
 
 #include "PartialPanel.h"
 
+#include "SliderUtil.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
@@ -31,6 +32,12 @@ PartialPanel::PartialPanel ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
+
+    juce__groupComponent3.reset (new juce::GroupComponent ("new group",
+                                                           TRANS("LFO")));
+    addAndMakeVisible (juce__groupComponent3.get());
+
+    juce__groupComponent3->setBounds (40, 472, 200, 86);
 
     juce__groupComponent6.reset (new juce::GroupComponent ("new group",
                                                            TRANS("Amp")));
@@ -151,14 +158,14 @@ PartialPanel::PartialPanel ()
 
     juce__toggleButton2->setBounds (176, 184, 96, 24);
 
-    juce__slider6.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (juce__slider6.get());
-    juce__slider6->setRange (0, 10, 1);
-    juce__slider6->setSliderStyle (juce::Slider::Rotary);
-    juce__slider6->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
-    juce__slider6->addListener (this);
+    lfoRate_knob.reset (new juce::Slider ("new slider"));
+    addAndMakeVisible (lfoRate_knob.get());
+    lfoRate_knob->setRange (0, 10, 1);
+    lfoRate_knob->setSliderStyle (juce::Slider::Rotary);
+    lfoRate_knob->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
+    lfoRate_knob->addListener (this);
 
-    juce__slider6->setBounds (48, 480, 48, 48);
+    lfoRate_knob->setBounds (48, 480, 48, 48);
 
     juce__label6.reset (new juce::Label ("new label",
                                          TRANS("Rate")));
@@ -171,14 +178,14 @@ PartialPanel::PartialPanel ()
 
     juce__label6->setBounds (48, 528, 47, 24);
 
-    juce__slider7.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (juce__slider7.get());
-    juce__slider7->setRange (0, 10, 1);
-    juce__slider7->setSliderStyle (juce::Slider::Rotary);
-    juce__slider7->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
-    juce__slider7->addListener (this);
+    lfoDepth_knob.reset (new juce::Slider ("new slider"));
+    addAndMakeVisible (lfoDepth_knob.get());
+    lfoDepth_knob->setRange (0, 10, 1);
+    lfoDepth_knob->setSliderStyle (juce::Slider::Rotary);
+    lfoDepth_knob->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
+    lfoDepth_knob->addListener (this);
 
-    juce__slider7->setBounds (112, 480, 48, 48);
+    lfoDepth_knob->setBounds (112, 480, 48, 48);
 
     juce__label7.reset (new juce::Label ("new label",
                                          TRANS("Depth")));
@@ -191,14 +198,14 @@ PartialPanel::PartialPanel ()
 
     juce__label7->setBounds (112, 528, 47, 24);
 
-    juce__slider8.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (juce__slider8.get());
-    juce__slider8->setRange (0, 10, 1);
-    juce__slider8->setSliderStyle (juce::Slider::Rotary);
-    juce__slider8->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
-    juce__slider8->addListener (this);
+    lfoMod_knob.reset (new juce::Slider ("new slider"));
+    addAndMakeVisible (lfoMod_knob.get());
+    lfoMod_knob->setRange (0, 10, 1);
+    lfoMod_knob->setSliderStyle (juce::Slider::Rotary);
+    lfoMod_knob->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
+    lfoMod_knob->addListener (this);
 
-    juce__slider8->setBounds (176, 480, 48, 48);
+    lfoMod_knob->setBounds (176, 480, 48, 48);
 
     juce__label8.reset (new juce::Label ("new label",
                                          TRANS("Mod")));
@@ -260,12 +267,6 @@ PartialPanel::PartialPanel ()
     juce__label10->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
     juce__label10->setBounds (144, 752, 64, 24);
-
-    juce__groupComponent3.reset (new juce::GroupComponent ("new group",
-                                                           TRANS("LFO")));
-    addAndMakeVisible (juce__groupComponent3.get());
-
-    juce__groupComponent3->setBounds (40, 472, 200, 86);
 
     juce__slider11.reset (new juce::Slider ("new slider"));
     addAndMakeVisible (juce__slider11.get());
@@ -596,6 +597,7 @@ PartialPanel::~PartialPanel()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    juce__groupComponent3 = nullptr;
     juce__groupComponent6 = nullptr;
     juce__groupComponent2 = nullptr;
     juce__groupComponent5 = nullptr;
@@ -610,18 +612,17 @@ PartialPanel::~PartialPanel()
     juce__label4 = nullptr;
     juce__label5 = nullptr;
     juce__toggleButton2 = nullptr;
-    juce__slider6 = nullptr;
+    lfoRate_knob = nullptr;
     juce__label6 = nullptr;
-    juce__slider7 = nullptr;
+    lfoDepth_knob = nullptr;
     juce__label7 = nullptr;
-    juce__slider8 = nullptr;
+    lfoMod_knob = nullptr;
     juce__label8 = nullptr;
     juce__imageButton2 = nullptr;
     juce__slider9 = nullptr;
     juce__label9 = nullptr;
     juce__slider10 = nullptr;
     juce__label10 = nullptr;
-    juce__groupComponent3 = nullptr;
     juce__slider11 = nullptr;
     juce__label11 = nullptr;
     juce__slider12 = nullptr;
@@ -715,20 +716,32 @@ void PartialPanel::sliderValueChanged (juce::Slider* sliderThatWasMoved)
         //[UserSliderCode_juce__slider4] -- add your slider handling code here..
         //[/UserSliderCode_juce__slider4]
     }
-    else if (sliderThatWasMoved == juce__slider6.get())
+    else if (sliderThatWasMoved == lfoRate_knob.get())
     {
-        //[UserSliderCode_juce__slider6] -- add your slider handling code here..
-        //[/UserSliderCode_juce__slider6]
+        //[UserSliderCode_lfoRate_knob] -- add your slider handling code here..
+        if (mLfoRate)
+        {
+            mLfoRate->setValue(sliderThatWasMoved->getValue());
+        }
+        //[/UserSliderCode_lfoRate_knob]
     }
-    else if (sliderThatWasMoved == juce__slider7.get())
+    else if (sliderThatWasMoved == lfoDepth_knob.get())
     {
-        //[UserSliderCode_juce__slider7] -- add your slider handling code here..
-        //[/UserSliderCode_juce__slider7]
+        //[UserSliderCode_lfoDepth_knob] -- add your slider handling code here..
+        if (mLfoDepth)
+        {
+            mLfoDepth->setValue(sliderThatWasMoved->getValue());
+        }
+        //[/UserSliderCode_lfoDepth_knob]
     }
-    else if (sliderThatWasMoved == juce__slider8.get())
+    else if (sliderThatWasMoved == lfoMod_knob.get())
     {
-        //[UserSliderCode_juce__slider8] -- add your slider handling code here..
-        //[/UserSliderCode_juce__slider8]
+        //[UserSliderCode_lfoMod_knob] -- add your slider handling code here..
+        if (mLfoMod)
+        {
+            mLfoMod->setValue(sliderThatWasMoved->getValue());
+        }
+        //[/UserSliderCode_lfoMod_knob]
     }
     else if (sliderThatWasMoved == juce__slider9.get())
     {
@@ -863,14 +876,26 @@ void PartialPanel::bindProperty(PartialProperty* prop)
         mWaveform = &prop->waveGenerator.waveform;
 
         mPulseWidth = &prop->waveGenerator.pulseWidth;
-        pulseWidth_knob->setRange(mPulseWidth->getMin(), mPulseWidth->getMax(), 1);
+        setupKnob(pulseWidth_knob.get(), mPulseWidth);
         pulseWidth_knob->setPopupDisplayEnabled(true, false, this);
 
         mPulseWidthVeloSens = &prop->waveGenerator.pulseWidthVelocitySensitivity;
-        pulseWidthVel_knob->setRange(mPulseWidthVeloSens->getMin(), mPulseWidthVeloSens->getMax(), 1);
+        setupKnob(pulseWidth_knob.get(), mPulseWidth);
         pulseWidthVel_knob->setPopupDisplayEnabled(true, false, this);
 
         pitch_keyfollow->bindProperty(&prop->waveGenerator.pitchKeyfollow);
+        
+        mLfoRate = &prop->pitch.lfo.rate;
+        setupKnob(lfoRate_knob.get(), mLfoRate);
+        lfoRate_knob->setPopupDisplayEnabled(true, false, this);
+        
+        mLfoDepth = &prop->pitch.lfo.depth;
+        setupKnob(lfoDepth_knob.get(), mLfoDepth);
+        lfoDepth_knob->setPopupDisplayEnabled(true, false, this);
+        
+        mLfoMod = &prop->pitch.lfo.modSensitivity;
+        setupKnob(lfoMod_knob.get(), mLfoMod);
+        lfoMod_knob->setPopupDisplayEnabled(true, false, this);
     }
     else
     {
@@ -898,6 +923,8 @@ BEGIN_JUCER_METADATA
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="900" initialHeight="900">
   <BACKGROUND backgroundColour="ff323e44"/>
+  <GROUPCOMPONENT name="new group" id="e84f6b8d6841971c" memberName="juce__groupComponent3"
+                  virtualName="" explicitFocusOrder="0" pos="40 472 200 86" title="LFO"/>
   <GROUPCOMPONENT name="new group" id="ef4a2812f7334f30" memberName="juce__groupComponent6"
                   virtualName="" explicitFocusOrder="0" pos="616 32 256 648" title="Amp"/>
   <GROUPCOMPONENT name="new group" id="839f42ec567e21c2" memberName="juce__groupComponent2"
@@ -947,7 +974,7 @@ BEGIN_JUCER_METADATA
   <TOGGLEBUTTON name="new toggle button" id="22f570b8cb430a45" memberName="juce__toggleButton2"
                 virtualName="" explicitFocusOrder="0" pos="176 184 96 24" buttonText="Bend"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
-  <SLIDER name="new slider" id="83e57dedb7c35aca" memberName="juce__slider6"
+  <SLIDER name="new slider" id="83e57dedb7c35aca" memberName="lfoRate_knob"
           virtualName="" explicitFocusOrder="0" pos="48 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
@@ -956,7 +983,7 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Rate" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
-  <SLIDER name="new slider" id="4526f131b87f991c" memberName="juce__slider7"
+  <SLIDER name="new slider" id="4526f131b87f991c" memberName="lfoDepth_knob"
           virtualName="" explicitFocusOrder="0" pos="112 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
@@ -965,7 +992,7 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Depth" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
-  <SLIDER name="new slider" id="2a8d66bd7609b8ab" memberName="juce__slider8"
+  <SLIDER name="new slider" id="2a8d66bd7609b8ab" memberName="lfoMod_knob"
           virtualName="" explicitFocusOrder="0" pos="176 480 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
@@ -998,8 +1025,6 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Keyfollow" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
          kerning="0.0" bold="0" italic="0" justification="36"/>
-  <GROUPCOMPONENT name="new group" id="e84f6b8d6841971c" memberName="juce__groupComponent3"
-                  virtualName="" explicitFocusOrder="0" pos="40 472 200 86" title="LFO"/>
   <SLIDER name="new slider" id="d264454f65148a13" memberName="juce__slider11"
           virtualName="" explicitFocusOrder="0" pos="400 48 48 48" min="0.0"
           max="10.0" int="1.0" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
