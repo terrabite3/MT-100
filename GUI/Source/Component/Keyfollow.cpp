@@ -14,12 +14,29 @@ using namespace juce;
 
 Keyfollow::Keyfollow()
 {
-    
-}
+    mTunings = {
+        {0,  -1,     CharPointer_UTF8("-1")},
+        {1,  -0.5,   CharPointer_UTF8("-½")},
+        {2,  -0.25,  CharPointer_UTF8("-¼")},
+        {3,  0,      CharPointer_UTF8("0")},
+        {4,  0.125,  CharPointer_UTF8("⅛")},
+        {5,  0.25,   CharPointer_UTF8("¼")},
+        {6,  0.375,  CharPointer_UTF8("⅜")},
+        {7,  0.5,    CharPointer_UTF8("½")},
+        {8,  0.625,  CharPointer_UTF8("⅝")},
+        {9,  0.75,   CharPointer_UTF8("¾")},
+        {10, 0.875,  CharPointer_UTF8("⅞")},
+        {11, 1,      CharPointer_UTF8("1")},
+        // The stretch tunings come after 2 in the raw values, but after 1 in sound.
+        // The slope is chosen for esthetics, not accuracy.
+        {15, 1.07,   CharPointer_UTF8("s¹")},
+        {16, 1.14,   CharPointer_UTF8("s²")},
+        {12, 1.25,   CharPointer_UTF8("1¼")},
+        {13, 1.5,    CharPointer_UTF8("1½")},
+        {14, 2,      CharPointer_UTF8("2")},
+    };
 
-void Keyfollow::resized()
-{
-    
+    mSelectedTuning = 11; // 1
 }
 
 
@@ -27,7 +44,15 @@ void Keyfollow::refreshFromProperty()
 {
     if (mProp)
     {
-        mSelectedSlopeIndex = mProp->getRawValue();
+        auto rawIndex = mProp->getRawValue();
+        for (int i = 0; i < mTunings.size(); ++i)
+        {
+            if (mTunings[i].rawValue == rawIndex)
+            {
+                mSelectedTuning = i;
+            }
+        }
+        
         repaint();
     }
 }
@@ -53,40 +78,12 @@ void Keyfollow::paint(Graphics& g)
     float centerY = (top + bottom) / 2;
     
     
-    float s1 = 1.1;
-    float s2 = 1.2;
-    std::vector<float> slopes
+    
+    
+    for (int i = 0; i < mTunings.size(); ++i)
     {
-        -1, -0.5, -0.25, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.5, 2, s1, s2
-    };
-    std::vector<String> slopeNames
-    {
-        CharPointer_UTF8("-1"),
-        CharPointer_UTF8("-½"),
-        CharPointer_UTF8("-¼"),
-        CharPointer_UTF8("0"),
-        CharPointer_UTF8("⅛"),
-        CharPointer_UTF8("¼"),
-        CharPointer_UTF8("⅜"),
-        CharPointer_UTF8("½"),
-        CharPointer_UTF8("⅝"),
-        CharPointer_UTF8("¾"),
-        CharPointer_UTF8("⅞"),
-        CharPointer_UTF8("1"),
-        CharPointer_UTF8("1½"),
-        CharPointer_UTF8("2"),
-        CharPointer_UTF8("s¹"),
-        CharPointer_UTF8("s²")
-    };
-    
-    
-    float selectedSlope = slopes[mSelectedSlopeIndex];
-    
-    
-    for (int i = 0; i < slopes.size(); ++i)
-    {
-        float slope = slopes[i];
-        String name = slopeNames[i];
+        float slope = mTunings[i].slope;
+        String name = mTunings[i].label;
         
         
         float rise = slope * centerX;
@@ -106,7 +103,7 @@ void Keyfollow::paint(Graphics& g)
         g.drawLine(x0, y0, x1, y1);
         
         
-        if (slope == selectedSlope)
+        if (i == mSelectedTuning)
         {
             g.setColour(Colours::cornflowerblue);
         }
@@ -128,11 +125,6 @@ void Keyfollow::paint(Graphics& g)
             x1 += 2 / slope;
             y1 -= 2;
             
-            if (slope == s1)
-            {
-                x1 += 4;
-            }
-            
             g.drawText(name, x1 - 10, y1 - margin, 20, margin, Justification::centredBottom);
         }
         
@@ -141,7 +133,7 @@ void Keyfollow::paint(Graphics& g)
     
     // Draw selected slope again so it's on top
     {
-        float slope = selectedSlope;
+        float slope = mTunings[mSelectedTuning].slope;
         
         float rise = slope * centerX;
         
@@ -174,19 +166,19 @@ void Keyfollow::mouseWheelMove(const MouseEvent& event, const MouseWheelDetails&
 {
     if (wheel.deltaY > 0)
     {
-        if (mSelectedSlopeIndex < mNumSlopes - 1)
-            mSelectedSlopeIndex++;
+        if (mSelectedTuning < mTunings.size() - 1)
+            mSelectedTuning++;
 
     }
     else if (wheel.deltaY < 0)
     {
-        if (mSelectedSlopeIndex > 0)
-            mSelectedSlopeIndex--;
+        if (mSelectedTuning > 0)
+            mSelectedTuning--;
     }
     
     if (mProp)
     {
-        mProp->setRawValue(mSelectedSlopeIndex);
+        mProp->setRawValue(mTunings[mSelectedTuning].rawValue);
     }
     
     repaint();

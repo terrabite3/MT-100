@@ -24,12 +24,18 @@ public:
     void bindProperty(ChoiceProperty* prop);
     
 private:
-    void resized() override;
     void paint(juce::Graphics& g) override;
     void mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel) override;
     
-    int mSelectedSlopeIndex = 11;
-    const static int mNumSlopes = 16;
+    struct Tuning
+    {
+        int8_t rawValue;
+        float slope;
+        juce::String label;
+    };
+    
+    std::vector<Tuning> mTunings;
+    int mSelectedTuning;
     
     ChoiceProperty* mProp = nullptr;
 };
