@@ -25,6 +25,7 @@
 #include "Component/Keyfollow.h"
 
 #include "Property/PartialProperty.h"
+#include "Property/IntProperty.h"
 //[/Headers]
 
 
@@ -38,8 +39,8 @@
                                                                     //[/Comments]
 */
 class PartialPanel  : public juce::Component,
-                      public juce::Button::Listener,
-                      public juce::Slider::Listener
+                      public juce::Slider::Listener,
+                      public juce::Button::Listener
 {
 public:
     //==============================================================================
@@ -54,12 +55,10 @@ public:
 
     void paint (juce::Graphics& g) override;
     void resized() override;
-    void buttonClicked (juce::Button* buttonThatWasClicked) override;
     void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
     // Binary resources:
-    static const char* keyfollow_png;
-    static const int keyfollow_pngSize;
     static const char* filterEnv_png;
     static const int filterEnv_pngSize;
     static const char* bias_png;
@@ -70,17 +69,19 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    ChoiceProperty* mWaveform = nullptr;
+    IntProperty* mPulseWidth = nullptr;
+    IntProperty* mPulseWidthVeloSens = nullptr;
     //[/UserVariables]
 
     //==============================================================================
+    std::unique_ptr<juce::GroupComponent> juce__groupComponent6;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent2;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent5;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent4;
     std::unique_ptr<juce::GroupComponent> juce__groupComponent;
-    std::unique_ptr<juce::ToggleButton> juce__toggleButton;
-    std::unique_ptr<juce::Slider> juce__slider;
-    std::unique_ptr<juce::Label> juce__label;
-    std::unique_ptr<juce::Slider> juce__slider2;
+    std::unique_ptr<juce::Slider> pulseWidth_knob;
+    std::unique_ptr<juce::Slider> pulseWidthVel_knob;
     std::unique_ptr<juce::Label> juce__label2;
     std::unique_ptr<juce::Slider> juce__slider3;
     std::unique_ptr<juce::Label> juce__label3;
@@ -104,7 +105,6 @@ private:
     std::unique_ptr<juce::Label> juce__label11;
     std::unique_ptr<juce::Slider> juce__slider12;
     std::unique_ptr<juce::Label> juce__label12;
-    std::unique_ptr<juce::ImageButton> juce__imageButton3;
     std::unique_ptr<juce::ImageButton> juce__imageButton4;
     std::unique_ptr<juce::Label> juce__label13;
     std::unique_ptr<juce::ImageButton> juce__imageButton5;
@@ -113,8 +113,6 @@ private:
     std::unique_ptr<juce::Label> juce__label14;
     std::unique_ptr<juce::Slider> juce__slider14;
     std::unique_ptr<juce::Label> juce__label15;
-    std::unique_ptr<juce::ImageButton> juce__imageButton7;
-    std::unique_ptr<juce::ImageButton> juce__imageButton8;
     std::unique_ptr<juce::Label> juce__label16;
     std::unique_ptr<juce::Label> juce__label17;
     std::unique_ptr<juce::Slider> juce__slider15;
@@ -123,13 +121,19 @@ private:
     std::unique_ptr<juce::Label> juce__label19;
     std::unique_ptr<juce::Slider> juce__slider17;
     std::unique_ptr<juce::Label> juce__label20;
-    std::unique_ptr<juce::ImageButton> juce__imageButton9;
     std::unique_ptr<juce::Label> juce__label21;
     std::unique_ptr<juce::ImageButton> juce__imageButton10;
     std::unique_ptr<juce::Label> juce__label22;
-    std::unique_ptr<juce::GroupComponent> juce__groupComponent6;
     std::unique_ptr<Keyfollow> pitch_keyfollow;
     std::unique_ptr<juce::Label> juce__label23;
+    std::unique_ptr<juce::ToggleButton> juce__toggleButton3;
+    std::unique_ptr<juce::Slider> waveform_slider;
+    std::unique_ptr<juce::Label> juce__label24;
+    std::unique_ptr<juce::Label> juce__label25;
+    std::unique_ptr<Keyfollow> keyfollow2;
+    std::unique_ptr<Keyfollow> keyfollow3;
+    std::unique_ptr<Keyfollow> keyfollow4;
+    std::unique_ptr<Keyfollow> keyfollow5;
 
 
     //==============================================================================

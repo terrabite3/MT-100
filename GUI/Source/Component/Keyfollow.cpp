@@ -71,7 +71,6 @@ void Keyfollow::paint(Graphics& g)
     float top = margin;
     float bottom = getHeight();
     
-    float width = right - left;
     float height = bottom - top;
     
     float centerX = (right + left) / 2;
