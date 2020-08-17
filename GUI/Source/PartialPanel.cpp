@@ -873,7 +873,7 @@ void PartialPanel::bindProperty(PartialProperty* prop)
         pulseWidth_knob->setPopupDisplayEnabled(true, false, this);
 
         mPulseWidthVeloSens = &prop->waveGenerator.pulseWidthVelocitySensitivity;
-        setupKnob(pulseWidth_knob.get(), mPulseWidth);
+        setupKnob(pulseWidthVel_knob.get(), mPulseWidthVeloSens);
         pulseWidthVel_knob->setPopupDisplayEnabled(true, false, this);
 
         pitch_keyfollow->bindProperty(&prop->waveGenerator.pitchKeyfollow);
