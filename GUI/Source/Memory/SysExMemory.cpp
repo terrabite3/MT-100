@@ -270,6 +270,62 @@ SysExMemory SysExMemory::diff(const SysExMemory& other) const
         }
     }
     
+    // 10 bytes overhead per message
+    // Two values in separate messages: (10 + 1) bytes * 2 = 22 bytes
+    // Two values in one message with 10 unchanged bytes between = (10 + 1 + 10 + 1) bytes = 22 bytes
+    // With a gap larger than 10, it's more efficient to send separate messages
+    const int maxGap = 10;
+    
+    for (auto pair : result.mData)
+    {
+        NativeAddr addr = pair.first;
+
+        // If the next address is also set, there's nothing to consolidate
+        if (result.mData.count(addr + 1)) continue;
+        
+        // If the next address is excluded from the diff (either because it's set to the same value
+        // in the source and destination, or because it's set in the destination but not the source),
+        // but the address after that is set in the diff, then include the next address in the diff.
+        if (other.mData.count(addr + 1) && result.mData.count(addr + 2))
+        {
+            result.write(addr + 1, other.read(addr+1));
+        }
+        
+        auto determineState = [&](int address)
+        {
+            if (result.isSet(address)) return 'a';
+            if (other.isSet(address)) return 'b';
+            return 'c';
+        };
+        
+        int lengthOfGapToFill = 0;
+        
+        for (int gap = 1; gap <= maxGap + 1; ++gap)
+        {
+            auto nextState = determineState(addr + gap);
+            
+            if (nextState == 'a')
+            {
+                lengthOfGapToFill = gap;
+                break;
+            }
+            if (nextState == 'b')
+            {
+                continue;
+            }
+            if (nextState == 'c')
+            {
+                break;
+            }
+        }
+        
+        for (int i = 0; i < lengthOfGapToFill; ++i)
+        {
+            int gapAddr = addr + i + 1;
+            result.write(gapAddr, other.read(gapAddr));
+        }
+    }
+    
     return result;
 }
 
